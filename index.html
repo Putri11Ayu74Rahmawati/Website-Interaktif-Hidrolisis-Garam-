@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksplorasi Hidrolisis Garam - Virtual Chemistry Learning</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%);
+        }
+        
+        /* Header dengan Logo */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-um {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1e40af;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 120px 40px 60px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 50%, #fef3c7 100%);
+        }
+        
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.2), rgba(124, 58, 237, 0.1));
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .bubble:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bubble:nth-child(2) { left: 25%; width: 120px; height: 120px; animation-delay: 2s; }
+        .bubble:nth-child(3) { left: 45%; width: 60px; height: 60px; animation-delay: 4s; }
+        .bubble:nth-child(4) { left: 65%; width: 100px; height: 100px; animation-delay: 1s; }
+        .bubble:nth-child(5) { left: 80%; width: 90px; height: 90px; animation-delay: 3s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .hero-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 2s infinite;
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.4);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2563eb, #7c3aed, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            animation: slideDown 1s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+        
+        .btn {
+            padding: 16px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+        
+        .btn-outline {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+        
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-green:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: white;
+        }
+
+        .btn-purple:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+        }
+
+        /* Photo Box */
+        .photo-box {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px dashed #7c3aed;
+            background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo-box:hover {
+            border-color: #6d28d9;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+            transform: scale(1.03);
+        }
+
+        .photo-box .photo-placeholder-text {
+            font-size: 0.75rem;
+            color: #7c3aed;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        #photoInput {
+            display: none;
+        }
+
+        .instagram-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3);
+        }
+
+        .instagram-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(220, 39, 67, 0.5);
+        }
+
+        .pengembang-profile {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #faf5ff, #ede9fe);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pengembang-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #4c1d95;
+            margin-bottom: 5px;
+        }
+
+        .pengembang-role {
+            color: #7c3aed;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .pengembang-univ {
+            color: #64748b;
+            font-size: 0.88rem;
+        }
+        
+        /* Learning Objectives */
+        .objectives {
+            padding: 80px 40px;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 50px;
+        }
+        
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .objective-card {
+            background: linear-gradient(135deg, #dbeafe, #ede9fe);
+            padding: 30px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        
+        .objective-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.2);
+            border-color: #2563eb;
+        }
+        
+        .objective-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .objective-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        
+        .objective-desc {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .objective-desc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .objective-desc ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            line-height: 1.6;
+            font-size: 0.92rem;
+        }
+
+        .objective-desc ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* Navigation Modules */
+        .modules {
+            padding: 80px 40px;
+            background: linear-gradient(135deg, #f0f9ff, #faf5ff);
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .module-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 25px;
+            text-align: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            transition: left 0.5s;
+        }
+        
+        .module-card:hover::before {
+            left: 100%;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Module number badge */
+        .module-number {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: white;
+        }
+        
+        .module-card:nth-child(1) { border-color: #ef4444; }
+        .module-card:nth-child(1):hover { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+        .module-card:nth-child(1) .module-number { background: #ef4444; }
+        
+        .module-card:nth-child(2) { border-color: #2563eb; }
+        .module-card:nth-child(2):hover { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+        .module-card:nth-child(2) .module-number { background: #2563eb; }
+        
+        .module-card:nth-child(3) { border-color: #7c3aed; }
+        .module-card:nth-child(3):hover { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+        .module-card:nth-child(3) .module-number { background: #7c3aed; }
+        
+        .module-card:nth-child(4) { border-color: #10b981; }
+        .module-card:nth-child(4):hover { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+        .module-card:nth-child(4) .module-number { background: #10b981; }
+        
+        .module-card:nth-child(5) { border-color: #f59e0b; }
+        .module-card:nth-child(5):hover { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+        .module-card:nth-child(5) .module-number { background: #f59e0b; }
+        
+        .module-card:nth-child(6) { border-color: #ec4899; }
+        .module-card:nth-child(6):hover { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+        .module-card:nth-child(6) .module-number { background: #ec4899; }
+        
+        .module-card:nth-child(7) { border-color: #0891b2; }
+        .module-card:nth-child(7):hover { background: linear-gradient(135deg, #cffafe, #a5f3fc); }
+        .module-card:nth-child(7) .module-number { background: #0891b2; }
+        
+        .module-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .module-card:nth-child(1) .module-icon { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .module-card:nth-child(2) .module-icon { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+        .module-card:nth-child(3) .module-icon { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
+        .module-card:nth-child(4) .module-icon { background: linear-gradient(135deg, #10b981, #34d399); }
+        .module-card:nth-child(5) .module-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .module-card:nth-child(6) .module-icon { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .module-card:nth-child(7) .module-icon { background: linear-gradient(135deg, #0891b2, #06b6d4); }
+        
+        .module-card:hover .module-icon {
+            transform: rotateY(360deg);
+        }
+        
+        .module-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        
+        .module-desc {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        /* Modal Tentang */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlide 0.3s ease-out;
+        }
+        
+        @keyframes modalSlide {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            transform: rotate(90deg);
+            background: #dc2626;
+        }
+        
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2563eb;
+            margin-bottom: 30px;
+        }
+        
+        .tujuan-list, .dosen-list {
+            margin-bottom: 30px;
+        }
+        
+        .tujuan-item, .dosen-item {
+            padding: 15px;
+            background: #f0f9ff;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2563eb;
+        }
+        
+        .tujuan-label {
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .tujuan-item ul {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+        }
+
+        .tujuan-item ul li {
+            padding: 4px 0 4px 18px;
+            position: relative;
+            color: #475569;
+            font-size: 0.93rem;
+            line-height: 1.6;
+        }
+
+        .tujuan-item ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        /* Modal Pengembang */
+        .pengembang-item {
+            padding: 15px;
+            background: #f5f3ff;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #7c3aed;
+        }
+
+        .pengembang-item .label {
+            font-weight: 700;
+            color: #7c3aed;
+            margin-bottom: 5px;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 40px;
+            background: linear-gradient(135deg, #1e40af, #7c3aed);
+            color: white;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-icon {
+            animation: rotate 3s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 300px; }
+            .header { padding: 15px 20px; }
+            .hero { padding: 100px 20px 40px; }
+            .objectives, .modules { padding: 60px 20px; }
+            .modal-content { padding: 30px; margin: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-um">UM</div>
+        <div class="logo-text">Universitas Negeri Malang</div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="bubbles">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-icon">
+                <i data-lucide="flask-conical" color="white" size="60"></i>
+            </div>
+            
+            <h1>Temukan Rahasia di Balik Hidrolisis Garam</h1>
+            
+            <p class="subtitle">
+                Tahukah kamu, mengapa kue bisa mengembang ketika diberi soda kue? Rahasianya ada pada reaksi kimia antara ion-ion garam dan air — inilah dunia menarik <strong>Hidrolisis Garam</strong>! 🧪✨
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="#modules" class="btn btn-primary">
+                    <i data-lucide="rocket" size="22"></i>
+                    Mulai Belajar
+                </a>
+                <a href="Masalah pada case.html" class="btn btn-secondary">
+                    <i data-lucide="beaker" size="22"></i>
+                    Simulasi Cepat
+                </a>
+                <button onclick="openModal()" class="btn btn-outline">
+                    <i data-lucide="info" size="22"></i>
+                    Tentang
+                </button>
+                <button onclick="openPengembangModal()" class="btn btn-outline" style="border-color:#7c3aed; color:#7c3aed;">
+                    <i data-lucide="user" size="22"></i>
+                    Pengembang Media
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Objectives -->
+    <section class="objectives">
+        <h2 class="section-title">🎯 Tujuan Pembelajaran</h2>
+        
+        <div class="objectives-grid">
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i data-lucide="brain" color="white" size="32"></i>
+                </div>
+                <div class="objective-title">🧠 Remember</div>
+                <div class="objective-desc">
+                    <ul>
+                        <li>Peserta didik mampu menjelaskan pengertian hidrolisis garam berdasarkan reaksi ion garam dengan air.</li>
+                        <li>Peserta didik mampu mengidentifikasi asal asam dan basa penyusun suatu garam.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i data-lucide="lightbulb" color="white" size="32"></i>
+                </div>
+                <div class="objective-title">💡 Understand</div>
+                <div class="objective-desc">
+                    <ul>
+                        <li>Peserta didik mampu menjelaskan hubungan antara tetapan hidrolisis (Kh) dengan Ka, Kb, dan Kw.</li>
+                        <li>Peserta didik mampu menjelaskan bagaimana hidrolisis pupuk ZA ((NH₄)₂SO₄) dapat menyebabkan peningkatan keasaman tanah serta pentingnya penggunaan pupuk secara bijak untuk menjaga kualitas lingkungan.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i data-lucide="flask-round" color="white" size="32"></i>
+                </div>
+                <div class="objective-title">🧪 Apply</div>
+                <div class="objective-desc">
+                    <ul>
+                        <li>Peserta didik mampu mengklasifikasikan garam ke dalam jenis tidak terhidrolisis, hidrolisis anion, hidrolisis kation, dan hidrolisis total dengan benar.</li>
+                        <li>Peserta didik mampu menentukan nilai tetapan hidrolisis (Kh) suatu garam berdasarkan data Ka atau Kb yang diketahui.</li>
+                        <li>Peserta didik mampu menghitung pH larutan garam yang mengalami hidrolisis sebagian dengan langkah yang sistematis dan benar.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i data-lucide="search" color="white" size="32"></i>
+                </div>
+                <div class="objective-title">🔍 Analyze</div>
+                <div class="objective-desc">
+                    <ul>
+                        <li>Peserta didik mampu menganalisis kasus penggunaan pupuk ZA ((NH₄)₂SO₄) dan mengaitkannya dengan jenis hidrolisis yang terjadi.</li>
+                        <li>Peserta didik mampu menginterpretasikan hasil perhitungan pH untuk menentukan sifat larutan (asam, basa, atau netral).</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i data-lucide="scale" color="white" size="32"></i>
+                </div>
+                <div class="objective-title">⚖️ Evaluate</div>
+                <div class="objective-desc">
+                    <ul>
+                        <li>Peserta didik mampu mengevaluasi dampak penggunaan pupuk ZA ((NH₄)₂SO₄) terhadap keasaman tanah dan kualitas lingkungan berdasarkan konsep hidrolisis garam serta memberikan rekomendasi penggunaan yang lebih bijak.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Modules -->
+    <section id="modules" class="modules">
+        <h2 class="section-title">📚 Modul Pembelajaran Interaktif</h2>
+        
+        <div class="modules-grid">
+            <a href="Masalah Pada Case.html" class="module-card">
+                <div class="module-number">1</div>
+                <div class="module-icon">
+                    <i data-lucide="alert-triangle" color="white" size="40"></i>
+                </div>
+                <div class="module-title">Masalah Pada Case</div>
+                <div class="module-desc">Temukan kasus nyata hidrolisis garam dalam kehidupan sehari-hari dan rumuskan masalah yang akan dipecahkan</div>
+            </a>
+            
+            <a href="Teori Dasar.html" class="module-card">
+                <div class="module-number">2</div>
+                <div class="module-icon">
+                    <i data-lucide="book-open" color="white" size="40"></i>
+                </div>
+                <div class="module-title">Teori Dasar</div>
+                <div class="module-desc">Pelajari konsep fundamental hidrolisis garam, jenis-jenis garam, dan teori keasaman</div>
+            </a>
+            
+            <a href="Simulasi interaktif.html" class="module-card">
+                <div class="module-number">3</div>
+                <div class="module-icon">
+                    <i data-lucide="microscope" color="white" size="40"></i>
+                </div>
+                <div class="module-title">Simulasi Interaktif & Video Animasi</div>
+                <div class="module-desc">Saksikan animasi molekuler reaksi hidrolisis dan interaksi ion dalam larutan</div>
+            </a>
+            
+            <a href="Solusi Case.html" class="module-card">
+                <div class="module-number">4</div>
+                <div class="module-icon">
+                    <i data-lucide="check-circle" color="white" size="40"></i>
+                </div>
+                <div class="module-title">Solusi Case</div>
+                <div class="module-desc">Temukan solusi ilmiah atas kasus yang telah diidentifikasi berdasarkan konsep hidrolisis garam</div>
+            </a>
+
+            <a href="Perhitungan pH.html" class="module-card">
+                <div class="module-number">5</div>
+                <div class="module-icon">
+                    <i data-lucide="calculator" color="white" size="40"></i>
+                </div>
+                <div class="module-title">Perhitungan pH pada Hidrolisis Garam</div>
+                <div class="module-desc">Hitung pH larutan garam dengan kalkulator interaktif dan visualisasi grafis</div>
+            </a>
+            
+            <a href="Game Edukasi.html" class="module-card">
+                <div class="module-number">6</div>
+                <div class="module-icon">
+                    <i data-lucide="gamepad-2" color="white" size="40"></i>
+                </div>
+                <div class="module-title">Game Edukasi "Salt Challenge"</div>
+                <div class="module-desc">Uji pemahamanmu dengan game seru identifikasi garam dan prediksi pH</div>
+            </a>
+            
+            <a href="Latihan soal dan refleksi.html" class="module-card">
+                <div class="module-number">7</div>
+                <div class="module-icon">
+                    <i data-lucide="clipboard-check" color="white" size="40"></i>
+                </div>
+                <div class="module-title">Latihan Soal & Refleksi Pembelajaran</div>
+                <div class="module-desc">Kerjakan soal latihan dan refleksikan proses belajarmu</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Modal Tentang -->
+    <div id="modalTentang" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            
+            <h2 class="modal-title">📖 Tentang Modul Pembelajaran</h2>
+            
+            <div class="tujuan-list">
+                <h3 style="color: #2563eb; margin-bottom: 20px;">🎯 Tujuan Pembelajaran</h3>
+                
+                <div class="tujuan-item">
+                    <div class="tujuan-label">🧠 Remember</div>
+                    <ul>
+                        <li>Peserta didik mampu menjelaskan pengertian hidrolisis garam berdasarkan reaksi ion garam dengan air.</li>
+                        <li>Peserta didik mampu mengidentifikasi asal asam dan basa penyusun suatu garam.</li>
+                    </ul>
+                </div>
+                
+                <div class="tujuan-item">
+                    <div class="tujuan-label">💡 Understand</div>
+                    <ul>
+                        <li>Peserta didik mampu menjelaskan hubungan antara tetapan hidrolisis (Kh) dengan Ka, Kb, dan Kw.</li>
+                        <li>Peserta didik mampu menjelaskan bagaimana hidrolisis pupuk ZA ((NH₄)₂SO₄) dapat menyebabkan peningkatan keasaman tanah serta pentingnya penggunaan pupuk secara bijak untuk menjaga kualitas lingkungan.</li>
+                    </ul>
+                </div>
+                
+                <div class="tujuan-item">
+                    <div class="tujuan-label">🧪 Apply</div>
+                    <ul>
+                        <li>Peserta didik mampu mengklasifikasikan garam ke dalam jenis tidak terhidrolisis, hidrolisis anion, hidrolisis kation, dan hidrolisis total dengan benar.</li>
+                        <li>Peserta didik mampu menentukan nilai tetapan hidrolisis (Kh) suatu garam berdasarkan data Ka atau Kb yang diketahui.</li>
+                        <li>Peserta didik mampu menghitung pH larutan garam yang mengalami hidrolisis sebagian dengan langkah yang sistematis dan benar.</li>
+                    </ul>
+                </div>
+                
+                <div class="tujuan-item">
+                    <div class="tujuan-label">🔍 Analyze</div>
+                    <ul>
+                        <li>Peserta didik mampu menganalisis kasus penggunaan pupuk ZA ((NH₄)₂SO₄) dan mengaitkannya dengan jenis hidrolisis yang terjadi.</li>
+                        <li>Peserta didik mampu menginterpretasikan hasil perhitungan pH untuk menentukan sifat larutan (asam, basa, atau netral).</li>
+                    </ul>
+                </div>
+                
+                <div class="tujuan-item">
+                    <div class="tujuan-label">⚖️ Evaluate</div>
+                    <ul>
+                        <li>Peserta didik mampu mengevaluasi dampak penggunaan pupuk ZA ((NH₄)₂SO₄) terhadap keasaman tanah dan kualitas lingkungan berdasarkan konsep hidrolisis garam serta memberikan rekomendasi penggunaan yang lebih bijak.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="dosen-list">
+                <h3 style="color: #7c3aed; margin-bottom: 20px;">👨‍🏫 Dosen Pengembang Modul</h3>
+                
+                <div class="dosen-item" style="border-left-color: #7c3aed; background: #faf5ff;">
+                    <strong>Dr. Munzil, S.Pd., M.Si</strong><br>
+                    Universitas Negeri Malang
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pengembang Media -->
+    <div id="modalPengembang" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closePengembangModal()">×</button>
+            
+            <h2 class="modal-title" style="color:#7c3aed;">👩‍💻 Informasi Pengembang Media</h2>
+
+            <!-- Profil Pengembang -->
+            <div class="pengembang-profile">
+                <!-- Kotak Foto -->
+                <div class="photo-box".getElementById('photoInput').click()">
+                    <img id="profilePhoto" src="Foto studio formal .jpeg" alt="Foto Profil" style="display:block; width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; document.getElementById('photoPlaceholder').style.display='flex';" />
+                    <div class="photo-placeholder-text" id="photoPlaceholder" style="display:none; flex-direction:column; align-items:center; justify-content:center;">
+                        <i data-lucide="camera" size="32" style="color:#7c3aed; margin-bottom:6px;"></i><br>
+                        Klik untuk<br>upload foto
+                    </div>
+                </div>
+                <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)" />
+
+                <div class="pengembang-name">Putri Ayu Rahmawati</div>
+                <div class="pengembang-role">Mahasiswa S2 Pendidikan Kimia</div>
+                <div class="pengembang-univ">Universitas Negeri Malang</div>
+
+                <!-- Instagram Button -->
+                <div>
+                    <a href="https://www.instagram.com/putriiayuu_u?utm_source=qr&igsh=MW56ZWplZ2Ftd3U4OQ==" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="instagram-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        @putriiayuu_u
+                    </a>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <div class="pengembang-item">
+                    <div class="label">Dosen Pembimbing</div>
+                    <strong>Dr. Munzil, S.Pd., M.Si</strong><br>
+                    Universitas Negeri Malang
+                </div>
+
+                <div class="pengembang-item">
+                    <div class="label">Institusi</div>
+                    Universitas Negeri Malang<br>
+                    Fakultas Matematika dan Ilmu Pengetahuan Alam<br>
+                    Program Studi Pendidikan Kimia
+                </div>
+
+                <div class="pengembang-item">
+                    <div class="label">Tahun Pengembangan</div>
+                    2026
+                </div>
+
+                <div class="pengembang-item">
+                    <div class="label">Deskripsi Media</div>
+                    Media pembelajaran berbasis web interaktif ini dikembangkan sebagai sarana belajar mandiri materi Hidrolisis Garam untuk peserta didik SMA/MA. Media ini dilengkapi dengan simulasi interaktif, game edukasi, kalkulator pH, video animasi, serta latihan soal dan refleksi pembelajaran.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <i data-lucide="flask-conical" class="footer-icon" size="28"></i>
+            <div>
+                <strong>© 2025 Virtual Chemistry Learning | Hidrolisis Garam</strong><br>
+                Dikembangkan oleh: Putri Ayu Rahmawati – Universitas Negeri Malang
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+        
+        // Modal Functions - Tentang
+        function openModal() {
+            document.getElementById('modalTentang').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modalTentang').classList.remove('active');
+        }
+
+        // Modal Functions - Pengembang
+        function openPengembangModal() {
+            document.getElementById('modalPengembang').classList.add('active');
+        }
+
+        function closePengembangModal() {
+            document.getElementById('modalPengembang').classList.remove('active');
+        }
+
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('profilePhoto');
+                    const placeholder = document.getElementById('photoPlaceholder');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Close modals when clicking outside
+        document.getElementById('modalTentang').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.getElementById('modalPengembang').addEventListener('click', function(e) {
+            if (e.target === this) closePengembangModal();
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add hover sound effect (optional)
+        const moduleCards = document.querySelectorAll('.module-card');
+        moduleCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
+        
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.objective-card, .module-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

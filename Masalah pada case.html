@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masalah Pada Case – Hidrolisis Garam</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f4ff;
+            color: #1e293b;
+        }
+
+        /* ===== TOP NAV ===== */
+        .topnav {
+            background: white;
+            padding: 16px 48px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .topnav-left { display: flex; flex-direction: column; gap: 3px; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: #2563eb; font-weight: 600; font-size: 0.88rem;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .back-link:hover { color: #7c3aed; }
+        .page-title { font-size: 1.7rem; font-weight: 800; }
+        .page-title .t1 { color: #2563eb; }
+        .page-title .t2 { color: #7c3aed; }
+        .page-title .t3 { color: #f59e0b; }
+        .breadcrumb { font-size: 0.78rem; color: #64748b; display: flex; align-items: center; gap: 5px; }
+        .breadcrumb a { color: #2563eb; text-decoration: none; font-weight: 500; }
+        .next-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white; font-weight: 700; font-size: 0.95rem;
+            padding: 13px 26px; border-radius: 12px; text-decoration: none;
+            transition: all 0.3s; box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+            white-space: nowrap;
+        }
+        .next-btn:hover { transform: translateX(4px); box-shadow: 0 8px 22px rgba(37,99,235,0.5); }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 45%, #4c1d95 75%, #7c2d12 100%);
+            padding: 55px 48px 50px; text-align: center; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 25% 60%, rgba(96,165,250,0.15) 0%, transparent 55%),
+                        radial-gradient(ellipse at 75% 40%, rgba(167,139,250,0.15) 0%, transparent 55%);
+        }
+        .mol { position: absolute; color: white; font-weight: 900; opacity: 0.07; pointer-events: none; animation: flt 7s ease-in-out infinite; }
+        @keyframes flt { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-18px);} }
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(245,158,11,0.2); border: 2px solid rgba(245,158,11,0.5);
+            color: #fbbf24; font-weight: 700; font-size: 0.82rem;
+            padding: 7px 18px; border-radius: 50px; margin-bottom: 16px;
+            position: relative; z-index: 2;
+        }
+        .hero h1 {
+            font-size: 2.5rem; font-weight: 900; color: white; line-height: 1.2;
+            margin-bottom: 14px; position: relative; z-index: 2;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #ef4444);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            color: rgba(255,255,255,0.78); font-size: 1rem; line-height: 1.7;
+            max-width: 700px; margin: 0 auto 26px; position: relative; z-index: 2;
+        }
+        .hero-pills {
+            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+            position: relative; z-index: 2;
+        }
+        .pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.25);
+            color: white; font-size: 0.78rem; font-weight: 600;
+            padding: 6px 14px; border-radius: 50px;
+        }
+
+        /* ===== ORANGE INTRO STRIP ===== */
+        .intro-strip {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            padding: 20px 48px; text-align: center;
+        }
+        .intro-strip p {
+            color: white; font-size: 1rem; font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== MAIN WRAPPER ===== */
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 40px 72px; }
+
+        /* ===== SECTION HEADERS ===== */
+        .slabel {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b; color: #92400e;
+            font-weight: 700; font-size: 0.78rem;
+            padding: 5px 15px; border-radius: 50px; margin-bottom: 12px;
+        }
+        .stitle {
+            font-size: 1.85rem; font-weight: 800; color: #1e293b;
+            margin-bottom: 26px; line-height: 1.3;
+        }
+        .stitle span {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* ===== KASUS CARD ===== */
+        .kasus-card {
+            background: white;
+            border-radius: 22px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.09);
+            border: 2px solid #e2e8f0;
+            overflow: hidden;
+            margin-bottom: 36px;
+        }
+        .kasus-hdr {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            padding: 18px 30px;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .kasus-hdr-ico {
+            width: 44px; height: 44px; min-width: 44px;
+            background: rgba(255,255,255,0.25); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .kasus-hdr h2 { color: white; font-size: 1.05rem; font-weight: 800; }
+        .kasus-hdr p  { color: rgba(255,255,255,0.85); font-size: 0.78rem; margin-top: 2px; }
+
+        /* ===== READING AREA with images ===== */
+        .reading-area { padding: 30px; }
+
+        .reading-title {
+            font-size: 1.15rem; font-weight: 800; color: #1e3a8a;
+            text-align: center; margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        /* Layout: text + image side by side */
+        .content-row {
+            display: flex; gap: 22px; margin-bottom: 22px; align-items: flex-start;
+        }
+        .content-row.reverse { flex-direction: row-reverse; }
+
+        .content-text { flex: 1; min-width: 0; }
+        .content-text p {
+            font-size: 0.93rem; color: #374151; line-height: 1.9;
+            text-align: justify;
+        }
+        .content-text em { color: #7c3aed; font-style: italic; font-weight: 600; }
+        .content-text strong { color: #1e293b; font-weight: 700; }
+
+        /* Pupuk image box */
+        .img-box {
+            width: 200px; min-width: 200px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+            border: 3px solid #e2e8f0;
+        }
+        .img-box img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+        }
+        .img-box-tall { height: 160px; }
+        .img-caption {
+            background: #f8fafc;
+            padding: 7px 10px;
+            font-size: 0.72rem; color: #64748b; text-align: center;
+            font-style: italic; border-top: 1px solid #e2e8f0;
+        }
+
+        /* ===== STATIC PHOTO BOX ===== */
+        .photo-box-static {
+            width: 200px; min-width: 200px;
+            border-radius: 16px; overflow: hidden;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.13);
+            border: 3px solid #93c5fd;
+            background: #f0f4ff;
+            transition: all 0.3s;
+        }
+        .photo-box-static:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(37,99,235,0.2);
+            border-color: #2563eb;
+        }
+        .photo-box-static img {
+            width: 100%; height: 180px;
+            object-fit: cover; display: block;
+        }
+        .photo-box-caption {
+            padding: 8px 12px; background: white;
+            font-size: 0.72rem; color: #64748b; text-align: center;
+            font-style: italic; font-weight: 500;
+            border-top: 2px solid #bfdbfe;
+        }
+
+        /* Para number badge */
+        .para-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white; font-size: 0.72rem; font-weight: 700;
+            padding: 4px 12px; border-radius: 50px; margin-bottom: 10px;
+        }
+
+        /* ===== REAKSI CARD ===== */
+        .reaksi-card {
+            background: white; border-radius: 22px;
+            box-shadow: 0 4px 30px rgba(37,99,235,0.10);
+            border: 2px solid #bfdbfe; overflow: hidden; margin-bottom: 36px;
+        }
+        .reaksi-hdr {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            padding: 18px 30px; display: flex; align-items: center; gap: 14px;
+        }
+        .reaksi-hdr h3 { color: white; font-size: 1rem; font-weight: 700; }
+        .reaksi-hdr p  { color: rgba(255,255,255,0.72); font-size: 0.76rem; }
+        .reaksi-body { padding: 30px; }
+
+        .formula-box {
+            background: linear-gradient(135deg, #eff6ff, #ede9fe);
+            border-radius: 16px; padding: 26px; text-align: center; margin-bottom: 22px;
+        }
+        .formula-main {
+            font-size: 1.35rem; font-weight: 900; color: #1e3a8a; letter-spacing: 0.5px;
+        }
+        .formula-arrow { color: #7c3aed; margin: 0 10px; }
+        .formula-label {
+            font-size: 0.82rem; color: #64748b; margin-top: 10px;
+            font-style: italic;
+        }
+
+        .ion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+        .ion-chip {
+            padding: 18px; border-radius: 16px; text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .ion-chip:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .ion-chip.amber { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+        .ion-chip.blue  { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+        .ion-sym { font-size: 1.6rem; font-weight: 900; margin-bottom: 5px; }
+        .ion-chip.amber .ion-sym { color: #92400e; }
+        .ion-chip.blue  .ion-sym { color: #1e40af; }
+        .ion-nm  { font-size: 0.82rem; font-weight: 700; color: #374151; margin-bottom: 4px; }
+        .ion-ds  { font-size: 0.76rem; color: #64748b; line-height: 1.5; }
+
+        .source-row {
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            padding: 12px 16px; background: #f8fafc;
+            border: 1px solid #e2e8f0; border-radius: 12px;
+            font-size: 0.8rem; color: #64748b;
+        }
+        .source-link {
+            color: #2563eb; font-weight: 700; text-decoration: none;
+        }
+        .source-link:hover { color: #7c3aed; text-decoration: underline; }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            display: flex; align-items: center; gap: 14px; margin: 44px 0 36px;
+        }
+        .div-line { flex: 1; height: 2px; background: linear-gradient(90deg, transparent, #cbd5e1, transparent); }
+        .div-dot  { width: 10px; height: 10px; background: #7c3aed; border-radius: 50%; }
+        .div-text { color: #7c3aed; font-weight: 700; font-size: 0.82rem; white-space: nowrap; }
+
+        /* ===== PERTANYAAN CARDS ===== */
+        .pq-card {
+            border-radius: 22px; overflow: hidden;
+            box-shadow: 0 4px 28px rgba(0,0,0,0.08); margin-bottom: 26px;
+        }
+        .pq-hdr {
+            padding: 20px 30px; display: flex; align-items: center; gap: 14px;
+        }
+        .pq-blue-h  { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+        .pq-green-h { background: linear-gradient(135deg, #10b981, #0891b2); }
+        .pq-ico {
+            width: 46px; height: 46px; min-width: 46px;
+            background: rgba(255,255,255,0.22); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pq-lbl  { color: rgba(255,255,255,0.75); font-size: 0.73rem; font-weight: 600; margin-bottom: 2px; }
+        .pq-type { color: white; font-size: 1rem; font-weight: 800; }
+        .pq-body { background: white; padding: 26px 30px; }
+
+        .pq-q {
+            font-size: 0.94rem; color: #1e293b; line-height: 1.85;
+            padding: 18px 20px; border-radius: 14px; border-left: 4px solid;
+            margin-bottom: 18px;
+        }
+        .pq-q.blue-q  { background: #eff6ff; border-color: #2563eb; }
+        .pq-q.green-q { background: #f0fdf4; border-color: #10b981; }
+        .pq-q strong { color: #1e40af; }
+        .green-q strong { color: #065f46; }
+
+        /* Accordion */
+        .acc-btn {
+            display: flex; align-items: center; gap: 10px;
+            width: 100%; padding: 12px 18px; border: none; border-radius: 12px;
+            font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.87rem;
+            cursor: pointer; transition: all 0.3s; text-align: left;
+        }
+        .acc-btn.ab-blue  { background: #eff6ff; color: #2563eb; }
+        .acc-btn.ab-green { background: #f0fdf4; color: #065f46; }
+        .acc-btn.ab-blue:hover  { background: linear-gradient(135deg,#2563eb,#7c3aed); color: white; }
+        .acc-btn.ab-green:hover { background: linear-gradient(135deg,#10b981,#0891b2); color: white; }
+        .acc-chevron { margin-left: auto; transition: transform 0.3s; }
+        .acc-btn.open .acc-chevron { transform: rotate(180deg); }
+
+        .acc-box {
+            display: none; margin-top: 14px; padding: 18px 20px;
+            border-radius: 12px; font-size: 0.87rem; line-height: 1.8;
+        }
+        .acc-box.blue-box  { background: #eff6ff; border: 2px solid #bfdbfe; color: #1e40af; }
+        .acc-box.green-box { background: #f0fdf4; border: 2px solid #6ee7b7; color: #065f46; }
+
+        /* ===== KONSEP KUNCI ===== */
+        .konsep-sec {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b, #1e3a8a);
+            border-radius: 26px; padding: 44px 38px; margin: 44px 0;
+        }
+        .konsep-sec .stitle { color: white; }
+        .konsep-sec .stitle span {
+            background: linear-gradient(135deg,#fbbf24,#f59e0b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .k-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+        .k-chip {
+            padding: 20px; background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.13); border-radius: 18px;
+            transition: all 0.3s; cursor: default;
+        }
+        .k-chip:hover {
+            background: rgba(255,255,255,0.13); transform: translateY(-5px);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.3);
+        }
+        .k-ico   { font-size: 1.7rem; margin-bottom: 9px; }
+        .k-ttl   { font-size: 0.9rem; font-weight: 700; color: white; margin-bottom: 5px; }
+        .k-dsc   { font-size: 0.76rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+        /* ===== CTA ===== */
+        .cta-wrap {
+            background: linear-gradient(135deg, #f59e0b, #ef4444, #ec4899);
+            border-radius: 24px; padding: 44px 38px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .cta-wrap::before { content:'🧪'; position:absolute; font-size:9rem; opacity:.07; left:-15px; top:-15px; }
+        .cta-wrap::after  { content:'⚗️'; position:absolute; font-size:7rem; opacity:.07; right:-10px; bottom:-10px; }
+        .cta-wrap h2 { font-size: 1.75rem; font-weight: 900; color: white; margin-bottom: 10px; position: relative; z-index:1; }
+        .cta-wrap p  { color: rgba(255,255,255,0.9); font-size: 0.93rem; margin-bottom: 22px; position: relative; z-index:1; }
+        .cta-a {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: white; color: #dc2626;
+            font-family: 'Poppins',sans-serif; font-weight: 700; font-size: 0.95rem;
+            padding: 14px 32px; border-radius: 50px; text-decoration: none;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.18); transition: all 0.3s; position: relative; z-index:1;
+        }
+        .cta-a:hover { transform: translateY(-4px) scale(1.04); }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 38px 40px;
+            background: linear-gradient(135deg, #1e40af, #7c3aed);
+            color: white; text-align: center;
+        }
+        .foot-in { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 6px; }
+        .foot-spin { animation: spin 4s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 860px) {
+            .content-row, .content-row.reverse { flex-direction: column; }
+            .img-box, .photo-box-static { width: 100%; min-width: unset; }
+            .ion-grid { grid-template-columns: 1fr; }
+            .k-grid   { grid-template-columns: 1fr 1fr; }
+            .topnav   { padding: 14px 20px; }
+            .wrap     { padding: 30px 20px 60px; }
+            .hero h1  { font-size: 2rem; }
+        }
+        @media (max-width: 560px) {
+            .page-title { font-size: 1.25rem; }
+            .k-grid  { grid-template-columns: 1fr; }
+            .reading-area { padding: 18px 16px; }
+            .pq-body { padding: 20px 16px; }
+            .reaksi-body { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+    <div class="topnav-left">
+        <a href="index.html" class="back-link">
+            <i data-lucide="arrow-left" size="14"></i>
+            Kembali ke Landing Page
+        </a>
+        <div class="page-title">
+            <span class="t1">Masalah</span> <span class="t2">Pada</span> <span class="t3">Case</span>
+        </div>
+        <div class="breadcrumb">
+            <i data-lucide="map" size="12"></i>
+            <a href="index.html">Home</a>
+            <span>/</span>
+            <span>Masalah Pada Case</span>
+        </div>
+    </div>
+    <a href="Teori Dasar.html" class="next-btn">
+        <span>Lanjut ke Teori Dasar</span>
+        <i data-lucide="arrow-right" size="18"></i>
+    </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="mol" style="top:16%;left:5%;font-size:2rem;animation-delay:0s;">NH₄⁺</div>
+    <div class="mol" style="top:55%;left:87%;font-size:2rem;animation-delay:2s;">SO₄²⁻</div>
+    <div class="mol" style="top:68%;left:10%;font-size:1.8rem;animation-delay:3.5s;">H⁺</div>
+    <div class="mol" style="top:20%;left:80%;font-size:2.2rem;animation-delay:1.5s;">ZA</div>
+    <div class="mol" style="top:45%;left:48%;font-size:1.5rem;animation-delay:4s;">pH↓</div>
+
+    <div class="hero-tag">
+        <i data-lucide="alert-triangle" size="14"></i>
+        Studi Kasus Nyata
+    </div>
+    <h1>
+        Kasus: Jejak Kimia Pupuk ZA<br>
+        <span>Mengapa Tanah Menjadi Asam?</span>
+    </h1>
+    <p>
+        Pupuk ZA meningkatkan hasil panen — namun secara kimia juga mengubah keseimbangan keasaman tanah.<br>
+        Temukan fenomena <strong style="color:#fbbf24;">hidrolisis garam</strong> dalam kasus nyata pertanian!
+    </p>
+</div>
+
+<!-- INTRO STRIP -->
+<div class="intro-strip">
+    <p>📖 Simaklah dengan seksama bacaan kasus berikut ini!</p>
+</div>
+
+<!-- MAIN -->
+<div class="wrap">
+
+    <!-- ===== NARASI KASUS ===== -->
+    <div class="slabel">
+        <i data-lucide="file-text" size="13"></i>
+        Narasi Kasus
+    </div>
+    <h2 class="stitle">Bacaan <span>Kasus Lengkap</span></h2>
+
+    <div class="kasus-card">
+        <div class="kasus-hdr">
+            <div class="kasus-hdr-ico"><i data-lucide="alert-triangle" color="white" size="22"></i></div>
+            <div>
+                <h2>Jejak Kimia Pupuk ZA: Mengapa Tanah Menjadi Asam?</h2>
+                <p>Studi Kasus Fenomena Soil Acidification di Lahan Pertanian</p>
+            </div>
+        </div>
+
+        <div class="reading-area">
+            <div class="reading-title">📚 Jejak Kimia Pupuk ZA: Mengapa Tanah Menjadi Asam?</div>
+
+            <!-- PARAGRAF 1 -->
+            <div class="content-row">
+                <div class="content-text">
+                    <div class="para-badge">
+                        <i data-lucide="circle" size="8"></i>
+                       Manfaat Pupuk ZA
+                    </div>
+                    <p>
+                        Di banyak daerah pertanian, petani menggunakan pupuk Ammonium Sulfat (ZA) karena dikenal kaya akan unsur nitrogen (N) dan sulfur (S) yang sangat dibutuhkan tanaman untuk pertumbuhan daun dan pembentukan protein. Pupuk ZA juga mudah larut dalam air, sehingga unsur haranya cepat tersedia dan hasil panen dapat meningkat dalam waktu relatif singkat. Karena alasan inilah, pupuk ZA sering digunakan secara rutin, bahkan dalam dosis yang cukup tinggi, terutama pada lahan pertanian intensif.
+                    </p>
+                </div>
+                <!-- Foto 1: ganti src dengan nama file foto kamu -->
+                <div class="photo-box-static">
+                    <img src="Pupuk ZA.jpg" alt="Foto Pupuk ZA"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none; height:180px; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:linear-gradient(135deg,#fef3c7,#fde68a);">
+                        <span style="font-size:3rem;">🌾</span>
+                        <span style="font-size:0.75rem; font-weight:700; color:#92400e; text-align:center; padding:0 12px;">Pupuk ZA (NH₄)₂SO₄<br>Ganti src dengan nama file foto</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PARAGRAF 2 -->
+            <div class="content-row reverse">
+                <div class="content-text">
+                    <div class="para-badge">
+                        <i data-lucide="circle" size="8"></i>
+                       Masalah Jangka Panjang
+                    </div>
+                    <p>
+                        Namun, di balik manfaatnya, mulai muncul permasalahan yang dirasakan petani dalam jangka panjang. Beberapa lahan yang terus-menerus diberi pupuk ZA dilaporkan mengalami penurunan kesuburan tanah. Tanaman menjadi kurang optimal, meskipun pupuk tetap diberikan. Analisis tanah menunjukkan bahwa pH tanah perlahan menurun dan menjadi lebih asam. Kondisi ini dikenal sebagai <em>soil acidification</em>, yaitu peningkatan keasaman tanah yang dapat mengganggu ketersediaan unsur hara penting seperti fosfor, kalsium, dan magnesium.
+                    </p>
+                </div>
+                <!-- Foto 2: ganti src dengan nama file foto kamu -->
+                <div class="photo-box-static">
+                    <img src="Lahan tanah.jpg" alt="Foto Lahan Pertanian"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none; height:180px; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:linear-gradient(135deg,#fee2e2,#fecaca);">
+                        <span style="font-size:3rem;">🌱</span>
+                        <span style="font-size:0.75rem; font-weight:700; color:#991b1b; text-align:center; padding:0 12px;">Lahan Pertanian<br>Ganti src dengan nama file foto</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PARAGRAF 3 -->
+            <div class="content-row">
+                <div class="content-text">
+                    <div class="para-badge">
+                        <i data-lucide="circle" size="8"></i>
+                        Penjelasan Kimia: Hidrolisis Garam
+                    </div>
+                    <p>
+                        ZA merupakan garam yang ketika dilarutkan di dalam air akan terurai menjadi ion-ionnya. Ion amonium (NH₄⁺) dan sulfat (SO₄²⁻) ini berinteraksi dengan molekul air. Ion amonium inilah yang menjadi perhatian utama. Ketika berada di dalam tanah, NH₄⁺ tidak hanya diserap oleh tanaman, tetapi juga berinteraksi dengan air dan mikroorganisme tanah. Proses reaksi antara ion garam dan air inilah yang secara kimia dikenal sebagai <strong>hidrolisis garam</strong>, dan hasil reaksi ini berpengaruh terhadap konsentrasi ion hidrogen dalam larutan tanah.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PERSAMAAN REAKSI ===== -->
+    <div class="slabel" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);border-color:#7c3aed;color:#4c1d95;">
+        <i data-lucide="zap" size="13"></i>
+        Persamaan Reaksi
+    </div>
+    <h2 class="stitle">Ionisasi <span>Pupuk ZA</span> dalam Air</h2>
+
+    <div class="reaksi-card">
+        <div class="reaksi-hdr">
+            <i data-lucide="flask-conical" color="white" size="24"></i>
+            <div>
+                <h3>Persamaan Reaksi Ionisasi (NH₄)₂SO₄</h3>
+                <p>Penguraian garam ZA menjadi ion-ion dalam larutan berair</p>
+            </div>
+        </div>
+        <div class="reaksi-body">
+            <div class="formula-box">
+                <div class="formula-main">
+                    (NH₄)<sub style="font-size:.62em">2</sub>SO₄<sub style="font-size:.62em"><i>(s)</i></sub>
+                    <span class="formula-arrow">⟶</span>
+                    2&thinsp;NH₄<sup style="font-size:.62em">+</sup><sub style="font-size:.62em"><i>(aq)</i></sub>
+                    &nbsp;+&nbsp;
+                    SO₄<sup style="font-size:.62em">2−</sup><sub style="font-size:.62em"><i>(aq)</i></sub>
+                </div>
+            </div>
+
+            <div class="ion-grid">
+                <div class="ion-chip amber">
+                    <div class="ion-sym">NH₄⁺</div>
+                    <div class="ion-nm">Ion Amonium</div>
+                    <div class="ion-ds">Berasal dari basa lemah NH₃ — mengalami <strong>hidrolisis kation</strong>, menghasilkan ion H⁺ sehingga larutan bersifat <strong>asam</strong></div>
+                </div>
+                <div class="ion-chip blue">
+                    <div class="ion-sym">SO₄²⁻</div>
+                    <div class="ion-nm">Ion Sulfat</div>
+                    <div class="ion-ds">Berasal dari asam kuat H₂SO₄ — <strong>tidak terhidrolisis</strong>, tidak mempengaruhi pH larutan</div>
+                </div>
+            </div>
+
+            <div class="source-row">
+                <i data-lucide="book-marked" size="15" style="color:#2563eb;flex-shrink:0;"></i>
+                <span><strong>Sumber:</strong> Nopriani et al., 2023 —</span>
+                <a class="source-link"
+                   href="https://books.google.co.id/books?hl=en&lr=&id=-CO2EAAAQBAJ&oi=fnd&pg=PP1&dq=Penggunaan+pupuk+Ammonium+Sulfat+%28ZA%29+oleh+petani+yang+secara+bertahap+meningkatkan+keasaman+tanah+dan+mengancam+kesuburan+jangka+panjang.&ots=tOHAtA6m2e&sig=A8iwui9D4f2CJ4_o2JEY7hyrw5w&redir_esc=y#v=onepage&q&f=false"
+                   target="_blank" rel="noopener noreferrer">
+                    Buka Referensi di Google Books ↗
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DIVIDER ===== -->
+    <div class="divider">
+        <div class="div-line"></div>
+        <div class="div-dot"></div>
+        <div class="div-text">❓ Pertanyaan Pembelajaran</div>
+        <div class="div-dot"></div>
+        <div class="div-line"></div>
+    </div>
+
+    <!-- ===== PERTANYAAN ACUAN ===== -->
+    <div class="slabel">
+        <i data-lucide="help-circle" size="13"></i>
+        Pertanyaan Acuan
+    </div>
+    <h2 class="stitle">Analisis <span>Dampak Pemupukan</span></h2>
+
+    <div class="pq-card">
+        <div class="pq-hdr pq-blue-h">
+            <div class="pq-ico"><i data-lucide="help-circle" color="white" size="24"></i></div>
+            <div>
+                <div class="pq-lbl">Pertanyaan Acuan</div>
+                <div class="pq-type">Analisis Dampak Kimia pada Tanah</div>
+            </div>
+        </div>
+        <div class="pq-body">
+            <div class="pq-q blue-q">
+                Petani menggunakan pupuk ZA (NH₄)₂SO₄ secara terus-menerus sehingga tanah menjadi semakin asam. Jika suatu saat <strong>jumlah pupuk ZA yang diberikan ditambah</strong>, tetapi <strong>frekuensi pemupukan dibuat lebih jarang</strong>, bagaimana dampaknya terhadap pembentukan ion H⁺ hasil hidrolisis ion NH₄⁺ dan tingkat keasaman tanah?
+            </div>
+            <button class="acc-btn ab-blue" id="btn1" onclick="toggleAcc('a1','btn1')">
+                <i data-lucide="lightbulb" size="16"></i>
+                Tampilkan Petunjuk Berpikir
+                <i data-lucide="chevron-down" size="16" class="acc-chevron"></i>
+            </button>
+            <div class="acc-box blue-box" id="a1">
+                💡 <strong>Petunjuk Berpikir:</strong><br><br>
+                Perhatikan dua variabel yang berubah:<br><br>
+                🔺 <strong>Dosis ditambah</strong> → konsentrasi (NH₄)₂SO₄ per aplikasi lebih tinggi → ion NH₄⁺ yang terbentuk lebih banyak → hidrolisis lebih banyak → ion H⁺ meningkat signifikan → keasaman tanah melonjak tajam setiap pemupukan.<br><br>
+                🔻 <strong>Frekuensi dikurangi</strong> → ada jeda waktu → tanah punya kesempatan pulih (penyerapan H⁺ oleh tanaman, netralisasi alami).<br><br>
+                🔑 <strong>Kesimpulan:</strong> Dosis besar yang jarang menyebabkan <em>lonjakan asam periodik</em> yang dapat lebih merusak dibandingkan dosis kecil yang sering, karena tanaman tidak dapat beradaptasi dengan perubahan pH yang drastis dan tiba-tiba.
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PERTANYAAN IDENTITAS SAINS ===== -->
+    <div class="slabel" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-color:#10b981;color:#065f46;">
+        <i data-lucide="heart" size="13"></i>
+        Identitas Sains
+    </div>
+    <h2 class="stitle">Sikap <span>Ilmiah &amp; Peduli Lingkungan</span></h2>
+
+    <div class="pq-card">
+        <div class="pq-hdr pq-green-h">
+            <div class="pq-ico"><i data-lucide="leaf" color="white" size="24"></i></div>
+            <div>
+                <div class="pq-lbl">Pertanyaan Identitas Sains</div>
+                <div class="pq-type">Etika, Tanggung Jawab &amp; Lingkungan</div>
+            </div>
+        </div>
+        <div class="pq-body">
+            <div class="pq-q green-q">
+                Berdasarkan kasus penggunaan pupuk ZA yang menyebabkan tanah menjadi asam, <strong>sikap apa yang seharusnya dimiliki petani</strong> agar lingkungan tanah tetap sehat dan hasil panen tetap baik?
+            </div>
+            <button class="acc-btn ab-green" id="btn2" onclick="toggleAcc('a2','btn2')">
+                <i data-lucide="heart" size="16"></i>
+                Tampilkan Petunjuk Refleksi
+                <i data-lucide="chevron-down" size="16" class="acc-chevron"></i>
+            </button>
+            <div class="acc-box green-box" id="a2">
+                🌿 <strong>Petunjuk Refleksi:</strong><br><br>
+                Sains bukan hanya tentang pengetahuan, tetapi juga <strong>tanggung jawab</strong>. Seorang petani yang melek sains akan:<br><br>
+                📊 <strong>Memantau pH tanah</strong> secara berkala menggunakan alat uji tanah sederhana agar mengetahui kondisi aktual lahan.<br><br>
+                ⚖️ <strong>Menggunakan dosis optimal</strong> berdasarkan rekomendasi agronomi — tidak berlebihan demi hasil jangka panjang.<br><br>
+                🔄 <strong>Rotasi jenis pupuk</strong> — bergantian dengan pupuk organik atau urea untuk mengurangi akumulasi ion NH₄⁺ di tanah.<br><br>
+                🪨 <strong>Pengapuran lahan</strong> — menambahkan CaCO₃ (kapur pertanian) untuk menetralkan pH tanah yang terlalu asam.<br><br>
+                🌱 <strong>Pertanian berkelanjutan</strong> — mempertimbangkan dampak jangka panjang terhadap ekosistem tanah dan generasi mendatang.
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== KONSEP KUNCI ===== -->
+    <div class="konsep-sec">
+        <div class="slabel" style="background:rgba(245,158,11,0.2);border-color:rgba(245,158,11,0.5);color:#fbbf24;margin-bottom:14px;">
+            <i data-lucide="star" size="13"></i>
+            Kata Kunci Kimia
+        </div>
+        <h2 class="stitle" style="margin-bottom:26px;">
+            Konsep Kunci yang <span>Akan Kamu Pelajari</span>
+        </h2>
+        <div class="k-grid">
+            <div class="k-chip">
+                <div class="k-ico">🧂</div>
+                <div class="k-ttl">Hidrolisis Garam</div>
+                <div class="k-dsc">Reaksi ion garam dengan air yang menghasilkan perubahan sifat keasaman larutan</div>
+            </div>
+            <div class="k-chip">
+                <div class="k-ico">⚗️</div>
+                <div class="k-ttl">Hidrolisis Kation</div>
+                <div class="k-dsc">NH₄⁺ bereaksi dengan air menghasilkan NH₃ dan ion H⁺, membuat larutan bersifat asam</div>
+            </div>
+            <div class="k-chip">
+                <div class="k-ico">📐</div>
+                <div class="k-ttl">Tetapan Hidrolisis (Kh)</div>
+                <div class="k-dsc">Nilai seberapa besar ion garam terhidrolisis, berkaitan dengan Ka, Kb, dan Kw</div>
+            </div>
+            <div class="k-chip">
+                <div class="k-ico">🔢</div>
+                <div class="k-ttl">Perhitungan pH</div>
+                <div class="k-dsc">Menghitung derajat keasaman larutan garam menggunakan rumus yang sistematis</div>
+            </div>
+            <div class="k-chip">
+                <div class="k-ico">🌍</div>
+                <div class="k-ttl">Soil Acidification</div>
+                <div class="k-dsc">Penurunan pH tanah akibat akumulasi ion H⁺ dari proses hidrolisis garam</div>
+            </div>
+            <div class="k-chip">
+                <div class="k-ico">♻️</div>
+                <div class="k-ttl">Green Chemistry</div>
+                <div class="k-dsc">Pendekatan kimia bertanggung jawab — penggunaan pupuk bijak dan berkelanjutan</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CTA ===== -->
+    <div class="cta-wrap">
+        <h2>Siap Mempelajari Teorinya? 🚀</h2>
+        <p>Kamu sudah memahami kasusnya — sekarang saatnya gali konsep ilmiah di balik fenomena ini!</p>
+        <a href="Teori Dasar.html" class="cta-a">
+            <i data-lucide="book-open" size="20"></i>
+            Lanjut ke Teori Dasar →
+        </a>
+    </div>
+
+</div><!-- /wrap -->
+
+<!-- FOOTER -->
+<footer>
+    <div class="foot-in">
+        <i data-lucide="flask-conical" class="foot-spin" size="28"></i>
+        <div>
+            <strong>© 2025 Virtual Chemistry Learning | Hidrolisis Garam</strong><br>
+            Dikembangkan oleh: Putri Ayu Rahmawati – Universitas Negeri Malang
+        </div>
+    </div>
+</footer>
+
+<script>
+    lucide.createIcons();
+
+    function toggleAcc(boxId, btnId) {
+        var box = document.getElementById(boxId);
+        var btn = document.getElementById(btnId);
+        if (box.style.display === 'block') {
+            box.style.display = 'none';
+            btn.classList.remove('open');
+        } else {
+            box.style.display = 'block';
+            btn.classList.add('open');
+        }
+    }
+
+</script>
+</body>
+</html>

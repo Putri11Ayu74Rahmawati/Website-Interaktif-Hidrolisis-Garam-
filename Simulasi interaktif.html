@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulasi Interaktif Hidrolisis Garam | Virtual Chemistry Learning</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+    :root {
+      --blue:#2563eb;--indigo:#4f46e5;--purple:#7c3aed;
+      --green:#10b981;--amber:#f59e0b;--red:#ef4444;
+      --teal:#0891b2;--pink:#ec4899;--cyan:#06b6d4;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#bae6fd 0%,#c7d2fe 18%,#ddd6fe 34%,#fde68a 52%,#bbf7d0 68%,#fda4af 84%,#bae6fd 100%);
+      background-size:400% 400%;
+      animation:bgShift 18s ease infinite;
+      min-height:100vh;overflow-x:hidden;color:#1e293b;
+    }
+    @keyframes bgShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:#e2e8f0}
+    ::-webkit-scrollbar-thumb{background:linear-gradient(var(--blue),var(--purple));border-radius:4px}
+
+    /* ─── HEADER ─── */
+    header{
+      background:rgba(255,255,255,.94);backdrop-filter:blur(20px);
+      border-bottom:2px solid rgba(37,99,235,.1);
+      padding:14px 40px;display:flex;align-items:center;
+      justify-content:space-between;position:sticky;top:0;z-index:200;
+      gap:14px;flex-wrap:wrap;box-shadow:0 4px 24px rgba(37,99,235,.09);
+    }
+    .hdr-left{display:flex;flex-direction:column;gap:4px}
+    .nav-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .back-link{
+      display:inline-flex;align-items:center;gap:5px;
+      color:#2563eb;font-weight:600;font-size:.79rem;text-decoration:none;
+      padding:4px 10px;border-radius:20px;transition:all .25s;
+      background:rgba(37,99,235,.06);border:1px solid rgba(37,99,235,.15);
+    }
+    .back-link:hover{background:rgba(37,99,235,.15);color:#1d4ed8}
+    .nav-sep{color:#94a3b8}
+    .page-title{
+      font-size:1.5rem;font-weight:900;
+      background:linear-gradient(135deg,#2563eb,#7c3aed,#f59e0b,#10b981);
+      background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      animation:gradFlow 6s ease infinite;
+    }
+    @keyframes gradFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    .next-btn{
+      display:inline-flex;align-items:center;gap:8px;
+      background:linear-gradient(135deg,#7c3aed,#2563eb);
+      color:white;font-weight:700;font-size:.88rem;
+      padding:11px 22px;border-radius:13px;text-decoration:none;
+      transition:all .3s;box-shadow:0 4px 18px rgba(124,58,237,.35);
+      position:relative;overflow:hidden;white-space:nowrap;
+    }
+    .next-btn::after{content:'';position:absolute;top:-50%;left:-60%;width:15px;height:200%;background:rgba(255,255,255,.25);transform:rotate(25deg);transition:left .5s}
+    .next-btn:hover::after{left:120%}
+    .next-btn:hover{transform:translateX(4px);box-shadow:0 8px 26px rgba(124,58,237,.5)}
+
+    /* ─── HERO ─── */
+    .hero{
+      padding:42px 40px 32px;text-align:center;position:relative;overflow:hidden;
+      background:linear-gradient(135deg,rgba(37,99,235,.13) 0%,rgba(124,58,237,.1) 30%,rgba(245,158,11,.09) 65%,rgba(16,185,129,.1) 100%);
+      border-bottom:2px solid rgba(37,99,235,.1);
+    }
+    .hero-tag{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);
+      color:#b45309;font-weight:700;font-size:.78rem;
+      padding:5px 15px;border-radius:50px;margin-bottom:13px;
+    }
+    .hero h1{font-size:2.2rem;font-weight:900;color:#0f172a;line-height:1.2;margin-bottom:11px}
+    .hero h1 span{background:linear-gradient(135deg,#2563eb,#7c3aed,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero p{color:#475569;font-size:.93rem;line-height:1.7;max-width:680px;margin:0 auto 20px}
+    .hero-pills{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+    .hpill{
+      display:inline-flex;align-items:center;gap:5px;
+      background:white;border:1px solid rgba(37,99,235,.2);
+      color:#2563eb;font-size:.73rem;font-weight:600;
+      padding:4px 11px;border-radius:50px;
+      box-shadow:0 2px 8px rgba(37,99,235,.08);transition:all .3s;
+    }
+    .hpill:hover{background:rgba(37,99,235,.06)}
+
+    /* ─── MAIN GRID ─── */
+    .main-grid{
+      max-width:1500px;margin:0 auto;padding:20px 20px 80px;
+      display:grid;grid-template-columns:490px 1fr;gap:20px;
+    }
+
+    /* ─── WHITE CARD ─── */
+    .gcard{
+      background:white;border:1.5px solid rgba(37,99,235,.1);
+      border-radius:22px;padding:22px;transition:all .3s;
+      box-shadow:0 4px 20px rgba(37,99,235,.06);position:relative;overflow:hidden;
+    }
+    .gcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,#2563eb,#7c3aed,#f59e0b,#10b981)}
+    .gcard:hover{border-color:rgba(37,99,235,.18);box-shadow:0 8px 32px rgba(37,99,235,.1)}
+    .gcard-title{font-size:.97rem;font-weight:700;color:#0f172a;margin-bottom:15px;display:flex;align-items:center;gap:9px}
+    .ti{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+        background:linear-gradient(135deg,#eff6ff,#dbeafe);color:#2563eb;font-size:.85rem;flex-shrink:0}
+
+    /* ─── ION BUILDER ─── */
+    .ion-builder{background:linear-gradient(135deg,#e0f2fe,#eff6ff,#ede9fe);border-radius:16px;
+      padding:16px;border:1.5px solid rgba(99,102,241,.2);margin-bottom:14px}
+    .ion-section-title{font-size:.76rem;font-weight:700;color:#475569;
+      text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+    .ion-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:7px;margin-bottom:12px}
+    .ion-chip{
+      padding:8px 5px;border-radius:11px;cursor:pointer;transition:all .22s;
+      text-align:center;font-weight:700;font-size:.71rem;
+      border:2px solid rgba(255,255,255,.8);user-select:none;
+      background:linear-gradient(135deg,#f8fafc,#f1f5f9);box-shadow:0 2px 6px rgba(0,0,0,.08);
+    }
+    .ion-chip:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+    .ion-chip.selected-cation{border-color:#2563eb;background:linear-gradient(135deg,#dbeafe,#eff6ff);box-shadow:0 0 0 3px rgba(37,99,235,.2)}
+    .ion-chip.selected-anion{border-color:#7c3aed;background:linear-gradient(135deg,#ede9fe,#f5f3ff);box-shadow:0 0 0 3px rgba(124,58,237,.2)}
+    .ion-chip .isym{font-size:.92rem;font-weight:900;margin-bottom:2px}
+    .ion-chip .iname{font-size:.58rem;color:#64748b;font-weight:600;line-height:1.2}
+    .ion-chip .itype{font-size:.53rem;font-weight:700;padding:1px 5px;border-radius:20px;margin-top:3px;display:inline-block}
+    .tbk{background:#dbeafe;color:#1e40af} .tbl{background:#ede9fe;color:#5b21b6}
+    .tak{background:#fee2e2;color:#991b1b} .tal{background:#fef3c7;color:#854d0e}
+
+    /* ─── SELECTED DISPLAY ─── */
+    .selected-display{
+      background:linear-gradient(135deg,#f0f9ff,#faf5ff,#fffbeb);border-radius:13px;padding:14px;
+      border:1.5px solid rgba(99,102,241,.15);
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      margin-bottom:12px;min-height:62px;
+    }
+    .sel-slot{flex:1;min-width:110px;padding:10px 14px;border-radius:10px;text-align:center;
+      border:2px dashed #cbd5e1;background:#f8fafc;transition:all .3s}
+    .sel-slot.fc{border-color:#2563eb;background:#eff6ff;border-style:solid}
+    .sel-slot.fa{border-color:#7c3aed;background:#f5f3ff;border-style:solid}
+    .sel-slot .slbl{font-size:.65rem;color:#64748b;font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
+    .sel-slot .sval{font-size:1rem;font-weight:900;color:#0f172a}
+    .splus,.seq{font-size:1.4rem;font-weight:900;color:#94a3b8}
+    .ssalt{font-size:.85rem;font-weight:700;color:#475569;min-width:80px;text-align:center}
+
+    /* ─── REACT BUTTON ─── */
+    .react-btn{
+      width:100%;padding:13px;border:none;border-radius:13px;
+      background:linear-gradient(135deg,#2563eb,#7c3aed);
+      color:white;font-family:'Poppins',sans-serif;font-weight:700;font-size:.95rem;
+      cursor:pointer;transition:all .3s;box-shadow:0 4px 18px rgba(37,99,235,.3);
+      display:flex;align-items:center;justify-content:center;gap:9px;
+      position:relative;overflow:hidden;margin-bottom:10px;
+    }
+    .react-btn::after{content:'';position:absolute;top:-50%;left:-60%;width:15px;height:200%;background:rgba(255,255,255,.25);transform:rotate(25deg);transition:left .5s}
+    .react-btn:hover::after{left:120%}
+    .react-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(37,99,235,.4)}
+    .react-btn:disabled{background:#94a3b8;box-shadow:none;cursor:not-allowed;transform:none}
+
+    /* ─── RESULT REVEAL ─── */
+    .result-reveal{border-radius:16px;padding:18px;border:2px solid transparent;
+      transition:all .5s;display:none;animation:slideUp .5s ease-out}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .result-reveal.show{display:block}
+    .rr-netral{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#3b82f6}
+    .rr-asam  {background:linear-gradient(135deg,#fef2f2,#fee2e2);border-color:#ef4444}
+    .rr-basa  {background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:#10b981}
+    .rr-total {background:linear-gradient(135deg,#faf5ff,#ede9fe);border-color:#7c3aed}
+    .res-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+    .res-badge{padding:5px 14px;border-radius:50px;font-size:.75rem;font-weight:800;letter-spacing:.05em}
+    .res-title{font-size:.95rem;font-weight:800;color:#0f172a}
+    .res-eq{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;
+      padding:10px 14px;border-radius:10px;margin:10px 0;line-height:1.7;
+      background:rgba(255,255,255,.75);white-space:pre-line}
+    .res-explain{font-size:.79rem;color:#475569;line-height:1.75;white-space:pre-line}
+    .eq-box{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;
+      padding:12px 15px;border-radius:11px;line-height:1.7;word-break:break-word;white-space:pre-line;
+      background:linear-gradient(135deg,#f0f9ff,#eff6ff);border:1.5px solid rgba(37,99,235,.18);color:#1e40af}
+
+    /* ─── SLIDERS ─── */
+    .slwrap{margin-bottom:14px}
+    .slwrap label{display:block;font-size:.8rem;font-weight:600;color:#475569;margin-bottom:7px}
+    .slval{color:#2563eb;font-weight:800}
+    input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:7px;border-radius:50px;outline:none;cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+      background:white;border:3px solid #2563eb;box-shadow:0 2px 8px rgba(37,99,235,.4);cursor:pointer}
+    .sl-conc{background:linear-gradient(to right,#bfdbfe,#3b82f6)}
+    .sl-temp{background:linear-gradient(to right,#bae6fd,#fbbf24,#ef4444)}
+
+    /* ─── CTRL BUTTONS ─── */
+    .ctrl-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:12px}
+    .ctrl-btn{
+      padding:11px 6px;border:none;border-radius:11px;
+      font-family:'Poppins',sans-serif;font-weight:700;font-size:.8rem;
+      cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:5px;
+      position:relative;overflow:hidden;
+    }
+    .ctrl-btn::after{content:'';position:absolute;top:-50%;left:-60%;width:13px;height:200%;background:rgba(255,255,255,.35);transform:rotate(25deg);transition:left .4s}
+    .ctrl-btn:hover::after{left:120%}
+    .btn-start{background:linear-gradient(135deg,#10b981,#059669);color:white;box-shadow:0 3px 12px rgba(16,185,129,.3)}
+    .btn-pause{background:linear-gradient(135deg,#f59e0b,#d97706);color:white;box-shadow:0 3px 12px rgba(245,158,11,.3)}
+    .btn-reset{background:linear-gradient(135deg,#ef4444,#dc2626);color:white;box-shadow:0 3px 12px rgba(239,68,68,.3)}
+    .ctrl-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+    .speed-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .speed-row span{font-size:.8rem;font-weight:600;color:#475569}
+    .spsel{padding:7px 12px;border-radius:9px;border:1.5px solid rgba(37,99,235,.2);
+      background:white;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;color:#0f172a;cursor:pointer}
+    .spsel:focus{outline:none;border-color:#2563eb}
+    .zoom-btns{display:flex;gap:6px;margin-left:auto}
+    .zoom-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid rgba(37,99,235,.2);
+      background:white;color:#2563eb;font-size:.82rem;font-weight:700;
+      cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+    .zoom-btn:hover{background:#eff6ff;transform:scale(1.08)}
+
+    /* ─── STATS ─── */
+    .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    .stat-card{background:linear-gradient(135deg,#f8fafc,#eff6ff);
+      border:1.5px solid rgba(37,99,235,.1);border-radius:12px;padding:12px;text-align:center}
+    .sv{font-size:1.35rem;font-weight:900}
+    .sl2{font-size:.68rem;color:#64748b;margin-top:2px}
+
+    /* ─── pH CARD ─── */
+    .ph-big-card{
+      background:linear-gradient(135deg,#1e3a8a,#312e81,#4c1d95);
+      border-radius:16px;padding:18px;text-align:center;margin-bottom:11px;
+      position:relative;overflow:hidden;
+    }
+    .ph-big-card::before{content:'pH';position:absolute;font-size:5rem;font-weight:900;
+      right:-10px;bottom:-16px;opacity:.08;color:white;pointer-events:none}
+    .ph-lbl{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.6);
+      text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+    .ph-num{font-size:2.8rem;font-weight:900;color:white;line-height:1;margin-bottom:4px}
+    .ph-bar-wrap{height:9px;border-radius:50px;
+      background:linear-gradient(to right,#ef4444,#f59e0b,#fbbf24,#34d399,#3b82f6,#7c3aed);
+      margin-top:10px;position:relative}
+    .ph-ind{position:absolute;top:-4px;width:17px;height:17px;border-radius:50%;background:white;
+      box-shadow:0 2px 8px rgba(0,0,0,.4);transform:translateX(-50%);
+      transition:left .8s cubic-bezier(.34,1.56,.64,1);border:2px solid #1e293b}
+    .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+    .res-mini{background:#f8fafc;border:1.5px solid rgba(37,99,235,.1);border-radius:12px;padding:12px}
+    .res-mini h5{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+    .res-mini p{font-size:.88rem;font-weight:700}
+
+    /* ─── LEGEND ─── */
+    .lgnd-section{margin-bottom:16px}
+    .lgnd-header{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+      margin-bottom:8px;padding:5px 10px;border-radius:7px}
+    .legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .legend-item{
+      display:flex;align-items:center;gap:8px;padding:7px 10px;
+      border-radius:9px;background:#f8fafc;border:1.5px solid rgba(37,99,235,.07);
+      transition:all .2s;cursor:default;
+    }
+    .legend-item:hover{background:#eff6ff;transform:translateX(3px)}
+    .ldot{width:24px;height:24px;min-width:24px;border-radius:50%;
+      border:2px solid rgba(0,0,0,.08);display:flex;align-items:center;
+      justify-content:center;font-size:.55rem;font-weight:900;color:white;text-align:center;line-height:1}
+    .lt h5{font-size:.74rem;font-weight:700;color:#0f172a}
+    .lt p{font-size:.63rem;color:#64748b;line-height:1.3}
+
+    /* ─── ACCORDIONS ─── */
+    .info-acc{border-radius:12px;overflow:hidden;margin-bottom:7px;border:1.5px solid rgba(37,99,235,.1)}
+    .info-trigger{
+      width:100%;padding:12px 15px;border:none;background:#f8fafc;
+      display:flex;align-items:center;gap:9px;cursor:pointer;
+      font-family:'Poppins',sans-serif;font-weight:600;font-size:.83rem;
+      color:#0f172a;text-align:left;transition:all .3s;
+    }
+    .info-trigger:hover{background:#eff6ff}
+    .info-trigger.open{background:#dbeafe;color:#1e40af}
+    .acc-chev{margin-left:auto;transition:transform .3s;font-size:.72rem;color:#94a3b8}
+    .info-trigger.open .acc-chev{transform:rotate(180deg);color:#2563eb}
+    .info-body{display:none;padding:0 15px 14px;background:#f0f9ff}
+    .info-body.open{display:block;animation:fuUp .3s ease-out}
+    @keyframes fuUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+    .info-body p{font-size:.8rem;color:#475569;line-height:1.8;margin-bottom:7px}
+    .info-body ul{font-size:.78rem;color:#475569;line-height:1.85;padding-left:15px}
+    .info-body li{margin-bottom:3px}
+
+    /* ─── VIDEO ─── */
+    .vid-card{border-radius:16px;overflow:hidden;border:2px solid rgba(37,99,235,.1);
+      background:white;transition:all .3s;box-shadow:0 4px 14px rgba(37,99,235,.07)}
+    .vid-card:hover{border-color:rgba(37,99,235,.25);transform:translateY(-3px);box-shadow:0 12px 28px rgba(37,99,235,.12)}
+    .vid-card.vactive{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+    .vid-hdr{padding:13px 15px 9px;display:flex;align-items:center;gap:9px}
+    .vid-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+    .vid-hdr h4{font-size:.86rem;font-weight:700;color:#0f172a}
+    .vid-hdr p{font-size:.72rem;color:#64748b;margin-top:1px}
+    .vid-frame{padding:0 13px 13px}
+    .vid-frame iframe{width:100%;aspect-ratio:16/9;border-radius:11px;border:none;display:block}
+
+    /* ─── COLOURFUL CARD VARIANTS ─── */
+    .gcard-blue   { background:linear-gradient(135deg,#eff6ff,#dbeafe,#e0e7ff) !important; border-color:rgba(37,99,235,.22) !important; }
+    .gcard-purple { background:linear-gradient(135deg,#faf5ff,#ede9fe,#f5f3ff) !important; border-color:rgba(124,58,237,.22) !important; }
+    .gcard-green  { background:linear-gradient(135deg,#f0fdf4,#dcfce7,#d1fae5) !important; border-color:rgba(16,185,129,.22) !important; }
+    .gcard-amber  { background:linear-gradient(135deg,#fffbeb,#fef3c7,#fed7aa) !important; border-color:rgba(245,158,11,.22) !important; }
+    .gcard-teal   { background:linear-gradient(135deg,#f0fdfa,#ccfbf1,#a7f3d0) !important; border-color:rgba(13,148,136,.22) !important; }
+    .gcard-indigo { background:linear-gradient(135deg,#eef2ff,#e0e7ff,#ddd6fe) !important; border-color:rgba(79,70,229,.22) !important; }
+    .gcard-pink   { background:linear-gradient(135deg,#fff1f2,#fce7f3,#f5d0fe) !important; border-color:rgba(236,72,153,.22) !important; }
+    .gcard-cyan   { background:linear-gradient(135deg,#ecfeff,#cffafe,#a5f3fc) !important; border-color:rgba(6,182,212,.22) !important; }
+    .gcard-lime   { background:linear-gradient(135deg,#f7fee7,#ecfccb,#d9f99d) !important; border-color:rgba(101,163,13,.22) !important; }
+    .gcard-rose   { background:linear-gradient(135deg,#fff1f2,#ffe4e6,#fecdd3) !important; border-color:rgba(244,63,94,.22) !important; }
+
+    /* ─── CANVAS ─── */
+    #simCanvas{display:block;width:100%;border-radius:16px;cursor:grab;
+      border:2px solid rgba(37,99,235,.15);}
+    #simCanvas:active{cursor:grabbing}
+    #flashLayer{position:absolute;top:0;left:0;width:100%;height:100%;
+      pointer-events:none;overflow:hidden;border-radius:16px}
+    .rflash{position:absolute;border-radius:50%;pointer-events:none;animation:rfa .75s ease-out forwards}
+    @keyframes rfa{0%{transform:scale(.15);opacity:1}100%{transform:scale(3.5);opacity:0}}
+
+    /* ─── TOOLTIP ─── */
+    #tooltipBox{
+      position:fixed;background:rgba(15,23,42,.94);color:white;
+      padding:9px 13px;border-radius:11px;font-size:.8rem;font-weight:600;
+      pointer-events:none;z-index:9999;backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 18px rgba(0,0,0,.3);
+      display:none;max-width:210px;
+    }
+
+    /* ─── TABLE ─── */
+    .sum-table{width:100%;border-collapse:collapse;font-size:.78rem}
+    .sum-table thead tr{background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(124,58,237,.08))}
+    .sum-table th{padding:10px 12px;text-align:left;color:#0f172a;font-weight:700;border-bottom:2px solid rgba(37,99,235,.12)}
+    .sum-table td{padding:9px 12px;border-bottom:1px solid rgba(37,99,235,.06);color:#475569}
+    .sum-table tr:hover td{background:rgba(37,99,235,.03)}
+
+    /* ─── FOOTER ─── */
+    footer{padding:30px 40px;background:linear-gradient(135deg,#1e40af,#7c3aed);text-align:center}
+    .foot-in{display:flex;align-items:center;justify-content:center;gap:12px;color:white;font-size:.86rem}
+    .spin{animation:spn 5s linear infinite;display:inline-block}
+    @keyframes spn{to{transform:rotate(360deg)}}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+    @media(max-width:1200px){.main-grid{grid-template-columns:1fr}}
+    @media(max-width:700px){
+      header{padding:12px 16px}
+      .hero{padding:28px 16px 24px}.hero h1{font-size:1.65rem}
+      .main-grid{padding:14px 14px 60px}
+      .results-grid,.stats-row{grid-template-columns:1fr}
+      .legend-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-left">
+    <div class="nav-links">
+      <a href="index.html" class="back-link"><i class="fas fa-home" style="font-size:11px"></i> Landing</a>
+      <span class="nav-sep">/</span>
+      <a href="Masalah Pada Case.html" class="back-link"><i class="fas fa-exclamation-circle" style="font-size:11px"></i> Masalah</a>
+      <span class="nav-sep">/</span>
+      <a href="Teori Dasar.html" class="back-link"><i class="fas fa-book-open" style="font-size:11px"></i> Teori Dasar</a>
+    </div>
+    <div class="page-title">⚗️ Simulasi Interaktif Hidrolisis Garam</div>
+  </div>
+  <a href="Solusi Case.html" class="next-btn">
+    <i class="fas fa-lightbulb"></i><span>Solusi Case</span><i class="fas fa-arrow-right"></i>
+  </a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag"><i class="fas fa-atom"></i> Simulasi Interaktif Molekuler</div>
+  <h1>Simulasi <span>Mekanisme Hidrolisis</span> Garam</h1>
+  <p>Pilih kation dan anion sendiri, prediksi jenis hidrolisis yang terjadi, lalu lihat hasilnya! Amati reaksi ion garam dengan air pada skala <strong>mikroskopik real-time</strong>.</p>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+  <!-- ════════ LEFT COLUMN ════════ -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+
+    <!-- ION BUILDER -->
+    <div class="gcard gcard-indigo">
+      <div class="gcard-title"><div class="ti"><i class="fas fa-puzzle-piece"></i></div>🧪 Bangun Garammu Sendiri!</div>
+      <p style="font-size:.8rem;color:#64748b;margin-bottom:14px;line-height:1.6">Pilih <strong style="color:#2563eb">satu kation</strong> dan <strong style="color:#7c3aed">satu anion</strong>, lalu tekan <strong style="color:#2563eb">"Reaksikan!"</strong> — coba tebak dulu jenis hidrolisisnya! 🤔</p>
+
+      <div class="ion-builder">
+        <!-- KATION -->
+        <div class="ion-section-title">
+          <span style="background:#dbeafe;color:#1e40af;padding:2px 9px;border-radius:20px">⊕ KATION (ion positif)</span>
+          <span style="font-size:.65rem;color:#94a3b8">BK = Basa Kuat &nbsp;|&nbsp; BL = Basa Lemah</span>
+        </div>
+        <div class="ion-grid" id="cationGrid"></div>
+
+        <!-- ANION -->
+        <div class="ion-section-title">
+          <span style="background:#ede9fe;color:#5b21b6;padding:2px 9px;border-radius:20px">⊖ ANION (ion negatif)</span>
+          <span style="font-size:.65rem;color:#94a3b8">AK = Asam Kuat &nbsp;|&nbsp; AL = Asam Lemah</span>
+        </div>
+        <div class="ion-grid" id="anionGrid"></div>
+      </div>
+
+      <!-- SELECTED DISPLAY -->
+      <div class="selected-display">
+        <div class="sel-slot" id="slotCation">
+          <div class="slbl">Kation</div>
+          <div class="sval" id="slotCatVal" style="color:#94a3b8">—</div>
+        </div>
+        <div class="splus">+</div>
+        <div class="sel-slot" id="slotAnion">
+          <div class="slbl">Anion</div>
+          <div class="sval" id="slotAniVal" style="color:#94a3b8">—</div>
+        </div>
+        <div class="seq">→</div>
+        <div class="ssalt" id="selSaltName" style="color:#94a3b8;font-size:.78rem">Pilih ion<br>terlebih dahulu</div>
+      </div>
+
+      <!-- REACT BUTTON -->
+      <button class="react-btn" id="reactBtn" onclick="doReact()" disabled>
+        <i class="fas fa-flask"></i> Reaksikan &amp; Lihat Hasilnya!
+      </button>
+
+      <!-- RESULT REVEAL -->
+      <div class="result-reveal" id="resultReveal">
+        <div class="res-header">
+          <span class="res-badge" id="resBadge"></span>
+          <span class="res-title" id="resTitle"></span>
+        </div>
+        <div class="res-eq" id="resEq"></div>
+        <div class="res-explain" id="resExplain"></div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,.08)">
+          <p style="font-size:.72rem;color:#64748b;font-weight:600;margin-bottom:5px"><i class="fas fa-ruler" style="color:#f59e0b;margin-right:4px"></i> Rumus pH:</p>
+          <div class="eq-box" id="resRumus" style="font-size:.77rem"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARAMETERS -->
+    <div class="gcard gcard-cyan">
+      <div class="gcard-title"><div class="ti"><i class="fas fa-sliders-h"></i></div>Kontrol Parameter Larutan</div>
+      <div class="slwrap">
+        <label>Konsentrasi Garam: <span class="slval" id="concVal">0.10 M</span></label>
+        <input type="range" id="concSl" class="sl-conc" min="0.01" max="1.00" step="0.01" value="0.10" oninput="onConc(this)">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;color:#94a3b8;margin-top:3px"><span>0.01 M</span><span>1.00 M</span></div>
+      </div>
+      <div class="slwrap" style="margin-bottom:0">
+        <label>Suhu Larutan: <span class="slval" id="tempVal">25 °C</span></label>
+        <input type="range" id="tempSl" class="sl-temp" min="10" max="60" step="1" value="25" oninput="onTemp(this)">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;color:#94a3b8;margin-top:3px"><span>10°C</span><span>60°C</span></div>
+      </div>
+    </div>
+
+    <!-- SIM CONTROLS -->
+    <div class="gcard gcard-lime">
+      <div class="gcard-title"><div class="ti"><i class="fas fa-gamepad"></i></div>Kontrol Simulasi Molekuler</div>
+      <div class="ctrl-btns">
+        <button class="ctrl-btn btn-start" onclick="startSim()"><i class="fas fa-play"></i> Start</button>
+        <button class="ctrl-btn btn-pause" onclick="pauseSim()"><i class="fas fa-pause"></i> Pause</button>
+        <button class="ctrl-btn btn-reset" onclick="resetSim()"><i class="fas fa-redo"></i> Reset</button>
+      </div>
+      <div class="speed-row">
+        <span><i class="fas fa-tachometer-alt"></i> Kecepatan:</span>
+        <select class="spsel" id="speedSel" onchange="onSpeed(this)">
+          <option value="0.4">🐢 Sangat Lambat</option>
+          <option value="0.7">🐌 Lambat</option>
+          <option value="1.0" selected>🚶 Sedang</option>
+          <option value="1.6">🏃 Cepat</option>
+          <option value="2.4">⚡ Sangat Cepat</option>
+        </select>
+        <div class="zoom-btns">
+          <button class="zoom-btn" onclick="adjZoom(.25)">+</button>
+          <button class="zoom-btn" onclick="adjZoom(-.25)">−</button>
+          <button class="zoom-btn" onclick="resetView()" style="font-size:.6rem">⌂</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- pH RESULTS -->
+    <div class="gcard gcard-blue">
+      <div class="gcard-title"><div class="ti"><i class="fas fa-chart-bar"></i></div>Hasil Analisis pH Real-Time</div>
+      <div class="ph-big-card">
+        <div class="ph-lbl">Nilai pH Larutan</div>
+        <div class="ph-num" id="phNum">7.00</div>
+        <div style="font-size:.8rem;font-weight:700;color:rgba(255,255,255,.7)" id="phSifat">⚖️ Netral</div>
+        <div class="ph-bar-wrap"><div class="ph-ind" id="phInd" style="left:50%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:.62rem;color:rgba(255,255,255,.35);margin-top:4px">
+          <span>0</span><span>3.5</span><span>7</span><span>10.5</span><span>14</span>
+        </div>
+      </div>
+      <div class="results-grid">
+        <div class="res-mini" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:rgba(37,99,235,.2)"><h5>Sifat Larutan</h5><p id="resType" style="color:#2563eb">Netral</p></div>
+        <div class="res-mini" style="background:linear-gradient(135deg,#faf5ff,#ede9fe);border-color:rgba(124,58,237,.2)"><h5>Jenis Hidrolisis</h5><p id="resHydro" style="color:#7c3aed">Tidak Ada</p></div>
+        <div class="res-mini" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:rgba(245,158,11,.2)"><h5>[H⁺] (M)</h5><p id="resHp" style="color:#b45309;font-family:monospace;font-size:.82rem">1.00×10⁻⁷</p></div>
+        <div class="res-mini" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:rgba(16,185,129,.2)"><h5>[OH⁻] (M)</h5><p id="resOH" style="color:#059669;font-family:monospace;font-size:.82rem">1.00×10⁻⁷</p></div>
+      </div>
+      <div style="margin-top:10px">
+        <p style="font-size:.72rem;color:#64748b;margin-bottom:5px;font-weight:600"><i class="fas fa-code" style="color:#0891b2;margin-right:4px"></i> Persamaan Hidrolisis:</p>
+        <div class="eq-box" id="eqBox" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:rgba(37,99,235,.25);color:#1e40af">Tidak ada reaksi hidrolisis (ion spektator)</div>
+      </div>
+      <div style="margin-top:9px">
+        <p style="font-size:.72rem;color:#64748b;margin-bottom:5px;font-weight:600"><i class="fas fa-ruler" style="color:#f59e0b;margin-right:4px"></i> Rumus pH:</p>
+        <div class="eq-box" id="rumusBox" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:rgba(245,158,11,.3);color:#92400e">pH = 7 &nbsp;(asam kuat + basa kuat)</div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="gcard gcard-amber">
+      <div class="gcard-title"><div class="ti"><i class="fas fa-chart-line"></i></div>Statistik Simulasi Real-Time</div>
+      <div class="stats-row">
+        <div class="stat-card" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:rgba(245,158,11,.25)"><div class="sv" id="stColl" style="color:#d97706">0</div><div class="sl2">Tumbukan</div></div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:rgba(37,99,235,.25)"><div class="sv" id="stPart" style="color:#2563eb">0</div><div class="sl2">Partikel</div></div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:rgba(16,185,129,.25)"><div class="sv" id="stReact" style="color:#059669">0</div><div class="sl2">Reaksi</div></div>
+      </div>
+      <div style="margin-top:10px;display:flex;justify-content:space-between">
+        <span style="font-size:.72rem;color:#94a3b8" id="stZoom">Zoom: 1.0×</span>
+        <span style="font-size:.72rem;color:#94a3b8" id="stFPS">FPS: --</span>
+        <span style="font-size:.72rem;color:#94a3b8" id="stTemp">T: 25°C</span>
+      </div>
+    </div>
+
+    <!-- LEGEND (FULL) -->
+    <div class="gcard gcard-purple">
+      <div class="gcard-title"><div class="ti"><i class="fas fa-palette"></i></div>Legenda Warna Partikel Mikroskopik</div>
+
+      <!-- Molekul Air & Produk -->
+      <div class="lgnd-section">
+        <div class="lgnd-header" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);color:#1e40af">
+          💧 Molekul Air &amp; Produk Hidrolisis
+        </div>
+        <div class="legend-grid">
+          <div class="legend-item" style="border-left:3px solid #3b82f6">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,rgba(147,197,253,.9),rgba(29,78,216,.8))">H₂O</div>
+            <div class="lt"><h5>H₂O</h5><p>Molekul Air (pelarut)</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #f59e0b">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fde68a,#b45309);box-shadow:0 0 6px rgba(245,158,11,.5)">H⁺</div>
+            <div class="lt"><h5 style="color:#b45309">H⁺ / H₃O⁺</h5><p style="color:#b45309;font-weight:700">Produk → Larutan Asam ✨</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #10b981">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#6ee7b7,#047857);box-shadow:0 0 6px rgba(16,185,129,.5)">OH⁻</div>
+            <div class="lt"><h5 style="color:#047857">OH⁻</h5><p style="color:#047857;font-weight:700">Produk → Larutan Basa ✨</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #c2410c">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fed7aa,#c2410c)">HA</div>
+            <div class="lt"><h5>Asam Lemah</h5><p>Produk hidrolisis anion</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #15803d">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#bbf7d0,#166534)">BOH</div>
+            <div class="lt"><h5>Basa Lemah</h5><p>Produk hidrolisis kation</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kation dari Basa Kuat -->
+      <div class="lgnd-section">
+        <div class="lgnd-header" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e40af">
+          ⊕ Kation dari Basa KUAT — Spektator (tidak bereaksi dengan air)
+        </div>
+        <div class="legend-grid">
+          <div class="legend-item" style="border-left:3px solid #3b82f6">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#93c5fd,#1d4ed8)">Na⁺</div>
+            <div class="lt"><h5>Na⁺</h5><p>Natrium — NaOH</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #0891b2">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#a5f3fc,#0e7490)">K⁺</div>
+            <div class="lt"><h5>K⁺</h5><p>Kalium — KOH</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #4f46e5">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#c7d2fe,#4338ca)">Ca²⁺</div>
+            <div class="lt"><h5>Ca²⁺</h5><p>Kalsium — Ca(OH)₂</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #7c3aed">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#e9d5ff,#6d28d9)">Ba²⁺</div>
+            <div class="lt"><h5>Ba²⁺</h5><p>Barium — Ba(OH)₂</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #0d9488">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#99f6e4,#0f766e)">Mg²⁺</div>
+            <div class="lt"><h5>Mg²⁺</h5><p>Magnesium — Mg(OH)₂</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kation dari Basa Lemah -->
+      <div class="lgnd-section">
+        <div class="lgnd-header" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#5b21b6">
+          ⊕ Kation dari Basa LEMAH — Bereaksi → menghasilkan H⁺
+        </div>
+        <div class="legend-grid">
+          <div class="legend-item" style="border-left:3px solid #7c3aed">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#c4b5fd,#6d28d9)">NH₄⁺</div>
+            <div class="lt"><h5>NH₄⁺</h5><p>Amonium — NH₃·H₂O</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #d97706">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fde68a,#b45309)">Fe³⁺</div>
+            <div class="lt"><h5>Fe³⁺</h5><p>Besi(III) — Fe(OH)₃</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #64748b">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#e2e8f0,#475569)">Al³⁺</div>
+            <div class="lt"><h5>Al³⁺</h5><p>Aluminium — Al(OH)₃</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #0e7490">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#67e8f9,#0c4a6e)">Cu²⁺</div>
+            <div class="lt"><h5>Cu²⁺</h5><p>Tembaga(II) — Cu(OH)₂</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #78716c">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#d4d4d4,#57534e)">Zn²⁺</div>
+            <div class="lt"><h5>Zn²⁺</h5><p>Seng — Zn(OH)₂</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #4b5563">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#9ca3af,#374151)">Pb²⁺</div>
+            <div class="lt"><h5>Pb²⁺</h5><p>Timbal(II) — Pb(OH)₂</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #92400e">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fbbf24,#92400e)">Fe²⁺</div>
+            <div class="lt"><h5>Fe²⁺</h5><p>Besi(II) — Fe(OH)₂</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anion dari Asam Kuat -->
+      <div class="lgnd-section">
+        <div class="lgnd-header" style="background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b">
+          ⊖ Anion dari Asam KUAT — Spektator (tidak bereaksi dengan air)
+        </div>
+        <div class="legend-grid">
+          <div class="legend-item" style="border-left:3px solid #ef4444">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fca5a5,#b91c1c)">Cl⁻</div>
+            <div class="lt"><h5>Cl⁻</h5><p>Klorida — HCl</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #dc2626">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fca5a5,#991b1b)">NO₃⁻</div>
+            <div class="lt"><h5>NO₃⁻</h5><p>Nitrat — HNO₃</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #be123c">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fda4af,#9f1239)">SO₄²⁻</div>
+            <div class="lt"><h5>SO₄²⁻</h5><p>Sulfat — H₂SO₄</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #be185d">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fbcfe8,#9d174d)">Br⁻</div>
+            <div class="lt"><h5>Br⁻</h5><p>Bromida — HBr</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #7c3aed">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#ddd6fe,#5b21b6)">I⁻</div>
+            <div class="lt"><h5>I⁻</h5><p>Iodida — HI</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anion dari Asam Lemah -->
+      <div class="lgnd-section" style="margin-bottom:0">
+        <div class="lgnd-header" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#15803d">
+          ⊖ Anion dari Asam LEMAH — Bereaksi → menghasilkan OH⁻
+        </div>
+        <div class="legend-grid">
+          <div class="legend-item" style="border-left:3px solid #7c3aed">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#ddd6fe,#6d28d9)">Ac⁻</div>
+            <div class="lt"><h5>CH₃COO⁻</h5><p>Asetat — CH₃COOH</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #059669">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#a7f3d0,#065f46)">CN⁻</div>
+            <div class="lt"><h5>CN⁻</h5><p>Sianida — HCN</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #0891b2">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#bae6fd,#0369a1)">F⁻</div>
+            <div class="lt"><h5>F⁻</h5><p>Fluorida — HF</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #65a30d">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#d9f99d,#4d7c0f)">HCO₃⁻</div>
+            <div class="lt"><h5>HCO₃⁻</h5><p>Bikarbonat — H₂CO₃</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #d97706">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#fde68a,#d97706)">S²⁻</div>
+            <div class="lt"><h5>S²⁻</h5><p>Sulfida — H₂S</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #0d9488">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#99f6e4,#134e4a)">NO₂⁻</div>
+            <div class="lt"><h5>NO₂⁻</h5><p>Nitrit — HNO₂</p></div>
+          </div>
+          <div class="legend-item" style="border-left:3px solid #9333ea">
+            <div class="ldot" style="background:radial-gradient(circle at 35% 35%,#e9d5ff,#7e22ce)">HCOO⁻</div>
+            <div class="lt"><h5>HCOO⁻</h5><p>Format — HCOOH</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left col -->
+
+  <!-- ════════ RIGHT COLUMN ════════ -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+
+    <!-- CANVAS CARD -->
+    <div class="gcard" style="padding:0;overflow:hidden">
+      <div style="padding:16px 20px 12px;border-bottom:1.5px solid rgba(37,99,235,.08);
+                  display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#ede9fe,#dbeafe);
+                      display:flex;align-items:center;justify-content:center">
+            <i class="fas fa-microscope" style="color:#7c3aed;font-size:.85rem"></i>
+          </div>
+          <div>
+            <h3 style="font-size:.97rem;font-weight:700;color:#0f172a">Visualisasi Mikroskopik Interaktif</h3>
+            <p style="font-size:.7rem;color:#64748b">Scroll = zoom • Drag = geser • Hover = info partikel</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <div style="width:10px;height:10px;border-radius:50%;background:#ef4444"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#10b981"></div>
+        </div>
+      </div>
+      <div style="position:relative;padding:14px">
+        <canvas id="simCanvas" width="700" height="520"></canvas>
+        <div id="flashLayer"></div>
+        <!-- HUD top -->
+        <div style="position:absolute;top:24px;left:24px;right:24px;display:flex;justify-content:space-between;pointer-events:none;z-index:10">
+          <div style="background:rgba(0,0,0,.7);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);
+                      border-radius:7px;padding:4px 11px;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.85);
+                      display:flex;align-items:center;gap:5px">
+            <div id="simDot" style="width:7px;height:7px;border-radius:50%;background:#10b981;animation:blink 1.5s ease-in-out infinite"></div>
+            <span id="simLabel">Pilih ion untuk memulai simulasi</span>
+          </div>
+          <div style="background:rgba(0,0,0,.7);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);
+                      border-radius:7px;padding:4px 11px;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.85)">
+            <span id="hudZoom">1.0×</span>
+          </div>
+        </div>
+        <!-- pH overlay bottom-right -->
+        <div style="position:absolute;bottom:24px;right:24px;background:rgba(0,0,0,.8);
+                    backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);
+                    border-radius:12px;padding:10px 16px;text-align:center;pointer-events:none">
+          <div style="font-size:.58rem;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase">pH</div>
+          <div id="phMini" style="font-size:1.8rem;font-weight:900;color:white;line-height:1">7.00</div>
+        </div>
+      </div>
+      <div style="padding:10px 20px;display:flex;justify-content:space-between;border-top:1.5px solid rgba(37,99,235,.06)">
+        <span style="font-size:.72rem;color:#94a3b8" id="hudColl">Tumbukan: 0</span>
+        <span style="font-size:.72rem;color:#94a3b8" id="hudPart">Partikel: 0</span>
+        <span style="font-size:.72rem;color:#94a3b8" id="hudReact">Reaksi: 0</span>
+        <span style="font-size:.72rem;color:#94a3b8" id="hudFPS">FPS: --</span>
+      </div>
+    </div>
+
+    <!-- QUICK GUIDE -->
+    <div class="gcard gcard-rose">
+      <div class="gcard-title"><div class="ti"><i class="fas fa-info-circle"></i></div>Panduan Cepat Simulasi</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:11px;background:white;border-radius:10px;border-left:3px solid #10b981;box-shadow:0 2px 8px rgba(16,185,129,.1)">
+          <p style="font-size:.72rem;font-weight:700;color:#047857;margin-bottom:4px"><i class="fas fa-circle"></i> Flash Hijau</p>
+          <p style="font-size:.7rem;color:#475569">Reaksi menghasilkan OH⁻ — larutan basa terbentuk</p>
+        </div>
+        <div style="padding:11px;background:white;border-radius:10px;border-left:3px solid #ef4444;box-shadow:0 2px 8px rgba(239,68,68,.1)">
+          <p style="font-size:.72rem;font-weight:700;color:#b91c1c;margin-bottom:4px"><i class="fas fa-fire"></i> Flash Merah</p>
+          <p style="font-size:.7rem;color:#475569">Reaksi menghasilkan H⁺ — larutan asam terbentuk</p>
+        </div>
+        <div style="padding:11px;background:white;border-radius:10px;border-left:3px solid #f59e0b;box-shadow:0 2px 8px rgba(245,158,11,.1)">
+          <p style="font-size:.72rem;font-weight:700;color:#b45309;margin-bottom:4px"><i class="fas fa-mouse-pointer"></i> Hover Partikel</p>
+          <p style="font-size:.7rem;color:#475569">Arahkan kursor ke partikel untuk lihat nama dan sifatnya</p>
+        </div>
+        <div style="padding:11px;background:white;border-radius:10px;border-left:3px solid #2563eb;box-shadow:0 2px 8px rgba(37,99,235,.1)">
+          <p style="font-size:.72rem;font-weight:700;color:#1d4ed8;margin-bottom:4px"><i class="fas fa-search-plus"></i> Scroll Zoom</p>
+          <p style="font-size:.7rem;color:#475569">Scroll mouse pada kanvas untuk zoom in/out detail</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEOS -->
+    <div class="gcard gcard-amber">
+      <div class="gcard-title">
+        <div class="ti" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">
+          <i class="fas fa-video" style="color:#b45309"></i>
+        </div>Video Edukasi Hidrolisis Garam
+      </div>
+      <p style="font-size:.78rem;color:#64748b;margin-bottom:14px">Tonton animasi visual untuk memahami setiap jenis hidrolisis secara mendalam.</p>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div class="vid-card vactive">
+          <div class="vid-hdr">
+            <div class="vid-ico" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">🧂</div>
+            <div><h4>🎥 Hidrolisis Netral — NaCl</h4><p>Asam Kuat + Basa Kuat → pH = 7 (tidak ada hidrolisis)</p></div>
+          </div>
+          <div class="vid-frame">
+            <iframe src="https://www.youtube.com/embed/0bdjg_aZlOk" title="Hidrolisis Netral"
+              allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="padding:0 13px 12px;display:flex;gap:8px;flex-wrap:wrap">
+            <span style="background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">pH = 7</span>
+            <span style="background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">Ion Spektator</span>
+            <span style="background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">Tidak Terhidrolisis</span>
+          </div>
+        </div>
+        <div class="vid-card">
+          <div class="vid-hdr">
+            <div class="vid-ico" style="background:linear-gradient(135deg,#fee2e2,#fecaca)">⚡</div>
+            <div><h4>🎥 Hidrolisis Asam — NH₄Cl</h4><p>Asam Kuat + Basa Lemah → pH &lt; 7</p></div>
+          </div>
+          <div class="vid-frame">
+            <iframe src="https://www.youtube.com/embed/LDa9leesuSM" title="Hidrolisis Asam"
+              allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="padding:0 13px 12px;display:flex;gap:8px;flex-wrap:wrap">
+            <span style="background:#fee2e2;color:#b91c1c;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">pH &lt; 7</span>
+            <span style="background:#fee2e2;color:#b91c1c;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">Menghasilkan H⁺</span>
+            <span style="background:#fee2e2;color:#b91c1c;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">Kation Terhidrolisis</span>
+          </div>
+        </div>
+        <div class="vid-card">
+          <div class="vid-hdr">
+            <div class="vid-ico" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)">🌿</div>
+            <div><h4>🎥 Hidrolisis Basa — CH₃COONa</h4><p>Asam Lemah + Basa Kuat → pH &gt; 7</p></div>
+          </div>
+          <div class="vid-frame">
+            <iframe src="https://www.youtube.com/embed/XSw4SOpfTaY" title="Hidrolisis Basa"
+              allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="padding:0 13px 12px;display:flex;gap:8px;flex-wrap:wrap">
+            <span style="background:#dcfce7;color:#15803d;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">pH &gt; 7</span>
+            <span style="background:#dcfce7;color:#15803d;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">Menghasilkan OH⁻</span>
+            <span style="background:#dcfce7;color:#15803d;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700">Anion Terhidrolisis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCORDIONS — Materi Pendukung -->
+    <div class="gcard" style="background:linear-gradient(135deg,#f0f9ff 0%,#eff6ff 50%,#faf5ff 100%)">
+      <div class="gcard-title"><div class="ti" style="background:linear-gradient(135deg,#dbeafe,#ede9fe)"><i class="fas fa-book-open" style="color:#4f46e5"></i></div>Materi Pendukung Hidrolisis</div>
+      <div class="info-acc">
+        <button class="info-trigger" onclick="togAcc('ac1')"><i class="fas fa-water" style="color:#2563eb"></i>Apa itu Hidrolisis Garam?<i class="fas fa-chevron-down acc-chev"></i></button>
+        <div id="ac1" class="info-body">
+          <p>Hidrolisis garam adalah reaksi antara ion-ion dari garam dengan molekul air. Proses ini menghasilkan ion H⁺ atau OH⁻ yang menentukan sifat asam/basa larutan.</p>
+          <ul>
+            <li>Ion dari asam kuat → tidak bereaksi (spektator)</li>
+            <li>Ion dari basa kuat → tidak bereaksi (spektator)</li>
+            <li>Ion dari asam lemah → bereaksi dengan air, menghasilkan OH⁻</li>
+            <li>Ion dari basa lemah → bereaksi dengan air, menghasilkan H⁺</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-acc">
+        <button class="info-trigger" onclick="togAcc('ac2')"><i class="fas fa-calculator" style="color:#f59e0b"></i>Rumus Perhitungan pH<i class="fas fa-chevron-down acc-chev"></i></button>
+        <div id="ac2" class="info-body">
+          <p><strong style="color:#2563eb">Hidrolisis Kation (AK + BL) → Asam:</strong></p>
+          <p>[H⁺] = √(Kw/Kb × C) → pH = ½(pKw − pKb − log C)</p>
+          <p><strong style="color:#10b981">Hidrolisis Anion (AL + BK) → Basa:</strong></p>
+          <p>[OH⁻] = √(Kw/Ka × C) → pH = 7 + ½(pKa + log C)</p>
+          <p><strong style="color:#7c3aed">Hidrolisis Total (AL + BL):</strong></p>
+          <p>pH = 7 + ½(pKa − pKb)</p>
+        </div>
+      </div>
+      <div class="info-acc">
+        <button class="info-trigger" onclick="togAcc('ac3')"><i class="fas fa-eye" style="color:#10b981"></i>Cara Membaca Simulasi<i class="fas fa-chevron-down acc-chev"></i></button>
+        <div id="ac3" class="info-body">
+          <ul>
+            <li>Pilih kation &amp; anion → klik "Reaksikan!" untuk memulai simulasi</li>
+            <li>Setiap kation/anion punya warna unik sesuai legendanya</li>
+            <li>Scroll mouse pada kanvas untuk zoom in/out</li>
+            <li>Klik dan drag pada kanvas untuk menggeser tampilan</li>
+            <li>Hover partikel untuk melihat nama dan sifatnya</li>
+            <li><span style="color:#10b981;font-weight:700">Flash hijau</span> = OH⁻ terbentuk (larutan basa)</li>
+            <li><span style="color:#ef4444;font-weight:700">Flash merah</span> = H⁺ terbentuk (larutan asam)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY TABLE -->
+    <div class="gcard gcard-teal">
+      <div class="gcard-title"><div class="ti"><i class="fas fa-table"></i></div>Ringkasan Jenis Hidrolisis Garam</div>
+      <div style="overflow-x:auto">
+        <table class="sum-table">
+          <thead><tr>
+            <th>Tipe Garam</th><th>pH</th><th>Reaksi Hidrolisis</th><th>Produk</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td>AK + BK (NaCl)</td>
+              <td><span style="background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:20px;font-weight:700;font-size:.75rem">= 7</span></td>
+              <td style="font-family:monospace;font-size:.72rem;color:#64748b">Tidak ada reaksi</td>
+              <td style="font-size:.72rem">—</td>
+            </tr>
+            <tr>
+              <td>AK + BL (NH₄Cl)</td>
+              <td><span style="background:#fee2e2;color:#b91c1c;padding:2px 8px;border-radius:20px;font-weight:700;font-size:.75rem">&lt; 7</span></td>
+              <td style="font-family:monospace;font-size:.72rem;color:#2563eb">NH₄⁺ + H₂O ⇌ NH₃ + H₃O⁺</td>
+              <td style="color:#b45309;font-weight:700;font-size:.72rem">H⁺</td>
+            </tr>
+            <tr>
+              <td>AL + BK (CH₃COONa)</td>
+              <td><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:20px;font-weight:700;font-size:.75rem">&gt; 7</span></td>
+              <td style="font-family:monospace;font-size:.72rem;color:#2563eb">CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻</td>
+              <td style="color:#059669;font-weight:700;font-size:.72rem">OH⁻</td>
+            </tr>
+            <tr>
+              <td>AL + BL (NH₄CH₃COO)</td>
+              <td><span style="background:#ede9fe;color:#5b21b6;padding:2px 8px;border-radius:20px;font-weight:700;font-size:.75rem">≈ 7</span></td>
+              <td style="font-family:monospace;font-size:.72rem;color:#2563eb">NH₄⁺ + CH₃COO⁻ + H₂O ⇌ ...</td>
+              <td style="color:#7c3aed;font-weight:700;font-size:.72rem">H⁺ + OH⁻</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /right col -->
+</div><!-- /main-grid -->
+
+<div id="tooltipBox"></div>
+
+<footer>
+  <div class="foot-in">
+    <i class="fas fa-flask spin" style="font-size:22px"></i>
+    <div>
+      <strong>© 2025 Virtual Chemistry Learning | Hidrolisis Garam</strong><br>
+      <span style="font-size:.8rem;opacity:.8">Dikembangkan oleh: Putri Ayu Rahmawati – Universitas Negeri Malang</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// ION DATABASE
+// ══════════════════════════════════════════════
+const IONS = {
+  cations: [
+    { id:'Na',  sym:'Na⁺',   name:'Natrium',     strength:'kuat',  Kb:null,    color:'#3b82f6', bg:'#dbeafe' },
+    { id:'K',   sym:'K⁺',    name:'Kalium',       strength:'kuat',  Kb:null,    color:'#0891b2', bg:'#e0f2fe' },
+    { id:'Ca2', sym:'Ca²⁺',  name:'Kalsium',      strength:'kuat',  Kb:null,    color:'#4f46e5', bg:'#e0e7ff' },
+    { id:'Ba2', sym:'Ba²⁺',  name:'Barium',       strength:'kuat',  Kb:null,    color:'#7c3aed', bg:'#f5f3ff' },
+    { id:'Mg2', sym:'Mg²⁺',  name:'Magnesium',    strength:'kuat',  Kb:null,    color:'#0d9488', bg:'#ccfbf1' },
+    { id:'NH4', sym:'NH₄⁺',  name:'Amonium',      strength:'lemah', Kb:1.8e-5,  color:'#8b5cf6', bg:'#ede9fe' },
+    { id:'Fe3', sym:'Fe³⁺',  name:'Besi(III)',    strength:'lemah', Kb:2.0e-11, color:'#d97706', bg:'#fef3c7' },
+    { id:'Al3', sym:'Al³⁺',  name:'Aluminium',    strength:'lemah', Kb:1.0e-9,  color:'#64748b', bg:'#f1f5f9' },
+    { id:'Cu2', sym:'Cu²⁺',  name:'Tembaga(II)', strength:'lemah', Kb:3.4e-7,  color:'#0e7490', bg:'#ecfeff' },
+    { id:'Zn2', sym:'Zn²⁺',  name:'Seng',         strength:'lemah', Kb:9.6e-8,  color:'#78716c', bg:'#f5f5f4' },
+    { id:'Pb2', sym:'Pb²⁺',  name:'Timbal(II)',   strength:'lemah', Kb:9.8e-4,  color:'#4b5563', bg:'#f3f4f6' },
+    { id:'Fe2', sym:'Fe²⁺',  name:'Besi(II)',     strength:'lemah', Kb:1.3e-9,  color:'#92400e', bg:'#fef3c7' },
+  ],
+  anions: [
+    { id:'Cl',   sym:'Cl⁻',      name:'Klorida',    strength:'kuat',  Ka:null,    color:'#ef4444', bg:'#fee2e2' },
+    { id:'NO3',  sym:'NO₃⁻',     name:'Nitrat',      strength:'kuat',  Ka:null,    color:'#dc2626', bg:'#fef2f2' },
+    { id:'SO4',  sym:'SO₄²⁻',    name:'Sulfat',      strength:'kuat',  Ka:null,    color:'#be123c', bg:'#fff1f2' },
+    { id:'Br',   sym:'Br⁻',      name:'Bromida',     strength:'kuat',  Ka:null,    color:'#be185d', bg:'#fdf2f8' },
+    { id:'I',    sym:'I⁻',       name:'Iodida',      strength:'kuat',  Ka:null,    color:'#7c3aed', bg:'#f5f3ff' },
+    { id:'Ac',   sym:'CH₃COO⁻',  name:'Asetat',      strength:'lemah', Ka:1.8e-5,  color:'#7c3aed', bg:'#ede9fe' },
+    { id:'CN',   sym:'CN⁻',      name:'Sianida',     strength:'lemah', Ka:6.2e-10, color:'#059669', bg:'#d1fae5' },
+    { id:'F',    sym:'F⁻',       name:'Fluorida',    strength:'lemah', Ka:6.8e-4,  color:'#0891b2', bg:'#e0f2fe' },
+    { id:'HCO3', sym:'HCO₃⁻',    name:'Bikarbonat',  strength:'lemah', Ka:4.7e-11, color:'#65a30d', bg:'#f7fee7' },
+    { id:'S2',   sym:'S²⁻',      name:'Sulfida',     strength:'lemah', Ka:1.0e-14, color:'#d97706', bg:'#fffbeb' },
+    { id:'NO2',  sym:'NO₂⁻',     name:'Nitrit',      strength:'lemah', Ka:4.5e-4,  color:'#0d9488', bg:'#f0fdfa' },
+    { id:'HCOO', sym:'HCOO⁻',    name:'Format',      strength:'lemah', Ka:1.8e-4,  color:'#9333ea', bg:'#faf5ff' },
+  ]
+};
+
+// Particle type per ion ID → unique PT key
+const ION_TO_PT = {
+  Na:'catNa', K:'catK', Ca2:'catCa2', Ba2:'catBa2', Mg2:'catMg2',
+  NH4:'catNH4', Fe3:'catFe3', Al3:'catAl3', Cu2:'catCu2', Zn2:'catZn2', Pb2:'catPb2', Fe2:'catFe2',
+  Cl:'aniCl', NO3:'aniNO3', SO4:'aniSO4', Br:'aniBr', I:'aniI',
+  Ac:'aniAc', CN:'aniCN', F:'aniF', HCO3:'aniHCO3', S2:'aniS2', NO2:'aniNO2', HCOO:'aniHCOO'
+};
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let selectedCation = null, selectedAnion = null;
+let saltType = 'strong-acid-strong-base';
+let conc = 0.10, temp = 25, speed = 1.0;
+let particles = [], animId = null, running = false;
+let collisions = 0, reactions = 0;
+let zoom = 1.0, offX = 0, offY = 0;
+let dragging = false, dragSX = 0, dragSY = 0;
+let frameCount = 0, fpsTimer = 0;
+const maxParticles = 300;
+let activeCatType = 'catNa', activeAniType = 'aniCl';
+
+// ══════════════════════════════════════════════
+// BUILD ION GRIDS
+// ══════════════════════════════════════════════
+function buildIonGrids() {
+  const cg = document.getElementById('cationGrid');
+  const ag = document.getElementById('anionGrid');
+
+  IONS.cations.forEach(ion => {
+    const chip = document.createElement('div');
+    chip.className = 'ion-chip';
+    const isLemah = ion.strength === 'lemah';
+    chip.innerHTML = `
+      <div class="isym" style="color:${ion.color}">${ion.sym}</div>
+      <div class="iname">${ion.name}</div>
+      <div class="itype ${isLemah?'tbl':'tbk'}">${isLemah?'BL':'BK'}</div>`;
+    chip.title = `${ion.sym} — ${ion.name} (basa ${ion.strength})`;
+    chip.onclick = () => selectCation(ion, chip);
+    cg.appendChild(chip);
+  });
+
+  IONS.anions.forEach(ion => {
+    const chip = document.createElement('div');
+    chip.className = 'ion-chip';
+    const isLemah = ion.strength === 'lemah';
+    chip.innerHTML = `
+      <div class="isym" style="color:${ion.color}">${ion.sym}</div>
+      <div class="iname">${ion.name}</div>
+      <div class="itype ${isLemah?'tal':'tak'}">${isLemah?'AL':'AK'}</div>`;
+    chip.title = `${ion.sym} — ${ion.name} (asam ${ion.strength})`;
+    chip.onclick = () => selectAnion(ion, chip);
+    ag.appendChild(chip);
+  });
+}
+
+function selectCation(ion, el) {
+  document.querySelectorAll('#cationGrid .ion-chip').forEach(c => c.classList.remove('selected-cation'));
+  el.classList.add('selected-cation');
+  selectedCation = ion;
+  updateSelectedDisplay();
+}
+function selectAnion(ion, el) {
+  document.querySelectorAll('#anionGrid .ion-chip').forEach(c => c.classList.remove('selected-anion'));
+  el.classList.add('selected-anion');
+  selectedAnion = ion;
+  updateSelectedDisplay();
+}
+
+function updateSelectedDisplay() {
+  const sc = document.getElementById('slotCation');
+  const sa = document.getElementById('slotAnion');
+  const rv = document.getElementById('resultReveal');
+
+  if (selectedCation) {
+    sc.className = 'sel-slot fc';
+    document.getElementById('slotCatVal').textContent = selectedCation.sym;
+    document.getElementById('slotCatVal').style.color = selectedCation.color;
+  }
+  if (selectedAnion) {
+    sa.className = 'sel-slot fa';
+    document.getElementById('slotAniVal').textContent = selectedAnion.sym;
+    document.getElementById('slotAniVal').style.color = selectedAnion.color;
+  }
+
+  if (selectedCation && selectedAnion) {
+    document.getElementById('selSaltName').textContent = buildSaltName(selectedCation, selectedAnion);
+    document.getElementById('selSaltName').style.color = '#0f172a';
+    document.getElementById('reactBtn').disabled = false;
+    rv.classList.remove('show');
+  } else {
+    document.getElementById('selSaltName').textContent = 'Pilih ion\nterlebih dahulu';
+    document.getElementById('selSaltName').style.color = '#94a3b8';
+    document.getElementById('reactBtn').disabled = true;
+  }
+}
+
+function buildSaltName(cat, ani) {
+  const c = cat.sym.replace(/[⁺²³]/g,'');
+  const a = ani.sym.replace(/[⁻²³]/g,'');
+  return c + a;
+}
+
+// ══════════════════════════════════════════════
+// DO REACT — determine hydrolysis, show result
+// ══════════════════════════════════════════════
+function doReact() {
+  if (!selectedCation || !selectedAnion) return;
+  const cat = selectedCation, ani = selectedAnion;
+  const catKuat = cat.strength === 'kuat', aniKuat = ani.strength === 'kuat';
+  const Kw = 1e-14;
+
+  let cls, badge, badgeColor, title, eq, explain, rumus;
+
+  if (catKuat && aniKuat) {
+    saltType = 'strong-acid-strong-base';
+    cls = 'rr-netral'; badge = '⚖️ Tidak Terhidrolisis'; badgeColor = '#1e40af';
+    title = 'Larutan Bersifat NETRAL — pH = 7';
+    eq = `${ani.sym} → ion spektator (tidak bereaksi)\n${cat.sym} → ion spektator (tidak bereaksi)`;
+    explain = `Ion ${cat.sym} berasal dari basa kuat → stabil di air, tidak bereaksi.\nIon ${ani.sym} berasal dari asam kuat → stabil di air, tidak bereaksi.\nKedua ion hanya mengalir sebagai spektator. Larutan tetap netral (pH = 7).`;
+    rumus = 'pH = 7  (pada suhu 25°C)';
+
+  } else if (!catKuat && aniKuat) {
+    saltType = 'strong-acid-weak-base';
+    cls = 'rr-asam'; badge = '🔥 Hidrolisis Kation'; badgeColor = '#b91c1c';
+    title = `Larutan Bersifat ASAM — pH < 7`;
+    eq = `${cat.sym} + H₂O  ⇌  Basa Lemah + H₃O⁺\n${ani.sym} → ion spektator`;
+    explain = `Ion ${cat.sym} dari basa lemah bereaksi dengan air, melepas H⁺ sehingga larutan bersifat asam.\nIon ${ani.sym} dari asam kuat tidak bereaksi (spektator).\nSemakin kecil Kb → semakin kuat hidrolisis → semakin asam larutan.`;
+    const pH = calcPH_kation(cat.Kb, conc);
+    rumus = `pH = ½(pKw − pKb − log C)\n[H⁺] = √(Kw/Kb × C)\nKb = ${cat.Kb.toExponential(2)}  →  pH ≈ ${pH.toFixed(2)}`;
+
+  } else if (catKuat && !aniKuat) {
+    saltType = 'weak-acid-strong-base';
+    cls = 'rr-basa'; badge = '🌿 Hidrolisis Anion'; badgeColor = '#15803d';
+    title = `Larutan Bersifat BASA — pH > 7`;
+    eq = `${ani.sym} + H₂O  ⇌  Asam Lemah + OH⁻\n${cat.sym} → ion spektator`;
+    explain = `Ion ${ani.sym} dari asam lemah menerima H⁺ dari air, melepas OH⁻ sehingga larutan bersifat basa.\nIon ${cat.sym} dari basa kuat tidak bereaksi (spektator).\nSemakin kecil Ka → semakin kuat hidrolisis → semakin basa larutan.`;
+    const pH = calcPH_anion(ani.Ka, conc);
+    rumus = `pH = 7 + ½(pKa + log C)\n[OH⁻] = √(Kw/Ka × C)\nKa = ${ani.Ka.toExponential(2)}  →  pH ≈ ${pH.toFixed(2)}`;
+
+  } else {
+    saltType = 'weak-acid-weak-base';
+    const pH = calcPH_total(ani.Ka, cat.Kb);
+    let pHSifat = pH < 6.8 ? 'ASAM (Ka > Kb)' : pH > 7.2 ? 'BASA (Ka < Kb)' : 'NETRAL (Ka ≈ Kb)';
+    cls = 'rr-total'; badge = '🟣 Hidrolisis Total'; badgeColor = '#5b21b6';
+    title = `Hidrolisis Total — Larutan ${pHSifat}`;
+    eq = `${cat.sym} + H₂O  ⇌  Basa Lemah + H⁺\n${ani.sym} + H₂O  ⇌  Asam Lemah + OH⁻\nKeduanya terhidrolisis!`;
+    explain = `Ion ${cat.sym} (basa lemah) dan ${ani.sym} (asam lemah) keduanya bereaksi dengan air.\nSifat akhir tergantung perbandingan Ka dan Kb:\n• Ka > Kb → asam   • Ka < Kb → basa   • Ka = Kb → netral`;
+    rumus = `pH = 7 + ½(pKa − pKb)\npKa = ${(-Math.log10(ani.Ka)).toFixed(2)},  pKb = ${(-Math.log10(cat.Kb)).toFixed(2)}\npH ≈ ${pH.toFixed(2)}`;
+  }
+
+  const rv = document.getElementById('resultReveal');
+  rv.className = `result-reveal show ${cls}`;
+  document.getElementById('resBadge').textContent = badge;
+  document.getElementById('resBadge').style.cssText = `background:${badgeColor}1a;color:${badgeColor};border:1.5px solid ${badgeColor}44;padding:5px 14px;border-radius:50px;font-size:.75rem;font-weight:800;letter-spacing:.05em`;
+  document.getElementById('resTitle').textContent = title;
+  document.getElementById('resEq').textContent = eq;
+  document.getElementById('resExplain').textContent = explain;
+  document.getElementById('resRumus').textContent = rumus;
+
+  // Update simulation with selected ions
+  collisions = 0; reactions = 0;
+  initParticles();
+  updateChemDisplay();
+  document.getElementById('simLabel').textContent = buildSaltName(selectedCation, selectedAnion);
+  rv.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function calcPH_kation(Kb, C) {
+  const Kh = 1e-14 / Kb;
+  return -Math.log10(Math.sqrt(Kh * C));
+}
+function calcPH_anion(Ka, C) {
+  const Kh = 1e-14 / Ka;
+  return 14 + Math.log10(Math.sqrt(Kh * C));
+}
+function calcPH_total(Ka, Kb) {
+  return 7 + 0.5 * (-Math.log10(Ka) - (-Math.log10(Kb)));
+}
+
+// ══════════════════════════════════════════════
+// CANVAS & PARTICLE ENGINE
+// ══════════════════════════════════════════════
+const canvas  = document.getElementById('simCanvas');
+const ctx     = canvas.getContext('2d');
+const flashL  = document.getElementById('flashLayer');
+const tooltip = document.getElementById('tooltipBox');
+
+function mkGrad(x, y, r, c0, c1) {
+  const g = ctx.createRadialGradient(x-r*.32, y-r*.32, r*.05, x, y, r);
+  g.addColorStop(0, c0); g.addColorStop(1, c1);
+  return g;
+}
+
+// Every kation and anion gets its own unique particle type with matching color
+const PT = {
+  // Water
+  water:   { r:10, lbl:'H₂O',      name:'Molekul Air',                    fill:(x,y,r)=>mkGrad(x,y,r,'rgba(147,197,253,.9)','rgba(29,78,216,.75)'), trail:'rgba(147,197,253,.18)' },
+  // Kation Kuat
+  catNa:   { r:12, lbl:'Na⁺',      name:'Ion Natrium (spektator)',         fill:(x,y,r)=>mkGrad(x,y,r,'#93c5fd','#1d4ed8'),   trail:'rgba(59,130,246,.2)' },
+  catK:    { r:12, lbl:'K⁺',       name:'Ion Kalium (spektator)',          fill:(x,y,r)=>mkGrad(x,y,r,'#a5f3fc','#0e7490'),   trail:'rgba(14,116,144,.2)' },
+  catCa2:  { r:13, lbl:'Ca²⁺',     name:'Ion Kalsium (spektator)',         fill:(x,y,r)=>mkGrad(x,y,r,'#c7d2fe','#4338ca'),   trail:'rgba(67,56,202,.18)' },
+  catBa2:  { r:13, lbl:'Ba²⁺',     name:'Ion Barium (spektator)',          fill:(x,y,r)=>mkGrad(x,y,r,'#ede9fe','#6d28d9'),   trail:'rgba(109,40,217,.18)' },
+  catMg2:  { r:12, lbl:'Mg²⁺',     name:'Ion Magnesium (spektator)',       fill:(x,y,r)=>mkGrad(x,y,r,'#99f6e4','#0f766e'),   trail:'rgba(15,118,110,.2)' },
+  // Kation Lemah (bereaksi → H⁺)
+  catNH4:  { r:13, lbl:'NH₄⁺',     name:'Ion Amonium (bereaksi → H⁺)',    fill:(x,y,r)=>mkGrad(x,y,r,'#c4b5fd','#6d28d9'),   trail:'rgba(167,139,250,.22)' },
+  catFe3:  { r:13, lbl:'Fe³⁺',     name:'Ion Besi(III) (bereaksi → H⁺)',  fill:(x,y,r)=>mkGrad(x,y,r,'#fde68a','#b45309'),   trail:'rgba(180,83,9,.2)' },
+  catAl3:  { r:13, lbl:'Al³⁺',     name:'Ion Aluminium (bereaksi → H⁺)',  fill:(x,y,r)=>mkGrad(x,y,r,'#e2e8f0','#475569'),   trail:'rgba(71,85,105,.2)' },
+  catCu2:  { r:13, lbl:'Cu²⁺',     name:'Ion Tembaga(II) (bereaksi → H⁺)',fill:(x,y,r)=>mkGrad(x,y,r,'#67e8f9','#0c4a6e'),   trail:'rgba(14,116,144,.22)' },
+  catZn2:  { r:12, lbl:'Zn²⁺',     name:'Ion Seng (bereaksi → H⁺)',       fill:(x,y,r)=>mkGrad(x,y,r,'#d4d4d4','#57534e'),   trail:'rgba(87,83,78,.2)' },
+  catPb2:  { r:13, lbl:'Pb²⁺',     name:'Ion Timbal(II) (bereaksi → H⁺)', fill:(x,y,r)=>mkGrad(x,y,r,'#9ca3af','#374151'),   trail:'rgba(55,65,81,.2)' },
+  catFe2:  { r:12, lbl:'Fe²⁺',     name:'Ion Besi(II) (bereaksi → H⁺)',   fill:(x,y,r)=>mkGrad(x,y,r,'#fbbf24','#92400e'),   trail:'rgba(146,64,14,.2)' },
+  // Anion Kuat
+  aniCl:   { r:12, lbl:'Cl⁻',      name:'Ion Klorida (spektator)',         fill:(x,y,r)=>mkGrad(x,y,r,'#fca5a5','#b91c1c'),   trail:'rgba(185,28,28,.2)' },
+  aniNO3:  { r:13, lbl:'NO₃⁻',     name:'Ion Nitrat (spektator)',          fill:(x,y,r)=>mkGrad(x,y,r,'#fca5a5','#991b1b'),   trail:'rgba(153,27,27,.2)' },
+  aniSO4:  { r:14, lbl:'SO₄²⁻',    name:'Ion Sulfat (spektator)',          fill:(x,y,r)=>mkGrad(x,y,r,'#fda4af','#9f1239'),   trail:'rgba(159,18,57,.2)' },
+  aniBr:   { r:12, lbl:'Br⁻',      name:'Ion Bromida (spektator)',         fill:(x,y,r)=>mkGrad(x,y,r,'#fbcfe8','#9d174d'),   trail:'rgba(157,23,77,.2)' },
+  aniI:    { r:12, lbl:'I⁻',       name:'Ion Iodida (spektator)',          fill:(x,y,r)=>mkGrad(x,y,r,'#ddd6fe','#5b21b6'),   trail:'rgba(91,33,182,.2)' },
+  // Anion Lemah (bereaksi → OH⁻)
+  aniAc:   { r:15, lbl:'CH₃COO⁻',  name:'Ion Asetat (bereaksi → OH⁻)',    fill:(x,y,r)=>mkGrad(x,y,r,'#ddd6fe','#6d28d9'),   trail:'rgba(109,40,217,.22)' },
+  aniCN:   { r:12, lbl:'CN⁻',      name:'Ion Sianida (bereaksi → OH⁻)',   fill:(x,y,r)=>mkGrad(x,y,r,'#a7f3d0','#065f46'),   trail:'rgba(6,95,70,.22)' },
+  aniF:    { r:11, lbl:'F⁻',       name:'Ion Fluorida (bereaksi → OH⁻)',  fill:(x,y,r)=>mkGrad(x,y,r,'#bae6fd','#0369a1'),   trail:'rgba(3,105,161,.2)' },
+  aniHCO3: { r:14, lbl:'HCO₃⁻',    name:'Ion Bikarbonat (bereaksi → OH⁻)',fill:(x,y,r)=>mkGrad(x,y,r,'#d9f99d','#4d7c0f'),   trail:'rgba(77,124,15,.2)' },
+  aniS2:   { r:13, lbl:'S²⁻',      name:'Ion Sulfida (bereaksi → OH⁻)',   fill:(x,y,r)=>mkGrad(x,y,r,'#fde68a','#d97706'),   trail:'rgba(217,119,6,.2)' },
+  aniNO2:  { r:13, lbl:'NO₂⁻',     name:'Ion Nitrit (bereaksi → OH⁻)',    fill:(x,y,r)=>mkGrad(x,y,r,'#99f6e4','#134e4a'),   trail:'rgba(19,78,74,.2)' },
+  aniHCOO: { r:13, lbl:'HCOO⁻',    name:'Ion Format (bereaksi → OH⁻)',    fill:(x,y,r)=>mkGrad(x,y,r,'#e9d5ff','#7e22ce'),   trail:'rgba(126,34,206,.2)' },
+  // Produk
+  hplus:   { r:8,  lbl:'H⁺',       name:'Proton (produk asam)',            fill:(x,y,r)=>mkGrad(x,y,r,'#fde68a','#b45309'),   trail:'rgba(245,158,11,.3)',  glow:true  },
+  ohminus: { r:8,  lbl:'OH⁻',      name:'Hidroksida (produk basa)',        fill:(x,y,r)=>mkGrad(x,y,r,'#6ee7b7','#047857'),   trail:'rgba(16,185,129,.3)', glow:true  },
+  weakacid:{ r:9,  lbl:'HA',        name:'Asam lemah (produk hidrolisis)',  fill:(x,y,r)=>mkGrad(x,y,r,'#fed7aa','#c2410c'),   trail:'rgba(194,65,12,.22)' },
+  weakbase:{ r:9,  lbl:'BOH',       name:'Basa lemah (produk hidrolisis)', fill:(x,y,r)=>mkGrad(x,y,r,'#bbf7d0','#166534'),   trail:'rgba(22,101,52,.22)' },
+};
+
+const CHEM = {
+  'strong-acid-strong-base': { pH:7.00, sifat:'⚖️ Netral', type:'Netral',  hydro:'Tidak Ada',         eq:'Tidak ada reaksi hidrolisis (ion spektator)', rumus:'pH = 7',                      bg:null                         },
+  'weak-acid-strong-base':   { pH:8.72, sifat:'🌿 Basa',   type:'Basa',    hydro:'Hidrolisis Anion',  eq:'Anion + H₂O ⇌ Asam Lemah + OH⁻',            rumus:'pH = 7 + ½(pKa + log C)',     bg:'rgba(16,185,129,.06)'       },
+  'strong-acid-weak-base':   { pH:5.28, sifat:'🔥 Asam',   type:'Asam',    hydro:'Hidrolisis Kation', eq:'Kation + H₂O ⇌ Basa Lemah + H₃O⁺',          rumus:'pH = ½(pKw − pKb − log C)',  bg:'rgba(239,68,68,.06)'        },
+  'weak-acid-weak-base':     { pH:7.00, sifat:'🟣 Total',  type:'Ka/Kb',   hydro:'Hidrolisis Total',  eq:'Kation + Anion + H₂O ⇌ Basa + Asam Lemah',  rumus:'pH = 7 + ½(pKa − pKb)',     bg:'rgba(124,58,237,.06)'       }
+};
+
+function initParticles() {
+  particles = [];
+  activeCatType = (selectedCation && ION_TO_PT[selectedCation.id]) ? ION_TO_PT[selectedCation.id] : 'catNa';
+  activeAniType = (selectedAnion  && ION_TO_PT[selectedAnion.id])  ? ION_TO_PT[selectedAnion.id]  : 'aniCl';
+
+  const W = canvas.width, H = canvas.height;
+  const base = Math.min(Math.floor(26 + conc * 40), 68);
+  const ionN = Math.floor(base * 0.27);
+  const tf = 0.7 + (temp - 10) / 50 * 0.6;
+
+  for (let i = 0; i < base; i++) particles.push(mkP('water', W, H, tf));
+  for (let i = 0; i < ionN; i++) {
+    particles.push(mkP(activeCatType, W, H, tf));
+    particles.push(mkP(activeAniType, W, H, tf));
+  }
+  updateStats();
+}
+
+function mkP(type, W, H, tf) {
+  tf = tf || 1;
+  const def = PT[type] || PT['water'];
+  const spd = (0.55 + Math.random() * 1.15) * speed * tf;
+  const a = Math.random() * Math.PI * 2;
+  return {
+    x: def.r + Math.random() * (W - def.r * 2),
+    y: def.r + Math.random() * (H - def.r * 2),
+    vx: Math.cos(a) * spd, vy: Math.sin(a) * spd,
+    type, r: def.r, age: 0, trail: [],
+    glow: def.glow || false, glowA: Math.random() * Math.PI * 2
+  };
+}
+
+function drawP(p) {
+  const def = PT[p.type] || PT['water'];
+  const r = p.r;
+
+  // Trail
+  if (p.trail.length > 1) {
+    ctx.beginPath(); ctx.moveTo(p.trail[0].x, p.trail[0].y);
+    for (let i = 1; i < p.trail.length; i++) ctx.lineTo(p.trail[i].x, p.trail[i].y);
+    ctx.strokeStyle = def.trail;
+    ctx.lineWidth = r * .38; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.stroke();
+  }
+
+  // Glow pulse for product ions
+  if (p.glow) {
+    p.glowA += 0.09;
+    const ga = (Math.sin(p.glowA) + 1) / 2;
+    const gc = p.type === 'hplus' ? '#f59e0b' : '#10b981';
+    const gf = p.type === 'hplus' ? `rgba(245,158,11,${.12+ga*.2})` : `rgba(16,185,129,${.12+ga*.2})`;
+    ctx.save();
+    ctx.shadowColor = gc; ctx.shadowBlur = 8 + ga * 16;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r + 3, 0, Math.PI * 2);
+    ctx.fillStyle = gf; ctx.fill();
+    ctx.restore();
+  }
+
+  // Main sphere
+  ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+  ctx.fillStyle = def.fill(p.x, p.y, r); ctx.fill();
+
+  // Bright specular highlight (top-left)
+  ctx.beginPath(); ctx.arc(p.x - r * .32, p.y - r * .32, r * .3, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,.48)'; ctx.fill();
+
+  // Smaller secondary highlight
+  ctx.beginPath(); ctx.arc(p.x - r * .15, p.y - r * .15, r * .14, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.fill();
+
+  // Inner translucent ring
+  ctx.beginPath(); ctx.arc(p.x, p.y, r * .72, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = .8; ctx.stroke();
+
+  // Outer ring
+  ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,.2)'; ctx.lineWidth = 1; ctx.stroke();
+
+  // Label
+  ctx.fillStyle = 'rgba(255,255,255,.96)';
+  const fs = Math.max(6, r * .65);
+  ctx.font = `bold ${fs}px "JetBrains Mono",monospace`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0,0,0,.85)'; ctx.shadowBlur = 5;
+  ctx.fillText(def.lbl, p.x, p.y);
+  ctx.shadowBlur = 0;
+}
+
+function drawBg() {
+  const W = canvas.width, H = canvas.height;
+  const bg = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H)*.7);
+  bg.addColorStop(0, '#0d1f3c'); bg.addColorStop(1, '#060d18');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  const chemBg = CHEM[saltType]?.bg;
+  if (chemBg) { ctx.fillStyle = chemBg; ctx.fillRect(0, 0, W, H); }
+  // Grid dots
+  ctx.fillStyle = 'rgba(255,255,255,.032)';
+  for (let x = 40; x < W; x += 40)
+    for (let y = 40; y < H; y += 40) {
+      ctx.beginPath(); ctx.arc(x, y, 1, 0, Math.PI * 2); ctx.fill();
+    }
+}
+
+function detectCollisions() {
+  const max = 2; let nr = 0;
+  const catIsWeak = selectedCation?.strength === 'lemah';
+  const aniIsWeak = selectedAnion?.strength  === 'lemah';
+
+  for (let i = 0; i < particles.length && nr < max; i++) {
+    const p1 = particles[i];
+    for (let j = i+1; j < particles.length && nr < max; j++) {
+      const p2 = particles[j];
+      const dx = p1.x-p2.x, dy = p1.y-p2.y;
+      const dist = Math.sqrt(dx*dx+dy*dy), minD = p1.r+p2.r;
+      if (dist < minD) {
+        collisions++;
+        const nx = dx/dist, ny = dy/dist;
+        const dv = (p1.vx-p2.vx)*nx + (p1.vy-p2.vy)*ny;
+        if (dv < 0) { p1.vx -= dv*nx; p1.vy -= dv*ny; p2.vx += dv*nx; p2.vy += dv*ny; }
+        const ov = (minD-dist)*.52;
+        p1.x += nx*ov; p1.y += ny*ov; p2.x -= nx*ov; p2.y -= ny*ov;
+        const rx = (p1.x+p2.x)/2, ry = (p1.y+p2.y)/2;
+
+        if (particles.length < maxParticles) {
+          // Hidrolisis Anion (AL + BK): anion lemah + water → OH⁻ + asam lemah
+          if (saltType === 'weak-acid-strong-base' && aniIsWeak) {
+            const hit = (p1.type===activeAniType&&p2.type==='water') || (p2.type===activeAniType&&p1.type==='water');
+            if (hit && Math.random() < .012) {
+              addProd('ohminus', rx, ry);
+              addProd('weakacid', rx, ry);
+              addFlash(rx, ry, false); reactions++; nr++;
+            }
+          }
+          // Hidrolisis Kation (AK + BL): kation lemah + water → H⁺ + basa lemah
+          if (saltType === 'strong-acid-weak-base' && catIsWeak) {
+            const hit = (p1.type===activeCatType&&p2.type==='water') || (p2.type===activeCatType&&p1.type==='water');
+            if (hit && Math.random() < .012) {
+              addProd('hplus', rx, ry);
+              addProd('weakbase', rx, ry);
+              addFlash(rx, ry, true); reactions++; nr++;
+            }
+          }
+          // Hidrolisis Total (AL + BL): kation + anion → basa + asam lemah
+          if (saltType === 'weak-acid-weak-base' && catIsWeak && aniIsWeak) {
+            const hit = (p1.type===activeCatType&&p2.type===activeAniType) || (p2.type===activeCatType&&p1.type===activeAniType);
+            if (hit && Math.random() < .009) {
+              addProd('weakbase', rx, ry);
+              addProd('weakacid', rx, ry);
+              addFlash(rx, ry, Math.random() > .5); reactions++; nr++;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+function addProd(type, x, y) {
+  const p = mkP(type, canvas.width, canvas.height);
+  p.x = Math.max(p.r, Math.min(canvas.width - p.r,  x + (Math.random()-.5)*20));
+  p.y = Math.max(p.r, Math.min(canvas.height - p.r, y + (Math.random()-.5)*20));
+  p.glow = PT[type]?.glow || false;
+  particles.push(p);
+}
+
+function addFlash(x, y, isAcid) {
+  const el = document.createElement('div');
+  el.className = 'rflash';
+  el.style.cssText = `left:${x-14}px;top:${y-14}px;width:28px;height:28px;background:${isAcid?'#ef4444':'#10b981'}`;
+  flashL.appendChild(el);
+  setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 800);
+}
+
+function draw() {
+  ctx.save(); drawBg();
+  ctx.translate(offX, offY); ctx.scale(zoom, zoom);
+  particles.forEach(p => drawP(p));
+  ctx.restore();
+}
+
+function animate(ts) {
+  if (!running) return;
+  frameCount++;
+  if (ts - fpsTimer >= 500) {
+    const fps = Math.round(frameCount / ((ts - fpsTimer) / 1000));
+    frameCount = 0; fpsTimer = ts;
+    document.getElementById('hudFPS').textContent = 'FPS: ' + fps;
+    document.getElementById('stFPS').textContent  = 'FPS: ' + fps;
+  }
+  const W = canvas.width, H = canvas.height;
+  const tf = 0.7 + (temp - 10) / 50 * 0.6;
+  particles.forEach(p => {
+    p.trail.push({x: p.x, y: p.y}); if (p.trail.length > 9) p.trail.shift();
+    p.x += p.vx * speed * tf; p.y += p.vy * speed * tf;
+    if (p.x < p.r)   { p.x = p.r;   p.vx = Math.abs(p.vx); }
+    if (p.x > W-p.r) { p.x = W-p.r; p.vx = -Math.abs(p.vx); }
+    if (p.y < p.r)   { p.y = p.r;   p.vy = Math.abs(p.vy); }
+    if (p.y > H-p.r) { p.y = H-p.r; p.vy = -Math.abs(p.vy); }
+    p.age++;
+  });
+  detectCollisions();
+  // Trim excess product particles
+  while (particles.length > maxParticles) {
+    const idx = particles.findIndex(p => p.type==='hplus'||p.type==='ohminus'||p.type==='weakacid'||p.type==='weakbase');
+    if (idx === -1) break; particles.splice(idx, 1);
+  }
+  draw(); updateStats();
+  animId = requestAnimationFrame(animate);
+}
+
+function updateStats() {
+  document.getElementById('stColl').textContent   = collisions;
+  document.getElementById('stPart').textContent   = particles.length;
+  document.getElementById('stReact').textContent  = reactions;
+  document.getElementById('hudColl').textContent  = 'Tumbukan: ' + collisions;
+  document.getElementById('hudPart').textContent  = 'Partikel: ' + particles.length;
+  document.getElementById('hudReact').textContent = 'Reaksi: ' + reactions;
+  document.getElementById('stZoom').textContent   = 'Zoom: ' + zoom.toFixed(1) + '×';
+  document.getElementById('hudZoom').textContent  = zoom.toFixed(1) + '×';
+  document.getElementById('stTemp').textContent   = 'T: ' + temp + '°C';
+}
+
+function updateChemDisplay() {
+  const c = CHEM[saltType]; const Kw = 1e-14;
+  let pH = c.pH;
+  if (saltType==='strong-acid-weak-base' && selectedCation?.Kb)
+    pH = calcPH_kation(selectedCation.Kb, conc);
+  else if (saltType==='weak-acid-strong-base' && selectedAnion?.Ka)
+    pH = calcPH_anion(selectedAnion.Ka, conc);
+  else if (saltType==='weak-acid-weak-base' && selectedAnion?.Ka && selectedCation?.Kb)
+    pH = calcPH_total(selectedAnion.Ka, selectedCation.Kb);
+  pH = Math.max(0.01, Math.min(13.99, pH));
+
+  document.getElementById('phNum').textContent  = pH.toFixed(2);
+  document.getElementById('phMini').textContent = pH.toFixed(2);
+  document.getElementById('phInd').style.left   = (pH / 14 * 100).toFixed(1) + '%';
+
+  let col = '#3b82f6';
+  if (pH < 6.5) col = '#ef4444';
+  else if (pH > 7.5) col = '#10b981';
+
+  document.getElementById('phSifat').textContent        = c.sifat;
+  document.getElementById('phNum').style.textShadow     = `0 0 20px ${col}`;
+  document.getElementById('phMini').style.color         = col;
+  document.getElementById('resType').textContent        = c.type;
+  document.getElementById('resType').style.color        = col;
+  document.getElementById('resHydro').textContent       = c.hydro;
+  document.getElementById('eqBox').textContent          = c.eq;
+  document.getElementById('rumusBox').textContent       = c.rumus;
+
+  const Hp = Math.pow(10, -pH), OH = Kw / Hp;
+  document.getElementById('resHp').textContent  = fmtSci(Hp);
+  document.getElementById('resOH').textContent  = fmtSci(OH);
+}
+
+function fmtSci(n) {
+  if (!n || n === 0) return '0';
+  const e = Math.floor(Math.log10(Math.abs(n)));
+  const m = (n / Math.pow(10, e)).toFixed(2);
+  const sup = ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];
+  const neg = e < 0 ? '⁻' : '';
+  const es = neg + String(Math.abs(e)).split('').map(d => sup[+d]).join('');
+  return `${m}×10${es}`;
+}
+
+// ══════════════════════════════════════════════
+// CONTROLS
+// ══════════════════════════════════════════════
+function onConc(el) { conc = parseFloat(el.value); document.getElementById('concVal').textContent = conc.toFixed(2)+' M'; initParticles(); updateChemDisplay(); }
+function onTemp(el) { temp = parseInt(el.value);   document.getElementById('tempVal').textContent = temp+' °C'; updateChemDisplay(); }
+function onSpeed(el) {
+  speed = parseFloat(el.value);
+  particles.forEach(p => {
+    const s = (0.55 + Math.random()*1.15) * speed;
+    const a = Math.random() * Math.PI * 2;
+    p.vx = Math.cos(a)*s; p.vy = Math.sin(a)*s;
+  });
+}
+function startSim() { if (!running) { running = true; fpsTimer = performance.now(); frameCount = 0; animId = requestAnimationFrame(animate); } }
+function pauseSim() { running = false; if (animId) cancelAnimationFrame(animId); }
+function resetSim() { pauseSim(); collisions = 0; reactions = 0; initParticles(); draw(); updateStats(); updateChemDisplay(); }
+function adjZoom(d) {
+  zoom = Math.max(.4, Math.min(4, zoom + d));
+  document.getElementById('stZoom').textContent = 'Zoom: ' + zoom.toFixed(1) + '×';
+  document.getElementById('hudZoom').textContent = zoom.toFixed(1) + '×';
+  if (!running) draw();
+}
+function resetView() {
+  zoom = 1; offX = 0; offY = 0;
+  document.getElementById('stZoom').textContent = 'Zoom: 1.0×';
+  document.getElementById('hudZoom').textContent = '1.0×';
+  if (!running) draw();
+}
+
+// ══════════════════════════════════════════════
+// CANVAS INTERACTION
+// ══════════════════════════════════════════════
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+  const mx = (e.clientX - rect.left) * sx, my = (e.clientY - rect.top) * sy;
+  const wx = (mx - offX) / zoom, wy = (my - offY) / zoom;
+
+  if (dragging) { offX = e.clientX - dragSX; offY = e.clientY - dragSY; if (!running) draw(); return; }
+
+  let hov = null;
+  for (const p of particles) if (Math.hypot(p.x-wx, p.y-wy) < p.r+5) { hov = p; break; }
+  if (hov) {
+    const def = PT[hov.type] || PT['water'];
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX + 14) + 'px'; tooltip.style.top = (e.clientY + 14) + 'px';
+    tooltip.innerHTML = `<strong style="color:#93c5fd">${def.lbl}</strong><br><span style="color:rgba(255,255,255,.7);font-size:.74rem">${def.name}</span>`;
+  } else tooltip.style.display = 'none';
+});
+canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; dragging = false; });
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const d = e.deltaY < 0 ? 1 : -1; const zf = Math.exp(d * .1);
+  const newZ = Math.max(.4, Math.min(4, zoom * zf));
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  offX = mx - (mx - offX) * (newZ / zoom);
+  offY = my - (my - offY) * (newZ / zoom);
+  zoom = newZ;
+  document.getElementById('stZoom').textContent = 'Zoom: ' + zoom.toFixed(1) + '×';
+  document.getElementById('hudZoom').textContent = zoom.toFixed(1) + '×';
+  if (!running) draw();
+}, {passive: false});
+canvas.addEventListener('mousedown', e => { dragging = true; dragSX = e.clientX - offX; dragSY = e.clientY - offY; canvas.style.cursor = 'grabbing'; });
+canvas.addEventListener('mouseup', () => { dragging = false; canvas.style.cursor = 'grab'; });
+
+// ══════════════════════════════════════════════
+// ACCORDION
+// ══════════════════════════════════════════════
+function togAcc(id) {
+  const el = document.getElementById(id), btn = el.previousElementSibling;
+  const op = el.classList.contains('open');
+  el.classList.toggle('open', !op);
+  if (btn) btn.classList.toggle('open', !op);
+}
+
+// ══════════════════════════════════════════════
+// VIDEO
+// ══════════════════════════════════════════════
+document.querySelectorAll('.vid-card').forEach(c => c.addEventListener('click', () => {
+  document.querySelectorAll('.vid-card').forEach(x => x.classList.remove('vactive'));
+  c.classList.add('vactive');
+}));
+
+// ══════════════════════════════════════════════
+// RESIZE
+// ══════════════════════════════════════════════
+function resizeCanvas() {
+  const w = canvas.parentElement.getBoundingClientRect().width - 28;
+  canvas.width  = Math.min(w, 1000);
+  canvas.height = Math.round(canvas.width * .72);
+  flashL.style.width  = canvas.offsetWidth  + 'px';
+  flashL.style.height = canvas.offsetHeight + 'px';
+  initParticles(); draw();
+}
+window.addEventListener('resize', resizeCanvas);
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+buildIonGrids();
+resizeCanvas();
+updateChemDisplay();
+</script>
+</body>
+</html>

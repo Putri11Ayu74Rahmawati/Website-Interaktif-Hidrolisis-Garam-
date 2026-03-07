@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perhitungan pH Garam - Modul 4</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Styling */
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #a855f7 100%);
+            color: white;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .header::after {
+            content: '🧪';
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 120px;
+            opacity: 0.1;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            opacity: 0.95;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .breadcrumb a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        /* Main Content Grid */
+        .main-content {
+            display: grid;
+            grid-template-columns: 45% 55%;
+            gap: 30px;
+            padding: 40px;
+            background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%);
+        }
+
+        /* Left Panel - Input Controls */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title::before {
+            content: '⚗️';
+            font-size: 28px;
+        }
+
+        /* Select Dropdown Styling */
+        .select-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .select-wrapper label {
+            display: block;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            transform: scale(1.02);
+        }
+
+        select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 50px;
+            appearance: none;
+        }
+
+        /* Input Groups */
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-field label {
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-helper {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        /* Slider Styling */
+        .slider-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            border: 2px solid #fbbf24;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: #92400e;
+        }
+
+        .slider-value {
+            background: #f59e0b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 15px;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #2563eb 0%, #7c3aed 50%, #f59e0b 100%);
+            outline: none;
+            -webkit-appearance: none;
+            border: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.5);
+            border: 4px solid #2563eb;
+            transition: all 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.7);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.5);
+            border: 4px solid #2563eb;
+        }
+
+        /* Button Styling */
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+        }
+
+        /* Right Panel - Results */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* pH Gauge */
+        .ph-gauge-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .ph-display {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .ph-value {
+            font-size: 72px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .ph-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .ph-bar-container {
+            height: 40px;
+            background: linear-gradient(to right, 
+                #ef4444 0%, #f97316 14%, #fbbf24 28%, 
+                #84cc16 42%, #22c55e 50%, #14b8a6 58%,
+                #06b6d4 72%, #3b82f6 86%, #8b5cf6 100%);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .ph-marker {
+            position: absolute;
+            top: -10px;
+            transform: translateX(-50%);
+            transition: left 0.5s ease;
+        }
+
+        .ph-marker-arrow {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid #1e293b;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .ph-scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .solution-type {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            transition: all 0.5s;
+        }
+
+        .acidic {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            color: #991b1b;
+        }
+
+        .neutral {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+        }
+
+        .basic {
+            background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+            color: #1e3a8a;
+        }
+
+        /* Calculation Steps */
+        .calculation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .calc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            background: #e0e7ff;
+            border: 2px solid #6366f1;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4338ca;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn:hover {
+            background: #6366f1;
+            color: white;
+        }
+
+        .calc-steps {
+            display: none;
+        }
+
+        .calc-steps.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .calc-step {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border-left: 5px solid #2563eb;
+        }
+
+        .calc-step-title {
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .calc-formula {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-size: 15px;
+            color: #0369a1;
+            border: 2px solid #bae6fd;
+        }
+
+        .calc-explanation {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        /* Graph Container */
+        .graph-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .graph-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .graph-btn {
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .graph-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        #phChart {
+            height: 350px !important;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 6px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .info-box h4 {
+            color: #92400e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .info-box p {
+            color: #78350f;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 40px;
+            background: linear-gradient(135deg, #1e40af, #7c3aed);
+            color: white;
+            text-align: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 20px 30px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            min-width: 140px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-8px);
+        }
+
+        .nav-icon {
+            font-size: 48px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.3) rotate(10deg);
+        }
+
+        .nav-label {
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .nav-item.active {
+            background: rgba(37, 99, 235, 0.3);
+            box-shadow: 0 0 30px rgba(37, 99, 235, 0.5);
+        }
+
+         /* Footer */
+        .footer {
+            padding: 40px;
+            background: linear-gradient(135deg, #1e40af, #7c3aed);
+            color: white;
+            text-align: center;
+        }
+
+        .footer-credit strong {
+            color: #e2e8f0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .ph-value {
+                font-size: 52px;
+            }
+
+            .footer-nav {
+                gap: 20px;
+            }
+
+            .nav-item {
+                min-width: 100px;
+                padding: 15px 20px;
+            }
+
+            .nav-icon {
+                font-size: 36px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top: 5px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="breadcrumb">
+                     <a href="index.html" class="hover:underline text-primary">🏠Home</a>
+                    <span>/</span>
+                    <a href="Masalah pada case.html" class="hover:underline text-primary">📋Masalah case</a>
+                    <span>/</span>
+                     <a href="Teori Dasar.html" class="hover:underline text-primary">📚Teori dasar</a>
+                    <span>/</span>
+                     <a href="Simulasi interaktif.html" class="hover:underline text-primary"> 🔬Simulasi interaktif</a>
+                    <span>/</span>
+                     <a href="Solusi Case.html" class="hover:underline text-primary"> 💡Solusi case</a>
+                    <span>/</span>
+                     <a href="Game Edukasi.html" class="px-5 py-2.5 bg-gradient-to-r from-primary to-blue-700 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-800 transition-all btn-glow shadow-lg">
+          🎮Game edukasi <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+                    <span>🧮 Perhitungan pH</span>
+                </div>
+                <h1>🧪 Hitung pH Garammu!</h1>
+                <p>Eksplorasi interaktif perhitungan pH larutan garam dengan visualisasi real-time</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel - Input Controls -->
+            <div class="left-panel">
+                <div class="card">
+                    <h3 class="card-title">Pilih Jenis Garam</h3>
+                    
+                    <div class="select-wrapper">
+                        <label for="saltSelect">Jenis Garam</label>
+                        <select id="saltSelect">
+                            <option value="strong-strong">NaCl - Asam Kuat + Basa Kuat (Netral)</option>
+                            <option value="weak-strong" selected>CH₃COONa - Asam Lemah + Basa Kuat (Basa)</option>
+                            <option value="strong-weak">NH₄Cl - Asam Kuat + Basa Lemah (Asam)</option>
+                            <option value="weak-weak">NH₄CH₃COO - Asam Lemah + Basa Lemah</option>
+                            <option value="custom">Custom - Masukkan Sendiri</option>
+                        </select>
+                    </div>
+
+                    <div class="select-wrapper" id="customNameWrapper" style="display: none;">
+                        <label for="customName">Nama Garam Custom</label>
+                        <input type="text" id="customName" placeholder="Contoh: CaCO₃">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label for="kaInput">Ka (Konstanta Asam)</label>
+                            <input type="number" id="kaInput" placeholder="Contoh: 1.8e-5" step="any">
+                            <span class="input-helper">Format: 1.8e-5 atau 0.000018</span>
+                        </div>
+                        <div class="input-field">
+                            <label for="kbInput">Kb (Konstanta Basa)</label>
+                            <input type="number" id="kbInput" placeholder="Contoh: 1.8e-5" step="any">
+                            <span class="input-helper">Format: 1.8e-5 atau 0.000018</span>
+                        </div>
+                    </div>
+
+                    <div class="input-field">
+                        <label for="concInput">Konsentrasi (M)</label>
+                        <input type="number" id="concInput" value="0.1" min="0.001" max="10" step="0.001">
+                        <span class="input-helper">Rentang: 0.001 - 10 M</span>
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>📊 Mode Interaktif - Geser Konsentrasi</span>
+                            <span class="slider-value" id="sliderValue">0.100 M</span>
+                        </div>
+                        <input type="range" id="concSlider" min="0.001" max="1" step="0.001" value="0.1">
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="calculatePH()">🎯 Hitung</button>
+                        <button class="btn btn-secondary" onclick="resetForm()">🔄 Reset</button>
+                        <button class="btn btn-info" onclick="loadExample()">📚 Contoh</button>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 Tips Perhitungan</h4>
+                    <p>
+                        <strong>Kw = 1.0 × 10⁻¹⁴</strong> (pada 25°C). Gunakan slider untuk melihat bagaimana konsentrasi mempengaruhi pH secara real-time. 
+                        Untuk garam dari asam lemah, ion anion akan terhidrolisis membentuk OH⁻. Untuk garam dari basa lemah, ion kation akan terhidrolisis membentuk H⁺.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Panel - Results -->
+            <div class="right-panel">
+                <!-- pH Gauge -->
+                <div class="ph-gauge-card">
+                    <div class="ph-display">
+                        <div class="ph-value" id="phValue">7.00</div>
+                        <div class="ph-label">pH Larutan</div>
+                    </div>
+
+                    <div class="ph-bar-container">
+                        <div class="ph-marker" id="phMarker" style="left: 50%;">
+                            <div class="ph-marker-arrow"></div>
+                        </div>
+                    </div>
+
+                    <div class="ph-scale-labels">
+                        <span>0 (Asam Kuat)</span>
+                        <span>7 (Netral)</span>
+                        <span>14 (Basa Kuat)</span>
+                    </div>
+
+                    <div class="solution-type neutral" id="solutionType">
+                        ⚖️ LARUTAN NETRAL
+                    </div>
+                </div>
+
+                <!-- Calculation Steps -->
+                <div class="calculation-card">
+                    <div class="calc-header">
+                        <h3 class="card-title" style="margin: 0;">Langkah Perhitungan</h3>
+                        <button class="toggle-btn" onclick="toggleSteps()">Tampilkan Detail</button>
+                    </div>
+
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Menghitung...</p>
+                    </div>
+
+                    <div class="calc-steps" id="calcSteps">
+                        <div class="calc-step">
+                            <div class="calc-step-title">📝 Langkah 1: Identifikasi Jenis Garam</div>
+                            <div class="calc-explanation" id="step1">Pilih jenis garam terlebih dahulu untuk melihat perhitungan.</div>
+                        </div>
+
+                        <div class="calc-step">
+                            <div class="calc-step-title">🧮 Langkah 2: Rumus yang Digunakan</div>
+                            <div class="calc-formula" id="step2formula">pH = -log[H⁺]</div>
+                            <div class="calc-explanation" id="step2">Rumus akan disesuaikan dengan jenis garam.</div>
+                        </div>
+
+                        <div class="calc-step">
+                            <div class="calc-step-title">🔢 Langkah 3: Substitusi Nilai</div>
+                            <div class="calc-formula" id="step3">Masukkan nilai Ka/Kb dan konsentrasi.</div>
+                        </div>
+
+                        <div class="calc-step">
+                            <div class="calc-step-title">✨ Langkah 4: Hasil Akhir</div>
+                            <div class="calc-formula" id="step4">pH = 7.00</div>
+                            <div class="calc-explanation" id="step4exp">Larutan bersifat netral.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graph -->
+                <div class="graph-card">
+                    <div class="graph-header">
+                        <h3 class="card-title" style="margin: 0;">Grafik pH vs Konsentrasi</h3>
+                        <div class="graph-controls">
+                            <button class="graph-btn active" id="linearBtn" onclick="setGraphScale('linear')">Linear</button>
+                            <button class="graph-btn" id="logBtn" onclick="setGraphScale('log')">Log</button>
+                        </div>
+                    </div>
+                    <canvas id="phChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+         <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <i data-lucide="flask-conical" class="footer-icon" size="28"></i>
+            <div>
+                <strong>© 2025 Virtual Chemistry Learning | Hidrolisis Garam</strong><br>
+                Dikembangkan oleh: Putri Ayu Rahmawati – Universitas Negeri Malang
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Constants
+        const Kw = 1e-14;
+        let chart = null;
+        let graphScale = 'linear';
+
+        // State
+        const state = {
+            saltType: 'weak-strong',
+            ka: 1.8e-5,
+            kb: null,
+            concentration: 0.1,
+            pH: 7.0,
+            customName: ''
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initChart();
+            setupEventListeners();
+            preselectValues();
+        });
+
+        function setupEventListeners() {
+            // Salt type change
+            document.getElementById('saltSelect').addEventListener('change', function() {
+                const value = this.value;
+                state.saltType = value;
+                
+                if (value === 'custom') {
+                    document.getElementById('customNameWrapper').style.display = 'block';
+                } else {
+                    document.getElementById('customNameWrapper').style.display = 'none';
+                    preselectValues();
+                }
+            });
+
+            // Ka input change
+            document.getElementById('kaInput').addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                if (!isNaN(val) && val > 0) {
+                    state.ka = val;
+                    // Auto calculate Kb
+                    state.kb = Kw / val;
+                    document.getElementById('kbInput').value = state.kb.toExponential(2);
+                }
+            });
+
+            // Kb input change
+            document.getElementById('kbInput').addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                if (!isNaN(val) && val > 0) {
+                    state.kb = val;
+                    // Auto calculate Ka
+                    state.ka = Kw / val;
+                    document.getElementById('kaInput').value = state.ka.toExponential(2);
+                }
+            });
+
+            // Concentration input
+            document.getElementById('concInput').addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                if (!isNaN(val) && val > 0) {
+                    state.concentration = val;
+                    document.getElementById('concSlider').value = Math.min(val, 1);
+                    document.getElementById('sliderValue').textContent = val.toFixed(3) + ' M';
+                }
+            });
+
+            // Concentration slider (real-time)
+            document.getElementById('concSlider').addEventListener('input', function() {
+                const val = parseFloat(this.value);
+                state.concentration = val;
+                document.getElementById('concInput').value = val;
+                document.getElementById('sliderValue').textContent = val.toFixed(3) + ' M';
+                
+                // Real-time calculation
+                calculatePH();
+            });
+        }
+
+        function preselectValues() {
+            const saltType = state.saltType;
+            let ka, kb;
+
+            switch(saltType) {
+                case 'weak-strong':
+                    // CH3COONa (Ka of CH3COOH)
+                    ka = 1.8e-5;
+                    kb = Kw / ka;
+                    document.getElementById('kaInput').value = ka.toExponential(2);
+                    document.getElementById('kbInput').value = kb.toExponential(2);
+                    break;
+                case 'strong-weak':
+                    // NH4Cl (Kb of NH3)
+                    kb = 1.8e-5;
+                    ka = Kw / kb;
+                    document.getElementById('kaInput').value = ka.toExponential(2);
+                    document.getElementById('kbInput').value = kb.toExponential(2);
+                    break;
+                case 'weak-weak':
+                    // NH4CH3COO
+                    ka = 5.6e-10;
+                    kb = 5.6e-10;
+                    document.getElementById('kaInput').value = ka.toExponential(2);
+                    document.getElementById('kbInput').value = kb.toExponential(2);
+                    break;
+                case 'strong-strong':
+                    // NaCl - no hydrolysis
+                    document.getElementById('kaInput').value = '';
+                    document.getElementById('kbInput').value = '';
+                    break;
+            }
+
+            state.ka = ka;
+            state.kb = kb;
+        }
+
+        function calculatePH() {
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            
+            setTimeout(() => {
+                const saltType = state.saltType;
+                const C = state.concentration;
+                let pH = 7.0;
+                let steps = [];
+
+                // Step 1: Identify salt type
+                let step1Text = '';
+                
+                switch(saltType) {
+                    case 'strong-strong':
+                        step1Text = 'Garam dari asam kuat (HCl) dan basa kuat (NaOH). Tidak terjadi hidrolisis.';
+                        pH = 7.0;
+                        
+                        steps = [
+                            {
+                                title: 'Identifikasi',
+                                text: step1Text
+                            },
+                            {
+                                title: 'Kesimpulan',
+                                formula: 'pH = 7.00',
+                                text: 'Larutan tetap netral karena tidak ada ion yang terhidrolisis.'
+                            }
+                        ];
+                        break;
+
+                    case 'weak-strong':
+                        step1Text = 'Garam dari asam lemah dan basa kuat. Anion (A⁻) akan terhidrolisis menghasilkan OH⁻.';
+                        
+                        // Calculate Kb from Ka
+                        const Kb = Kw / state.ka;
+                        
+                        // [OH-] = sqrt(Kb * C)
+                        const OH = Math.sqrt(Kb * C);
+                        const pOH = -Math.log10(OH);
+                        pH = 14 - pOH;
+                        
+                        steps = [
+                            {
+                                title: 'Identifikasi',
+                                text: step1Text
+                            },
+                            {
+                                title: 'Reaksi Hidrolisis',
+                                formula: 'A⁻ + H₂O ⇌ HA + OH⁻',
+                                text: 'Ion asetat bereaksi dengan air membentuk asam lemah dan ion hidroksida.'
+                            },
+                            {
+                                title: 'Hitung Kb',
+                                formula: `Kb = Kw / Ka = ${Kw.toExponential(2)} / ${state.ka.toExponential(2)} = ${Kb.toExponential(2)}`,
+                                text: 'Kb adalah konstanta basa untuk ion konjugat A⁻.'
+                            },
+                            {
+                                title: 'Hitung [OH⁻]',
+                                formula: `[OH⁻] = √(Kb × C) = √(${Kb.toExponential(2)} × ${C}) = ${OH.toExponential(2)} M`,
+                                text: 'Menggunakan pendekatan [OH⁻] ≈ √(Kb × C) karena hidrolisis kecil.'
+                            },
+                            {
+                                title: 'Hitung pOH dan pH',
+                                formula: `pOH = -log[OH⁻] = ${pOH.toFixed(2)}\npH = 14 - pOH = ${pH.toFixed(2)}`,
+                                text: `Larutan bersifat basa dengan pH ${pH.toFixed(2)} > 7.`
+                            }
+                        ];
+                        break;
+
+                    case 'strong-weak':
+                        step1Text = 'Garam dari asam kuat dan basa lemah. Kation (BH⁺) akan terhidrolisis menghasilkan H⁺.';
+                        
+                        // Calculate Ka from Kb
+                        const Ka = Kw / state.kb;
+                        
+                        // [H+] = sqrt(Ka * C)
+                        const H = Math.sqrt(Ka * C);
+                        pH = -Math.log10(H);
+                        
+                        steps = [
+                            {
+                                title: 'Identifikasi',
+                                text: step1Text
+                            },
+                            {
+                                title: 'Reaksi Hidrolisis',
+                                formula: 'NH₄⁺ + H₂O ⇌ NH₃ + H₃O⁺',
+                                text: 'Ion amonium bereaksi dengan air melepaskan ion hidronium.'
+                            },
+                            {
+                                title: 'Hitung Ka',
+                                formula: `Ka = Kw / Kb = ${Kw.toExponential(2)} / ${state.kb.toExponential(2)} = ${Ka.toExponential(2)}`,
+                                text: 'Ka adalah konstanta asam untuk ion amonium.'
+                            },
+                            {
+                                title: 'Hitung [H⁺]',
+                                formula: `[H⁺] = √(Ka × C) = √(${Ka.toExponential(2)} × ${C}) = ${H.toExponential(2)} M`,
+                                text: 'Menggunakan pendekatan [H⁺] ≈ √(Ka × C) karena hidrolisis kecil.'
+                            },
+                            {
+                                title: 'Hitung pH',
+                                formula: `pH = -log[H⁺] = ${pH.toFixed(2)}`,
+                                text: `Larutan bersifat asam dengan pH ${pH.toFixed(2)} < 7.`
+                            }
+                        ];
+                        break;
+
+                    case 'weak-weak':
+                        step1Text = 'Garam dari asam lemah dan basa lemah (amfiprotik). Kedua ion dapat terhidrolisis.';
+                        
+                        // pH approximation for amphiprotic salt
+                        // pH ≈ 7 + 0.5 * log(Kb/Ka)
+                        pH = 7 + 0.5 * Math.log10(state.kb / state.ka);
+                        
+                        steps = [
+                            {
+                                title: 'Identifikasi',
+                                text: step1Text
+                            },
+                            {
+                                title: 'Reaksi Hidrolisis Ganda',
+                                formula: 'NH₄⁺ + H₂O ⇌ NH₃ + H₃O⁺\nCH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻',
+                                text: 'Kedua ion mengalami hidrolisis secara bersamaan.'
+                            },
+                            {
+                                title: 'Rumus untuk Garam Amfiprotik',
+                                formula: `pH ≈ 7 + 0.5 × log(Kb/Ka)`,
+                                text: 'pH tidak bergantung pada konsentrasi, hanya pada rasio Kb dan Ka.'
+                            },
+                            {
+                                title: 'Substitusi',
+                                formula: `pH = 7 + 0.5 × log(${state.kb.toExponential(2)} / ${state.ka.toExponential(2)})\npH = 7 + 0.5 × ${Math.log10(state.kb / state.ka).toFixed(2)}\npH = ${pH.toFixed(2)}`,
+                                text: `Jika Kb > Ka, larutan bersifat basa. Jika Ka > Kb, larutan bersifat asam.`
+                            }
+                        ];
+                        break;
+                }
+
+                state.pH = pH;
+                
+                // Update UI
+                updatePHDisplay(pH);
+                displayCalculationSteps(steps);
+                updateGraph();
+                
+                // Hide loading
+                document.getElementById('loading').classList.remove('show');
+            }, 500);
+        }
+
+        function updatePHDisplay(pH) {
+            const phValue = document.getElementById('phValue');
+            const phMarker = document.getElementById('phMarker');
+            const solutionType = document.getElementById('solutionType');
+
+            // Animate pH value
+            phValue.textContent = pH.toFixed(2);
+            
+            // Update marker position (0-14 scale)
+            const position = (pH / 14) * 100;
+            phMarker.style.left = position + '%';
+
+            // Update solution type
+            if (pH < 6.5) {
+                solutionType.className = 'solution-type acidic';
+                solutionType.textContent = '🔴 LARUTAN ASAM';
+            } else if (pH > 7.5) {
+                solutionType.className = 'solution-type basic';
+                solutionType.textContent = '🔵 LARUTAN BASA';
+            } else {
+                solutionType.className = 'solution-type neutral';
+                solutionType.textContent = '⚖️ LARUTAN NETRAL';
+            }
+        }
+
+        function displayCalculationSteps(steps) {
+            const stepsContainer = document.getElementById('calcSteps');
+            stepsContainer.innerHTML = '';
+
+            steps.forEach((step, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'calc-step';
+                
+                let html = `<div class="calc-step-title">📝 Langkah ${index + 1}: ${step.title}</div>`;
+                
+                if (step.formula) {
+                    html += `<div class="calc-formula">${step.formula}</div>`;
+                }
+                
+                if (step.text) {
+                    html += `<div class="calc-explanation">${step.text}</div>`;
+                }
+                
+                stepDiv.innerHTML = html;
+                stepsContainer.appendChild(stepDiv);
+            });
+        }
+
+        function toggleSteps() {
+            const steps = document.getElementById('calcSteps');
+            const btn = event.target;
+            
+            if (steps.classList.contains('show')) {
+                steps.classList.remove('show');
+                btn.textContent = 'Tampilkan Detail';
+            } else {
+                steps.classList.add('show');
+                btn.textContent = 'Sembunyikan Detail';
+            }
+        }
+
+        function resetForm() {
+            state.saltType = 'weak-strong';
+            state.concentration = 0.1;
+            
+            document.getElementById('saltSelect').value = 'weak-strong';
+            document.getElementById('concInput').value = 0.1;
+            document.getElementById('concSlider').value = 0.1;
+            document.getElementById('sliderValue').textContent = '0.100 M';
+            document.getElementById('customNameWrapper').style.display = 'none';
+            
+            preselectValues();
+            updatePHDisplay(7.0);
+            document.getElementById('calcSteps').innerHTML = '<p style="color: #64748b; text-align: center;">Klik tombol "Hitung" untuk melihat perhitungan</p>';
+        }
+
+        function loadExample() {
+            // Load example: CH3COONa 0.1 M
+            state.saltType = 'weak-strong';
+            state.ka = 1.8e-5;
+            state.kb = Kw / 1.8e-5;
+            state.concentration = 0.1;
+            
+            document.getElementById('saltSelect').value = 'weak-strong';
+            document.getElementById('kaInput').value = '1.8e-5';
+            document.getElementById('kbInput').value = state.kb.toExponential(2);
+            document.getElementById('concInput').value = 0.1;
+            document.getElementById('concSlider').value = 0.1;
+            document.getElementById('sliderValue').textContent = '0.100 M';
+            
+            calculatePH();
+            
+            // Show notification
+            alert('✅ Contoh soal dimuat!\n\nGaram: CH₃COONa (Natrium Asetat)\nKonsentrasi: 0.1 M\nKa CH₃COOH: 1.8 × 10⁻⁵\n\nKlik "Hitung" untuk melihat perhitungan lengkap!');
+        }
+
+        // Chart Functions
+        function initChart() {
+            const ctx = document.getElementById('phChart').getContext('2d');
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'pH vs Konsentrasi',
+                        data: [],
+                        borderColor: 'rgb(37, 99, 235)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: 'rgb(124, 58, 237)',
+                        pointBorderColor: 'white',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    return 'pH: ' + context.parsed.y.toFixed(2);
+                                },
+                                afterLabel: function(context) {
+                                    const pH = context.parsed.y;
+                                    if (pH < 7) return 'Asam';
+                                    if (pH > 7) return 'Basa';
+                                    return 'Netral';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Konsentrasi (M)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'pH',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            min: 0,
+                            max: 14,
+                            ticks: {
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateGraph() {
+            const concentrations = [];
+            const pHValues = [];
+            
+            // Generate data points
+            for (let c = 0.01; c <= 1; c += 0.02) {
+                concentrations.push(c.toFixed(3));
+                
+                let pH = 7.0;
+                const C = c;
+                
+                switch(state.saltType) {
+                    case 'weak-strong':
+                        const Kb = Kw / state.ka;
+                        const OH = Math.sqrt(Kb * C);
+                        const pOH = -Math.log10(OH);
+                        pH = 14 - pOH;
+                        break;
+                    case 'strong-weak':
+                        const Ka = Kw / state.kb;
+                        const H = Math.sqrt(Ka * C);
+                        pH = -Math.log10(H);
+                        break;
+                    case 'weak-weak':
+                        pH = 7 + 0.5 * Math.log10(state.kb / state.ka);
+                        break;
+                    case 'strong-strong':
+                        pH = 7.0;
+                        break;
+                }
+                
+                pHValues.push(pH);
+            }
+            
+            // Update chart
+            chart.data.labels = concentrations;
+            chart.data.datasets[0].data = pHValues;
+            
+            // Highlight current point
+            const currentIndex = concentrations.findIndex(c => Math.abs(parseFloat(c) - state.concentration) < 0.02);
+            if (currentIndex !== -1) {
+                chart.data.datasets[0].pointRadius = concentrations.map((_, i) => i === currentIndex ? 10 : 6);
+                chart.data.datasets[0].pointBackgroundColor = concentrations.map((_, i) => 
+                    i === currentIndex ? 'rgb(245, 158, 11)' : 'rgb(124, 58, 237)'
+                );
+            }
+            
+            chart.update();
+        }
+
+        function setGraphScale(scale) {
+            graphScale = scale;
+            
+            document.getElementById('linearBtn').classList.toggle('active', scale === 'linear');
+            document.getElementById('logBtn').classList.toggle('active', scale === 'log');
+            
+            if (scale === 'log') {
+                chart.options.scales.x.type = 'logarithmic';
+            } else {
+                chart.options.scales.x.type = 'linear';
+            }
+            
+            chart.update();
+        }
+
+        // Navigation
+        function navigateTo(page) {
+            const pageNames = {
+                'home': 'Halaman Utama',
+                'teori': 'Teori Dasar',
+                'simulasi': 'Simulasi Interaktif',
+                'perhitungan': 'Perhitungan pH',
+                'game': 'Game Edukasi'
+            };
+            
+            alert(`🚀 Navigasi ke: ${pageNames[page] || page}\n\nDalam aplikasi lengkap, ini akan membuka halaman ${pageNames[page] || page}.`);
+            console.log('Navigating to:', page);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan & Refleksi - Hidrolisis Garam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+
+        /* ── LIGHT ANIMATED BACKGROUND ── */
+        body{
+            font-family:'Poppins',sans-serif;
+            background:#f0f4ff;
+            min-height:100vh;
+            overflow-x:hidden;
+            position:relative;
+        }
+        body::before{
+            content:'';position:fixed;inset:0;z-index:0;
+            background:
+                radial-gradient(ellipse 700px 500px at 0% 0%,   #dbeafe 0%,transparent 60%),
+                radial-gradient(ellipse 600px 400px at 100% 0%,  #fce7f3 0%,transparent 60%),
+                radial-gradient(ellipse 500px 400px at 50% 100%, #dcfce7 0%,transparent 60%),
+                radial-gradient(ellipse 400px 300px at 100% 100%,#fef9c3 0%,transparent 60%),
+                #f0f4ff;
+            animation:bgShift 16s ease-in-out infinite alternate;
+            pointer-events:none;
+        }
+        @keyframes bgShift{
+            0%{filter:hue-rotate(0deg);}
+            50%{filter:hue-rotate(18deg);}
+            100%{filter:hue-rotate(-10deg);}
+        }
+
+        /* floating soft bubbles */
+        .bubbles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+        .bub{position:absolute;border-radius:50%;animation:bubFloat linear infinite;}
+        .bub1{width:200px;height:200px;background:radial-gradient(circle,rgba(165,180,252,.5),rgba(99,102,241,.2));top:3%;left:1%;animation-duration:18s;animation-delay:0s;}
+        .bub2{width:130px;height:130px;background:radial-gradient(circle,rgba(251,207,232,.6),rgba(236,72,153,.2));top:12%;right:3%;animation-duration:22s;animation-delay:3s;}
+        .bub3{width:100px;height:100px;background:radial-gradient(circle,rgba(187,247,208,.6),rgba(16,185,129,.2));bottom:22%;left:4%;animation-duration:20s;animation-delay:6s;}
+        .bub4{width:160px;height:160px;background:radial-gradient(circle,rgba(253,230,138,.5),rgba(245,158,11,.2));bottom:8%;right:5%;animation-duration:25s;animation-delay:2s;}
+        .bub5{width:80px; height:80px; background:radial-gradient(circle,rgba(186,230,253,.6),rgba(59,130,246,.2));top:45%;left:0%;animation-duration:15s;animation-delay:8s;}
+        .bub6{width:110px;height:110px;background:radial-gradient(circle,rgba(216,180,254,.5),rgba(139,92,246,.2));top:58%;right:1%;animation-duration:19s;animation-delay:4s;}
+        @keyframes bubFloat{
+            0%{transform:translateY(0) scale(1) rotate(0deg);}
+            33%{transform:translateY(-45px) scale(1.07) rotate(5deg);}
+            66%{transform:translateY(22px) scale(0.96) rotate(-4deg);}
+            100%{transform:translateY(0) scale(1) rotate(0deg);}
+        }
+
+        .wrapper{position:relative;z-index:1;}
+
+        /* ── STICKY NAV ── */
+        .top-nav{
+            position:sticky;top:0;z-index:9999;
+            background:rgba(255,255,255,.88);
+            backdrop-filter:blur(20px);
+            border-bottom:2.5px solid rgba(99,102,241,.14);
+            box-shadow:0 4px 28px rgba(99,102,241,.1);
+        }
+        .top-nav-inner{
+            max-width:1400px;margin:0 auto;padding:0 22px;
+            display:flex;align-items:center;justify-content:space-between;
+            min-height:68px;gap:10px;flex-wrap:wrap;
+        }
+        .nav-brand{
+            display:flex;align-items:center;gap:8px;
+            font-weight:900;font-size:1.05rem;white-space:nowrap;
+            background:linear-gradient(90deg,#6366f1,#ec4899,#f59e0b);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+        .nav-link{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:7px 11px;border-radius:10px;
+            font-size:.72rem;font-weight:700;
+            text-decoration:none;transition:all .22s;
+            border:1.5px solid transparent;white-space:nowrap;
+            color:#374151;
+        }
+        .nav-link:hover{transform:translateY(-3px);color:#fff;}
+        .nl1:hover{background:#6366f1;border-color:#6366f1;box-shadow:0 4px 14px rgba(99,102,241,.32);}
+        .nl2:hover{background:#ec4899;border-color:#ec4899;box-shadow:0 4px 14px rgba(236,72,153,.32);}
+        .nl3:hover{background:#f59e0b;border-color:#f59e0b;box-shadow:0 4px 14px rgba(245,158,11,.32);}
+        .nl4:hover{background:#10b981;border-color:#10b981;box-shadow:0 4px 14px rgba(16,185,129,.32);}
+        .nl5:hover{background:#3b82f6;border-color:#3b82f6;box-shadow:0 4px 14px rgba(59,130,246,.32);}
+        .nl6:hover{background:#8b5cf6;border-color:#8b5cf6;box-shadow:0 4px 14px rgba(139,92,246,.32);}
+        .nl7:hover{background:#14b8a6;border-color:#14b8a6;box-shadow:0 4px 14px rgba(20,184,166,.32);}
+        .nav-link.active-page{
+            background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:#fff;border-color:#6366f1;
+            box-shadow:0 4px 16px rgba(99,102,241,.38);
+        }
+
+        /* ── HERO ── */
+        .hero{
+            padding:58px 40px 52px;text-align:center;
+            position:relative;overflow:hidden;
+        }
+        /* rainbow bar at bottom of hero */
+        .hero::after{
+            content:'';position:absolute;bottom:0;left:0;width:100%;height:5px;
+            background:linear-gradient(90deg,#6366f1,#ec4899,#f59e0b,#10b981,#3b82f6,#8b5cf6,#6366f1);
+            background-size:200% 100%;
+            animation:rainbowShift 4s linear infinite;
+        }
+        @keyframes rainbowShift{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+
+        .hero-badge{
+            display:inline-flex;align-items:center;gap:8px;
+            background:linear-gradient(135deg,#ede9fe,#fce7f3);
+            border:2px solid #c4b5fd;
+            color:#6d28d9;padding:8px 22px;border-radius:50px;
+            font-size:.82rem;font-weight:800;margin-bottom:20px;
+            box-shadow:0 4px 14px rgba(109,40,217,.14);
+            animation:badgePop .6s cubic-bezier(.34,1.56,.64,1) both;
+        }
+        @keyframes badgePop{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+        .hero h1{
+            font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:900;
+            line-height:1.18;margin-bottom:14px;
+            background:linear-gradient(135deg,#4f46e5 0%,#db2777 42%,#d97706 75%,#059669 100%);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .hero p{
+            font-size:1rem;color:#475569;
+            max-width:580px;margin:0 auto 32px;line-height:1.8;font-weight:500;
+        }
+        .hero-stats{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;}
+        .hstat{
+            background:white;border-radius:18px;padding:18px 28px;
+            box-shadow:0 6px 24px rgba(99,102,241,.11);
+            border:2px solid transparent;text-align:center;
+            transition:all .3s;cursor:default;position:relative;overflow:hidden;
+        }
+        .hstat::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:4px;
+        }
+        .hstat:nth-child(1)::before{background:linear-gradient(90deg,#6366f1,#8b5cf6);}
+        .hstat:nth-child(2)::before{background:linear-gradient(90deg,#10b981,#3b82f6);}
+        .hstat:nth-child(3)::before{background:linear-gradient(90deg,#f59e0b,#ec4899);}
+        .hstat:hover{transform:translateY(-5px);box-shadow:0 12px 32px rgba(99,102,241,.18);border-color:#c4b5fd;}
+        .hstat-val{
+            font-size:2rem;font-weight:900;
+            background:linear-gradient(135deg,#6366f1,#ec4899);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .hstat-lbl{font-size:.74rem;color:#64748b;font-weight:700;margin-top:3px;}
+
+        /* floating chem deco */
+        .hero-deco{
+            position:absolute;pointer-events:none;font-size:2.8rem;
+            animation:heroDeco 8s ease-in-out infinite;
+            filter:drop-shadow(0 2px 8px rgba(99,102,241,.15));
+        }
+        .hd1{top:12%;left:4%;animation-delay:0s;font-size:3rem;}
+        .hd2{top:18%;right:6%;font-size:2rem;animation-delay:2s;}
+        .hd3{bottom:18%;left:8%;font-size:2.4rem;animation-delay:4s;}
+        .hd4{bottom:22%;right:4%;font-size:2rem;animation-delay:6s;}
+        @keyframes heroDeco{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-14px) rotate(8deg);}}
+
+        /* ── MAIN ── */
+        .main{max-width:1100px;margin:0 auto;padding:36px 24px 70px;}
+
+        /* ── TABS ── */
+        .stabs{
+            display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap;
+            padding:14px;background:white;
+            border-radius:22px;box-shadow:0 6px 28px rgba(99,102,241,.1);
+            border:2px solid #ede9fe;
+        }
+        .stab{
+            flex:1;min-width:145px;
+            padding:14px 16px;border:none;border-radius:14px;
+            font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:800;
+            cursor:pointer;transition:all .28s;
+            background:#f8fafc;color:#64748b;
+            display:flex;align-items:center;justify-content:center;gap:8px;
+        }
+        .stab:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.08);}
+        .stab.active{color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.14);}
+        .stab1.active{background:linear-gradient(135deg,#6366f1,#8b5cf6);}
+        .stab2.active{background:linear-gradient(135deg,#ec4899,#f97316);}
+        .stab3.active{background:linear-gradient(135deg,#059669,#10b981);}
+        .stab4.active{background:linear-gradient(135deg,#3b82f6,#10b981);}
+
+        /* ── PANELS ── */
+        .panel{display:none;animation:fadeUp .42s ease both;}
+        .panel.active{display:block;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+        /* ── QUIZ 1 ── */
+        .q1-notice{
+            background:linear-gradient(135deg,#ede9fe,#fce7f3);
+            border:2px solid #c4b5fd;border-radius:16px;
+            padding:15px 20px;margin-bottom:20px;
+            display:flex;align-items:center;gap:10px;
+            color:#6d28d9;font-size:.86rem;font-weight:700;
+            box-shadow:0 3px 12px rgba(109,40,217,.1);
+        }
+        .quiz1-wrap{
+            background:white;border-radius:24px;padding:36px;
+            box-shadow:0 10px 40px rgba(99,102,241,.12);
+            border:2px solid #e0e7ff;
+        }
+        .quiz-topbar{
+            display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:20px;flex-wrap:wrap;gap:12px;
+        }
+        .qnum-badge{
+            background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:#fff;padding:8px 20px;border-radius:50px;
+            font-size:.84rem;font-weight:800;
+            box-shadow:0 4px 14px rgba(99,102,241,.32);
+        }
+        .qtimer{
+            display:flex;align-items:center;gap:8px;
+            background:#fef2f2;border:2px solid #fca5a5;
+            color:#dc2626;padding:8px 18px;border-radius:50px;
+            font-size:1rem;font-weight:800;font-variant-numeric:tabular-nums;
+        }
+        .qprogbar{
+            height:12px;background:#f1f5f9;border-radius:50px;
+            overflow:hidden;margin-bottom:26px;
+            box-shadow:inset 0 2px 4px rgba(0,0,0,.07);
+        }
+        .qprogfill{
+            height:100%;border-radius:50px;
+            background:linear-gradient(90deg,#6366f1,#ec4899,#f59e0b);
+            transition:width .6s cubic-bezier(.4,0,.2,1);
+            box-shadow:0 0 12px rgba(99,102,241,.4);
+        }
+        .qtext{
+            font-size:1.1rem;font-weight:700;color:#1e293b;
+            line-height:1.75;margin-bottom:24px;
+            padding:20px 24px;
+            background:linear-gradient(135deg,#f5f3ff,#fdf2f8);
+            border-radius:16px;border-left:5px solid #6366f1;
+            box-shadow:0 3px 12px rgba(99,102,241,.08);
+        }
+        .opts{display:flex;flex-direction:column;gap:11px;}
+        .opt{
+            padding:15px 20px;border-radius:14px;cursor:pointer;
+            display:flex;align-items:center;gap:14px;
+            border:2px solid #e2e8f0;background:#f8fafc;
+            color:#334155;font-size:.94rem;font-weight:600;
+            transition:all .25s;
+        }
+        .opt:hover{border-color:#6366f1;background:#ede9fe;transform:translateX(7px);box-shadow:0 4px 16px rgba(99,102,241,.14);}
+        .opt.selected{border-color:#6366f1;background:linear-gradient(135deg,#ede9fe,#e0e7ff);box-shadow:0 4px 16px rgba(99,102,241,.18);}
+        .opt.correct{border-color:#10b981;background:linear-gradient(135deg,#d1fae5,#ecfdf5);animation:correctBounce .5s ease;}
+        .opt.wrong  {border-color:#ef4444;background:linear-gradient(135deg,#fee2e2,#fff1f1);animation:wrongShake .5s ease;}
+        @keyframes correctBounce{0%,100%{transform:scale(1);}50%{transform:scale(1.02);}}
+        @keyframes wrongShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+        .opt-lbl{
+            width:34px;height:34px;border-radius:50%;flex-shrink:0;
+            background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:#fff;display:flex;align-items:center;justify-content:center;
+            font-weight:800;font-size:.84rem;
+            box-shadow:0 3px 8px rgba(99,102,241,.28);
+        }
+        .feedback{
+            margin-top:20px;padding:18px 22px;border-radius:14px;
+            display:none;animation:fadeUp .4s ease;
+        }
+        .feedback.show{display:block;}
+        .feedback.correct{background:linear-gradient(135deg,#d1fae5,#ecfdf5);border:2px solid #10b981;color:#065f46;}
+        .feedback.wrong  {background:linear-gradient(135deg,#fee2e2,#fff1f1);border:2px solid #ef4444;color:#991b1b;}
+        .feedback-title{font-size:1rem;font-weight:800;margin-bottom:6px;}
+        .hint-box{
+            margin-top:14px;padding:14px 18px;border-radius:13px;
+            background:linear-gradient(135deg,#fef9c3,#fef3c7);
+            border:2px solid #fbbf24;color:#92400e;
+            font-size:.88rem;display:none;
+            box-shadow:0 3px 10px rgba(245,158,11,.13);
+        }
+        .quiz-actions{display:flex;gap:11px;margin-top:22px;flex-wrap:wrap;}
+
+        /* ── BUTTONS ── */
+        .btn{
+            padding:13px 24px;border:none;border-radius:12px;
+            font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:800;
+            cursor:pointer;transition:all .25s;
+            display:inline-flex;align-items:center;gap:8px;
+            position:relative;overflow:hidden;text-decoration:none;
+        }
+        .btn:hover{transform:translateY(-3px);}
+        .btn-indigo{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,.36);}
+        .btn-amber {background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;box-shadow:0 6px 20px rgba(245,158,11,.32);}
+        .btn-green {background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 6px 20px rgba(16,185,129,.32);}
+        .btn-pink  {background:linear-gradient(135deg,#ec4899,#db2777);color:#fff;box-shadow:0 6px 20px rgba(236,72,153,.32);}
+        .btn-gray  {background:#f1f5f9;color:#475569;border:2px solid #e2e8f0;box-shadow:none;}
+        .btn-gray:hover{background:#e2e8f0;}
+        .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+
+        /* ── QUIZ 2 GENIALLY ── */
+        .quiz2-wrap{display:flex;flex-direction:column;gap:26px;}
+        .genially-card{
+            border-radius:22px;overflow:hidden;
+            box-shadow:0 12px 40px rgba(0,0,0,.1);
+            background:white;border:2px solid #e0e7ff;
+            transition:transform .3s,box-shadow .3s;
+        }
+        .genially-card:hover{transform:translateY(-5px);box-shadow:0 20px 56px rgba(99,102,241,.17);}
+        .gc-header{padding:22px 28px;display:flex;align-items:center;gap:16px;}
+        .gc1 .gc-header{background:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);}
+        .gc2 .gc-header{background:linear-gradient(135deg,#f59e0b,#ef4444,#ec4899);}
+        .gc-icon{font-size:2.2rem;}
+        .gc-title{font-size:1.15rem;font-weight:900;color:#fff;}
+        .gc-sub{font-size:.8rem;color:rgba(255,255,255,.88);margin-top:2px;font-weight:600;}
+        .gc-iframe-wrap{position:relative;padding-bottom:56.25%;height:0;background:#f8fafc;}
+        .gc-iframe-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+        .gc-actions{
+            padding:14px 22px;display:flex;align-items:center;
+            justify-content:space-between;gap:12px;flex-wrap:wrap;
+            background:#f8fafc;border-top:2px solid #e0e7ff;
+        }
+        .gc-note{font-size:.8rem;color:#64748b;font-weight:600;}
+        .gc-open-btn{
+            display:inline-flex;align-items:center;gap:7px;
+            padding:10px 20px;border-radius:10px;
+            font-size:.82rem;font-weight:800;text-decoration:none;transition:all .25s;
+        }
+        .gc1 .gc-open-btn{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 4px 14px rgba(99,102,241,.28);}
+        .gc2 .gc-open-btn{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;box-shadow:0 4px 14px rgba(245,158,11,.28);}
+        .gc-open-btn:hover{transform:translateY(-2px);}
+
+        /* ── REFLECTION ── */
+        .refl-card{
+            background:white;border-radius:22px;padding:36px;
+            box-shadow:0 10px 40px rgba(16,185,129,.1);
+            border:2px solid #d1fae5;margin-bottom:20px;
+        }
+        .refl-head{
+            font-size:1.5rem;font-weight:900;margin-bottom:24px;
+            background:linear-gradient(135deg,#059669,#10b981,#3b82f6);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .refl-prompt{
+            background:linear-gradient(135deg,#f0fdf4,#ecfdf5);
+            border:2px solid #bbf7d0;border-left:5px solid #10b981;
+            border-radius:14px;padding:18px 22px;margin-bottom:13px;
+        }
+        .refl-prompt h4{font-size:.92rem;font-weight:800;color:#065f46;margin-bottom:6px;}
+        .refl-prompt p{font-size:.86rem;color:#047857;line-height:1.65;}
+        .refl-ta{
+            width:100%;padding:15px 18px;
+            background:#f8fafc;border:2px solid #e2e8f0;
+            border-radius:13px;font-family:'Poppins',sans-serif;
+            font-size:.87rem;color:#1e293b;
+            resize:vertical;min-height:125px;line-height:1.7;
+            transition:border-color .25s,box-shadow .25s,background .25s;
+        }
+        .refl-ta:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.12);background:#f0fdf4;}
+        .refl-ta::placeholder{color:#94a3b8;}
+        .tags-lbl{font-size:.88rem;font-weight:800;color:#065f46;margin-bottom:12px;}
+        .tags-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+        .rtag{
+            padding:9px 18px;border-radius:50px;
+            background:#f1f5f9;border:2px solid #e2e8f0;
+            color:#475569;font-size:.79rem;font-weight:700;
+            cursor:pointer;transition:all .25s;
+        }
+        .rtag:hover{border-color:#10b981;background:#d1fae5;color:#065f46;transform:scale(1.06);}
+        .rtag.selected{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:#10b981;box-shadow:0 4px 12px rgba(16,185,129,.28);}
+
+        /* ── RESULTS ── */
+        .results-wrap{
+            background:white;border-radius:24px;padding:50px 40px;
+            box-shadow:0 10px 50px rgba(99,102,241,.13);
+            border:2px solid #e0e7ff;text-align:center;
+        }
+        .res-title{
+            font-size:2.6rem;font-weight:900;margin-bottom:8px;
+            background:linear-gradient(135deg,#4f46e5,#db2777,#d97706);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .res-score{
+            font-size:5.5rem;font-weight:900;
+            background:linear-gradient(135deg,#f59e0b,#ec4899);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            line-height:1;margin:14px 0;
+            animation:popIn .8s cubic-bezier(.34,1.56,.64,1) both;
+        }
+        @keyframes popIn{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+        .res-lbl{font-size:1rem;color:#64748b;margin-bottom:36px;font-weight:600;}
+        .stats-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+            gap:14px;margin:30px 0;
+        }
+        .scard{
+            padding:22px 16px;border-radius:18px;text-align:center;
+            transition:transform .25s,box-shadow .25s;border:2px solid transparent;
+        }
+        .scard:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(0,0,0,.08);}
+        .sc1{background:linear-gradient(135deg,#ede9fe,#e0e7ff);border-color:#c4b5fd;}
+        .sc2{background:linear-gradient(135deg,#fce7f3,#fdf2f8);border-color:#f9a8d4;}
+        .sc3{background:linear-gradient(135deg,#d1fae5,#ecfdf5);border-color:#6ee7b7;}
+        .sc4{background:linear-gradient(135deg,#fef3c7,#fffbeb);border-color:#fcd34d;}
+        .scard h4{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;color:#475569;}
+        .scard .val{font-size:2.1rem;font-weight:900;color:#1e293b;}
+        .badges-row{display:flex;justify-content:center;gap:22px;margin:28px 0;flex-wrap:wrap;}
+        .badge{
+            width:100px;height:100px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            font-size:3rem;box-shadow:0 8px 28px rgba(0,0,0,.15);
+            animation:spinBadge 8s linear infinite;
+        }
+        @keyframes spinBadge{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+        .badge.gold  {background:linear-gradient(135deg,#fbbf24,#f59e0b);}
+        .badge.silver{background:linear-gradient(135deg,#e5e7eb,#9ca3af);}
+        .badge.bronze{background:linear-gradient(135deg,#fb923c,#ea580c);}
+        .cert-box{
+            background:linear-gradient(135deg,#fef9c3,#fffbeb);
+            border:2px solid #fcd34d;border-radius:20px;padding:30px;margin:26px 0;
+            box-shadow:0 6px 24px rgba(245,158,11,.13);
+        }
+        .cert-box h3{font-size:1.4rem;font-weight:900;color:#92400e;margin-bottom:8px;}
+        .cert-box p{color:#78350f;font-size:.9rem;margin-bottom:22px;line-height:1.6;}
+        .res-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px;}
+
+        /* ── FOOTER ── */
+        .site-footer{
+            background:linear-gradient(135deg,#4f46e5,#7c3aed,#db2777);
+            padding:32px 40px;text-align:center;
+        }
+        .sf-logo{font-size:2rem;margin-bottom:8px;display:block;}
+        .sf-brand{font-size:.95rem;font-weight:800;color:rgba(255,255,255,.95);margin-bottom:4px;}
+        .sf-dev{font-size:.82rem;color:rgba(255,255,255,.72);line-height:1.6;}
+        .sf-dev span{color:#fde68a;font-weight:700;}
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar{width:7px;}
+        ::-webkit-scrollbar-track{background:#f0f4ff;}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(#6366f1,#ec4899);border-radius:4px;}
+
+        /* ── CONFETTI ── */
+        #confettiCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:768px){
+            .top-nav-inner{min-height:60px;}
+            .nav-links{gap:2px;}
+            .nav-link{padding:5px 8px;font-size:.66rem;}
+            .hero{padding:38px 18px 34px;}
+            .main{padding:22px 12px 50px;}
+            .quiz1-wrap,.refl-card,.results-wrap{padding:20px 16px;}
+            .stabs{padding:10px;gap:7px;}
+            .stab{padding:11px 10px;font-size:.77rem;min-width:120px;}
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<div class="bubbles">
+    <div class="bub bub1"></div><div class="bub bub2"></div>
+    <div class="bub bub3"></div><div class="bub bub4"></div>
+    <div class="bub bub5"></div><div class="bub bub6"></div>
+</div>
+
+<div class="wrapper">
+
+<!-- ══════════ STICKY NAV ══════════ -->
+<nav class="top-nav">
+    <div class="top-nav-inner">
+        <div class="nav-brand">🧪 Hidrolisis Garam</div>
+        <div class="nav-links">
+            <a href="index.html"                     class="nav-link nl1">🏠 Landing Page</a>
+            <a href="Masalah Pada Case.html"          class="nav-link nl2">📋 Masalah Case</a>
+            <a href="Teori Dasar.html"              class="nav-link nl3">📚 Teori Dasar</a>
+            <a href="Simulasi interaktif.html"         class="nav-link nl4">🔬 Simulasi</a>
+            <a href="Solusi Case.html"                class="nav-link nl5">💡 Solusi Case</a>
+            <a href="Perhitungan pH.html"             class="nav-link nl6">🧮 Perhitungan pH</a>
+            <a href="Game Edukasi.html"               class="nav-link nl7">🎮 Game</a>
+            <a href="Latihan soal dan refleksi.html"  class="nav-link active-page">📝 Latihan &amp; Refleksi</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+    <span class="hero-deco hd1">⚗️</span>
+    <span class="hero-deco hd2">pH</span>
+    <span class="hero-deco hd3">🧪</span>
+    <span class="hero-deco hd4">Ka</span>
+    <div class="hero-badge">📝  Latihan &amp; Refleksi</div>
+    <h1>Latihan Soal &amp; Refleksi Pembelajaran</h1>
+    <p>Uji pemahamanmu dengan kuis interaktif, eksplorasi quiz multimedia, dan refleksikan perjalanan belajarmu tentang hidrolisis garam!</p>
+    <div class="hero-stats">
+        <div class="hstat">
+            <div class="hstat-val" id="totalScore">0</div>
+            <div class="hstat-lbl">🎯 Skor Total</div>
+        </div>
+        <div class="hstat">
+            <div class="hstat-val" id="correctAnswers">0</div>
+            <div class="hstat-lbl">✅ Jawaban Benar</div>
+        </div>
+        <div class="hstat">
+            <div class="hstat-val" id="progressPercent">0%</div>
+            <div class="hstat-lbl">📊 Progress</div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="main">
+
+    <div class="stabs">
+        <button class="stab stab1 active" onclick="showSection('quiz1')">📋 Quiz Interaktif</button>
+        <button class="stab stab2"         onclick="showSection('quiz2')">🌐 Quiz Multimedia</button>
+        <button class="stab stab3"         onclick="showSection('reflection')">💭 Refleksi</button>
+        <button class="stab stab4"         onclick="showSection('results')">🏆 Hasil &amp; Sertifikat</button>
+    </div>
+
+    <!-- ══ PANEL QUIZ 1 ══ -->
+    <div class="panel active" id="panel-quiz1">
+        <div class="q1-notice">
+            💡 Jawab 10 soal pilihan ganda tentang hidrolisis garam. Klik jawaban lalu tekan "Kirim Jawaban". Gunakan hint jika bingung!
+        </div>
+        <div class="quiz1-wrap">
+            <div class="quiz-topbar">
+                <div class="qnum-badge" id="questionNumber">Soal 1 dari 10</div>
+                <div class="qtimer">⏱️ <span id="timeDisplay">00:00</span></div>
+            </div>
+            <div class="qprogbar"><div class="qprogfill" id="quizProgress" style="width:0%"></div></div>
+            <div class="qtext" id="questionText">Memuat soal...</div>
+            <div class="opts" id="answerContainer"></div>
+            <div class="feedback" id="feedbackBox"></div>
+            <div class="hint-box" id="hintBox"></div>
+            <div class="quiz-actions">
+                <button class="btn btn-indigo" id="submitAnswer" onclick="submitAnswer()">Kirim Jawaban →</button>
+                <button class="btn btn-amber"  onclick="showHint()">💡 Hint</button>
+                <button class="btn btn-green"  onclick="nextQuestion()" style="display:none;" id="nextBtn">Soal Berikutnya →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ PANEL QUIZ 2 GENIALLY ══ -->
+    <div class="panel" id="panel-quiz2">
+        <div class="quiz2-wrap">
+
+            <div class="genially-card gc1">
+                <div class="gc-header">
+                    <div class="gc-icon">🎯</div>
+                    <div>
+                        <div class="gc-title">Quiz Interaktif — Topik 1</div>
+                        <div class="gc-sub">Konsep Dasar &amp; Jenis Hidrolisis Garam</div>
+                    </div>
+                </div>
+                <div class="gc-iframe-wrap">
+                    <iframe src="https://view.genially.com/6998e05ca2e6c6571374c8e8/interactive-content-topik-1"
+                        allowfullscreen allow="autoplay; fullscreen" loading="lazy"
+                        title="Quiz Topik 1 – Hidrolisis Garam"></iframe>
+                </div>
+                <div class="gc-actions">
+                    <span class="gc-note">⚡ Powered by Genially — Klik pada soal untuk mulai menjawab</span>
+                    <a href="https://view.genially.com/6998e05ca2e6c6571374c8e8/interactive-content-topik-1"
+                       target="_blank" rel="noopener noreferrer" class="gc-open-btn">🔗 Buka di Tab Baru ↗</a>
+                </div>
+            </div>
+
+            <div class="genially-card gc2">
+                <div class="gc-header">
+                    <div class="gc-icon">🔥</div>
+                    <div>
+                        <div class="gc-title">Quiz Interaktif — Topik 2</div>
+                        <div class="gc-sub">Perhitungan pH &amp; Aplikasi Hidrolisis</div>
+                    </div>
+                </div>
+                <div class="gc-iframe-wrap">
+                    <iframe src="https://view.genially.com/69a364840b35b5efd6429075/interactive-content-topik-2"
+                        allowfullscreen allow="autoplay; fullscreen" loading="lazy"
+                        title="Quiz Topik 2 – Hidrolisis Garam"></iframe>
+                </div>
+                <div class="gc-actions">
+                    <span class="gc-note">⚡ Powered by Genially — Klik pada soal untuk mulai menjawab</span>
+                    <a href="https://view.genially.com/69a364840b35b5efd6429075/interactive-content-topik-2"
+                       target="_blank" rel="noopener noreferrer" class="gc-open-btn">🔗 Buka di Tab Baru ↗</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══ PANEL REFLEKSI ══ -->
+    <div class="panel" id="panel-reflection">
+        <div class="refl-card">
+            <div class="refl-head">💭 Refleksi Pembelajaran</div>
+
+            <div class="refl-prompt">
+                <h4>📌 Refleksi 1 — Pemahaman Konsep</h4>
+                <p>Apa tiga hal utama yang Anda pelajari dari modul simulasi hidrolisis garam? Jelaskan bagaimana pemahaman Anda berkembang dari modul pertama hingga sekarang.</p>
+            </div>
+            <textarea class="refl-ta" id="reflection1" placeholder="Tuliskan refleksi Anda di sini... (minimal 50 karakter)"></textarea>
+
+            <div class="refl-prompt" style="margin-top:24px;">
+                <h4>📌 Refleksi 2 — Aplikasi Kehidupan</h4>
+                <p>Bagaimana konsep hidrolisis garam dapat diterapkan dalam kehidupan sehari-hari atau pekerjaan Anda? Berikan minimal 2 contoh konkret.</p>
+            </div>
+            <textarea class="refl-ta" id="reflection2" placeholder="Tuliskan refleksi Anda di sini... (minimal 50 karakter)"></textarea>
+
+            <div class="refl-prompt" style="margin-top:24px;">
+                <h4>📌 Refleksi 3 — Tantangan &amp; Solusi</h4>
+                <p>Apa tantangan terbesar yang Anda hadapi dalam memahami materi ini? Bagaimana cara Anda mengatasinya?</p>
+            </div>
+            <textarea class="refl-ta" id="reflection3" placeholder="Tuliskan refleksi Anda di sini... (minimal 50 karakter)"></textarea>
+
+            <div style="margin-top:24px;">
+                <div class="tags-lbl">🏷️ Pilih Tag yang Sesuai dengan Pengalamanmu:</div>
+                <div class="tags-grid">
+                    <div class="rtag" onclick="toggleTag(this,'konsep')">💡 Konsep Jelas</div>
+                    <div class="rtag" onclick="toggleTag(this,'aplikasi')">🔬 Siap Aplikasi</div>
+                    <div class="rtag" onclick="toggleTag(this,'metode')">📊 Metode Baru</div>
+                    <div class="rtag" onclick="toggleTag(this,'ragu')">❓ Masih Ragu</div>
+                    <div class="rtag" onclick="toggleTag(this,'eksperimen')">🧪 Mau Eksplorasi Lanjutan</div>
+                    <div class="rtag" onclick="toggleTag(this,'menarik')">⭐ Sangat Menarik!</div>
+                    <div class="rtag" onclick="toggleTag(this,'quiz')">🎮 Quiz Seru</div>
+                    <div class="rtag" onclick="toggleTag(this,'simulasi')">🔬 Simulasi Membantu</div>
+                </div>
+            </div>
+
+            <div class="quiz-actions" style="margin-top:26px;">
+                <button class="btn btn-green" onclick="submitReflection()">✓ Kirim Refleksi</button>
+                <button class="btn btn-gray"  onclick="viewSummary()">📄 Lihat Ringkasan</button>
+            </div>
+            <div class="feedback" id="reflectionFeedback"></div>
+        </div>
+    </div>
+
+    <!-- ══ PANEL HASIL ══ -->
+    <div class="panel" id="panel-results">
+        <div class="results-wrap">
+            <div class="res-title">🎉 Selamat Sobat Kimia!</div>
+            <div class="res-score" id="finalScore">0</div>
+            <div class="res-lbl">Total Skor Keseluruhan</div>
+            <div class="stats-grid">
+                <div class="scard sc1"><h4>Quiz Benar</h4><div class="val" id="quizCorrect">0</div></div>
+                <div class="scard sc2"><h4>Quiz Multimedia</h4><div class="val">2 ✨</div></div>
+                <div class="scard sc3"><h4>Refleksi</h4><div class="val" id="reflectionComplete">0/3</div></div>
+                <div class="scard sc4"><h4>Waktu Total</h4><div class="val" id="totalTime">00:00</div></div>
+            </div>
+            <div class="badges-row" id="badgesEarned"></div>
+            <div class="cert-box">
+                <h3>🎓 Sertifikat Penyelesaian</h3>
+                <p>Kamu telah menyelesaikan semua modul pembelajaran Hidrolisis Garam dengan penuh semangat dan dedikasi!</p>
+                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                    <button class="btn btn-amber" onclick="downloadCertificate()">📥 Unduh Sertifikat PDF</button>
+                    <button class="btn btn-gray"  onclick="previewCertificate()">👁️ Preview</button>
+                </div>
+            </div>
+            <div class="res-actions">
+                <a href="Teori Dasar.html" class="btn btn-indigo">📚 Ke Teori Dasar</a>
+                <a href="index.html"          class="btn btn-gray">🏠 Halaman Utama</a>
+                <button class="btn btn-pink"  onclick="restartModule()">🔄 Ulangi Latihan</button>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <span class="sf-logo">🧪</span>
+    <div class="sf-brand">© 2025 Virtual Chemistry Learning | Hidrolisis Garam</div>
+    <div class="sf-dev">Dikembangkan oleh: <span>Putri Ayu Rahmawati</span> – Universitas Negeri Malang</div>
+</footer>
+
+</div><!-- /wrapper -->
+
+<script>
+"use strict";
+
+const state={
+    currentQ:0,score:0,correctAnswers:0,
+    selectedAnswer:null,attempts:0,
+    timerStart:Date.now(),timerInterval:null,
+    reflectionCompleted:0,selectedTags:[]
+};
+
+const questions=[
+    {q:"Garam NaCl dalam air akan menghasilkan larutan yang bersifat?",opts:["Asam","Basa","Netral","Amfoter"],correct:2,exp:"NaCl berasal dari asam kuat (HCl) dan basa kuat (NaOH), sehingga tidak terjadi hidrolisis dan larutan tetap netral (pH = 7).",hint:"Perhatikan asal asam dan basa pembentuk garam tersebut."},
+    {q:"Ion yang mengalami hidrolisis pada larutan CH₃COONa adalah?",opts:["Na⁺","CH₃COO⁻","Keduanya","Tidak ada"],correct:1,exp:"Ion asetat (CH₃COO⁻) berasal dari asam lemah sehingga akan terhidrolisis menghasilkan OH⁻, menjadikan larutan bersifat basa.",hint:"Ion dari asam lemah atau basa lemah yang akan terhidrolisis."},
+    {q:"Larutan NH₄Cl bersifat asam karena?",opts:["Ion Cl⁻ terhidrolisis menghasilkan H⁺","Ion NH₄⁺ terhidrolisis menghasilkan H⁺","Kedua ion terhidrolisis","Tidak terjadi hidrolisis"],correct:1,exp:"Ion NH₄⁺ berasal dari basa lemah NH₃, sehingga akan terhidrolisis dan melepaskan ion H⁺ ke dalam larutan.",hint:"Ion dari basa lemah akan melepaskan proton saat bereaksi dengan air."},
+    {q:"Nilai Kw (tetapan kesetimbangan air) pada suhu 25°C adalah?",opts:["1.0 × 10⁻¹²","1.0 × 10⁻¹⁴","1.0 × 10⁻⁷","1.0 × 10⁻¹⁰"],correct:1,exp:"Konstanta ionisasi air (Kw) pada suhu 25°C adalah 1.0 × 10⁻¹⁴, diperoleh dari perkalian [H⁺] dan [OH⁻] pada air murni.",hint:"Kw = [H⁺][OH⁻] pada suhu standar 25°C."},
+    {q:"Jika pH larutan = 8, maka larutan tersebut bersifat?",opts:["Sangat asam","Asam lemah","Basa lemah","Basa kuat"],correct:2,exp:"pH 8 berada di atas 7 (netral), menunjukkan larutan bersifat basa lemah karena konsentrasi OH⁻ > H⁺.",hint:"pH > 7 menunjukkan basa, pH < 7 menunjukkan asam."},
+    {q:"Garam yang menghasilkan larutan bersifat basa adalah?",opts:["NH₄Cl","KNO₃","CH₃COONa","CaCl₂"],correct:2,exp:"CH₃COONa berasal dari asam lemah (CH₃COOH) dan basa kuat (NaOH). Ion CH₃COO⁻ terhidrolisis menghasilkan OH⁻ sehingga larutan basa.",hint:"Garam dari asam lemah + basa kuat akan bersifat basa."},
+    {q:"Rumus menghitung pH larutan garam dari asam lemah dan basa kuat adalah?",opts:["pH = 7 + ½(pKa + log C)","pH = 14 - ½(pKb - log C)","pH = ½(pKa - log C)","pH = pKa + log([A⁻]/[HA])"],correct:1,exp:"Untuk garam asam lemah + basa kuat: pH = 14 - ½(pKb - log C). Formula ini diturunkan dari Kh = Kw/Ka.",hint:"Gunakan pendekatan dari konstanta hidrolisis dan hubungannya dengan pOH."},
+    {q:"Ion OH⁻ dalam larutan akan menyebabkan?",opts:["pH menurun","pH naik","pH tetap","pOH meningkat"],correct:1,exp:"Ion OH⁻ adalah ion hidroksida yang membuat larutan bersifat basa. Semakin banyak OH⁻, semakin tinggi pH (>7).",hint:"OH⁻ adalah ion basa — kehadirannya meningkatkan kebasaan larutan."},
+    {q:"Hubungan antara Ka dan Kb untuk pasangan asam-basa konjugat adalah?",opts:["Ka × Kb = 14","Ka × Kb = Kw","Ka + Kb = Kw","Ka / Kb = Kw"],correct:1,exp:"Untuk pasangan asam-basa konjugat: Ka × Kb = Kw = 1.0 × 10⁻¹⁴. Ini merupakan konsep penting dalam kimia asam-basa.",hint:"Konstanta ionisasi air (Kw) terlibat dalam hubungan Ka dan Kb."},
+    {q:"Garam NH₄CH₃COO (ammonium asetat) adalah contoh dari?",opts:["Garam normal (netral)","Garam asam","Garam basa","Garam amfiprotik"],correct:3,exp:"NH₄CH₃COO berasal dari asam lemah (CH₃COOH) dan basa lemah (NH₃). Kedua ionnya dapat terhidrolisis, sehingga disebut garam amfiprotik.",hint:"Jika kedua ion dapat terhidrolisis, garam disebut amfiprotik."}
+];
+
+startTimer();loadQuestion();
+
+function startTimer(){state.timerStart=Date.now();state.timerInterval=setInterval(updateTimer,1000);}
+function updateTimer(){const e=Math.floor((Date.now()-state.timerStart)/1000);const m=String(Math.floor(e/60)).padStart(2,'0');const s=String(e%60).padStart(2,'0');const td=document.getElementById('timeDisplay');if(td)td.textContent=`${m}:${s}`;}
+function stopTimer(){if(state.timerInterval)clearInterval(state.timerInterval);}
+
+function loadQuestion(){
+    const q=questions[state.currentQ];
+    document.getElementById('questionNumber').textContent=`Soal ${state.currentQ+1} dari ${questions.length}`;
+    document.getElementById('questionText').textContent=q.q;
+    document.getElementById('quizProgress').style.width=((state.currentQ+1)/questions.length*100)+'%';
+    const c=document.getElementById('answerContainer');c.innerHTML='';
+    q.opts.forEach((opt,i)=>{
+        const d=document.createElement('div');d.className='opt';
+        d.innerHTML=`<div class="opt-lbl">${String.fromCharCode(65+i)}</div><span>${opt}</span>`;
+        d.onclick=()=>selectOpt(i,d);c.appendChild(d);
+    });
+    const fb=document.getElementById('feedbackBox');fb.className='feedback';fb.innerHTML='';
+    const hb=document.getElementById('hintBox');hb.style.display='none';hb.textContent='';
+    document.getElementById('nextBtn').style.display='none';
+    document.getElementById('submitAnswer').style.display='inline-flex';
+    state.selectedAnswer=null;state.attempts=0;
+}
+function selectOpt(i,el){document.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');state.selectedAnswer=i;}
+
+function submitAnswer(){
+    if(state.selectedAnswer===null){alert('Pilih jawaban terlebih dahulu!');return;}
+    state.attempts++;
+    const q=questions[state.currentQ];
+    const fb=document.getElementById('feedbackBox');
+    const opts=document.querySelectorAll('.opt');
+    if(state.selectedAnswer===q.correct){
+        state.score+=10;state.correctAnswers++;
+        opts[state.selectedAnswer].classList.add('correct');
+        fb.className='feedback correct show';
+        fb.innerHTML=`<div class="feedback-title">✅ Jawaban Benar! +10 poin 🎉</div><p>${q.exp}</p>`;
+        document.getElementById('submitAnswer').style.display='none';
+        document.getElementById('nextBtn').style.display='inline-flex';
+        triggerConfetti();
+    } else {
+        opts[state.selectedAnswer].classList.add('wrong');
+        fb.className='feedback wrong show';
+        fb.innerHTML=`<div class="feedback-title">❌ Jawaban Salah</div><p>Jawaban yang benar: <strong>${q.opts[q.correct]}</strong></p><p>${q.exp}</p>`;
+        if(state.attempts===1){const hb=document.getElementById('hintBox');hb.textContent=`💡 Hint: ${q.hint}`;hb.style.display='block';}
+    }
+    updateStats();
+}
+function showHint(){const hb=document.getElementById('hintBox');hb.textContent=`💡 Hint: ${questions[state.currentQ].hint}`;hb.style.display='block';}
+function nextQuestion(){state.currentQ++;if(state.currentQ<questions.length){loadQuestion();}else{stopTimer();showSection('results');displayResults();}}
+
+function toggleTag(el,tag){el.classList.toggle('selected');const i=state.selectedTags.indexOf(tag);if(i>-1)state.selectedTags.splice(i,1);else state.selectedTags.push(tag);}
+
+function submitReflection(){
+    const r1=document.getElementById('reflection1').value;
+    const r2=document.getElementById('reflection2').value;
+    const r3=document.getElementById('reflection3').value;
+    let d=0;if(r1.trim().length>50)d++;if(r2.trim().length>50)d++;if(r3.trim().length>50)d++;
+    state.reflectionCompleted=d;state.score+=d*10;
+    const fb=document.getElementById('reflectionFeedback');
+    fb.className='feedback correct show';
+    fb.innerHTML=`<div class="feedback-title">✅ Refleksi Berhasil Disimpan!</div><p>Kamu telah menyelesaikan <strong>${d}/3</strong> refleksi.</p><p>Tag dipilih: ${state.selectedTags.length?state.selectedTags.join(', '):'Tidak ada'}</p><p>🌟 Bonus skor: <strong>+${d*10} poin</strong></p>`;
+    updateStats();triggerConfetti();
+}
+function viewSummary(){
+    const r1=document.getElementById('reflection1').value;
+    const r2=document.getElementById('reflection2').value;
+    const r3=document.getElementById('reflection3').value;
+    const all=(r1+' '+r2+' '+r3).trim();
+    alert(`📄 Ringkasan Refleksimu:\n\nJumlah karakter total: ${all.length}\nTag dipilih: ${state.selectedTags.join(', ')||'Tidak ada'}\nRefleksi selesai: ${state.reflectionCompleted}/3`);
+}
+
+function displayResults(){
+    const e=Math.floor((Date.now()-state.timerStart)/1000);
+    const m=String(Math.floor(e/60)).padStart(2,'0');const s=String(e%60).padStart(2,'0');
+    document.getElementById('finalScore').textContent=state.score;
+    document.getElementById('quizCorrect').textContent=state.correctAnswers;
+    document.getElementById('reflectionComplete').textContent=`${state.reflectionCompleted}/3`;
+    document.getElementById('totalTime').textContent=`${m}:${s}`;
+    const bc=document.getElementById('badgesEarned');bc.innerHTML='';
+    if(state.score>=100)bc.innerHTML+='<div class="badge gold">🥇</div>';
+    else if(state.score>=70)bc.innerHTML+='<div class="badge silver">🥈</div>';
+    else if(state.score>=40)bc.innerHTML+='<div class="badge bronze">🥉</div>';
+    triggerConfetti();
+}
+
+function downloadCertificate(){
+    try{
+        const {jsPDF}=window.jspdf;const doc=new jsPDF();
+        doc.setFillColor(240,244,255);doc.rect(0,0,210,297,'F');
+        doc.setFillColor(255,255,255);doc.roundedRect(12,12,186,273,10,10,'F');
+        doc.setDrawColor(99,102,241);doc.setLineWidth(2);doc.roundedRect(12,12,186,273,10,10,'S');
+        doc.setFontSize(28);doc.setTextColor(79,70,229);doc.setFont('helvetica','bold');
+        doc.text('SERTIFIKAT PENYELESAIAN',105,55,{align:'center'});
+        doc.setFontSize(14);doc.setTextColor(100,116,139);doc.setFont('helvetica','normal');
+        doc.text('Diberikan kepada:',105,80,{align:'center'});
+        doc.setFontSize(26);doc.setTextColor(30,41,59);doc.setFont('helvetica','bold');
+        doc.text('[Nama Mahasiswa]',105,105,{align:'center'});
+        doc.setFontSize(13);doc.setTextColor(100,116,139);doc.setFont('helvetica','normal');
+        doc.text('Telah menyelesaikan modul pembelajaran',105,125,{align:'center'});
+        doc.setFontSize(20);doc.setTextColor(124,58,237);doc.setFont('helvetica','bold');
+        doc.text('Eksplorasi Hidrolisis Garam',105,145,{align:'center'});
+        doc.setFontSize(14);doc.setTextColor(100,116,139);doc.setFont('helvetica','normal');
+        doc.text(`Skor Total: ${state.score} poin`,105,168,{align:'center'});
+        doc.text(`Jawaban Benar: ${state.correctAnswers}/10`,105,182,{align:'center'});
+        doc.text(`Tanggal: ${new Date().toLocaleDateString('id-ID')}`,105,196,{align:'center'});
+        doc.setFontSize(11);doc.setTextColor(148,163,184);
+        doc.text('Virtual Chemistry Learning — Hidrolisis Garam',105,240,{align:'center'});
+        doc.text('Putri Ayu Rahmawati | Universitas Negeri Malang',105,252,{align:'center'});
+        doc.save('Sertifikat_Hidrolisis_Garam.pdf');alert('✅ Sertifikat berhasil diunduh!');
+    }catch(e){alert('Library PDF belum siap. Refresh dan coba lagi.');}
+}
+function previewCertificate(){alert(`🎓 Preview Sertifikat:\n\nNama: [Nama Mahasiswa]\nProgram: Eksplorasi Hidrolisis Garam\nSkor: ${state.score} poin\nJawaban Benar: ${state.correctAnswers}/10\nTanggal: ${new Date().toLocaleDateString('id-ID')}\n\nKlik "Unduh Sertifikat PDF" untuk versi lengkap.`);}
+function restartModule(){
+    if(!confirm('Yakin ingin mengulang? Progress akan direset.'))return;
+    state.currentQ=0;state.score=0;state.correctAnswers=0;state.reflectionCompleted=0;state.selectedTags=[];
+    ['reflection1','reflection2','reflection3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.querySelectorAll('.rtag').forEach(t=>t.classList.remove('selected'));
+    updateStats();showSection('quiz1');startTimer();loadQuestion();
+}
+
+function showSection(sec){
+    document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    const map={quiz1:[0,'panel-quiz1'],quiz2:[1,'panel-quiz2'],reflection:[2,'panel-reflection'],results:[3,'panel-results']};
+    if(!map[sec])return;
+    const[ti,pid]=map[sec];
+    document.querySelectorAll('.stab')[ti].classList.add('active');
+    const panel=document.getElementById(pid);if(panel)panel.classList.add('active');
+    if(sec==='results')displayResults();
+}
+function updateStats(){
+    document.getElementById('totalScore').textContent=state.score;
+    document.getElementById('correctAnswers').textContent=state.correctAnswers;
+    const done=state.correctAnswers+state.reflectionCompleted;
+    document.getElementById('progressPercent').textContent=Math.round(done/(questions.length+3)*100)+'%';
+}
+function triggerConfetti(){
+    const canvas=document.getElementById('confettiCanvas');
+    const ctx=canvas.getContext('2d');
+    canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+    const cols=['#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981','#3b82f6','#fbbf24','#34d399'];
+    const parts=[];
+    for(let i=0;i<150;i++){parts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,vx:(Math.random()-.5)*6,vy:Math.random()*4+2,col:cols[Math.floor(Math.random()*cols.length)],size:Math.random()*9+4,rot:Math.random()*360,dr:(Math.random()-.5)*.4,alpha:1});}
+    function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        parts.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.1;p.rot+=p.dr*3;if(p.y>canvas.height*.7)p.alpha-=.022;ctx.save();ctx.globalAlpha=Math.max(0,p.alpha);ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.col;ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);ctx.restore();if(p.y>canvas.height)parts.splice(i,1);});
+        if(parts.length>0)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+    draw();
+}
+
+document.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&document.activeElement.tagName!=='TEXTAREA'){const sb=document.getElementById('submitAnswer');if(sb&&sb.style.display!=='none')submitAnswer();}
+    if(e.key==='ArrowRight'){const nb=document.getElementById('nextBtn');if(nb&&nb.style.display!=='none')nextQuestion();}
+});
+document.querySelectorAll('.refl-ta').forEach(ta=>{
+    ta.addEventListener('input',function(){this.style.borderColor=this.value.trim().length>50?'#10b981':'#e2e8f0';});
+});
+
+updateStats();
+console.log('📝 Latihan & Refleksi — Light Theme — Ready!');
+</script>
+</body>
+</html>

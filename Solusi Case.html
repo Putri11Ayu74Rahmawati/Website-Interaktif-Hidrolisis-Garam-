@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solusi Case – Hidrolisis Garam</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:#f4f6fb;color:#1e272e;overflow-x:hidden;}
+
+/* ===== TOP HEADER ===== */
+.top-header{
+  background:#fff;
+  border-bottom:1.5px solid #e8eaf0;
+  padding:0 40px;
+  position:sticky;top:0;z-index:9999;
+  box-shadow:0 2px 16px rgba(0,0,0,.06);
+}
+.th-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  min-height:88px;
+  padding:14px 0;
+  gap:20px;
+}
+.th-left{display:flex;flex-direction:column;gap:5px;}
+.th-nav-links{
+  display:flex;align-items:center;gap:6px;
+  font-size:.78rem;font-weight:600;
+}
+.th-nav-links a{
+  color:#5c6bc0;text-decoration:none;
+  display:flex;align-items:center;gap:4px;
+  transition:color .2s;
+}
+.th-nav-links a:hover{color:#3949ab;}
+.th-nav-sep{color:#bbb;font-size:.85rem;}
+.th-page-title{
+  font-size:1.75rem;font-weight:800;
+  line-height:1.25;
+  margin-top:2px;
+}
+.th-page-title .w1{color:#3f4fcf;}
+.th-page-title .w2{color:#5c6bc0;}
+.th-page-title .w3{color:#f5a623;}
+.th-page-title .w4{color:#f5a623;}
+.th-breadcrumb{
+  display:flex;align-items:center;gap:6px;
+  font-size:.75rem;color:#888;
+  margin-top:2px;
+}
+.th-breadcrumb span{display:flex;align-items:center;gap:4px;}
+.th-breadcrumb .sep{color:#ccc;}
+.th-breadcrumb .active{color:#5c6bc0;font-weight:700;}
+.th-next-btn{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#5c6bc0,#3f4fcf,#7c4dff);
+  color:#fff;border:none;cursor:pointer;
+  padding:14px 28px;border-radius:14px;
+  font-family:'Poppins',sans-serif;font-weight:700;font-size:.95rem;
+  box-shadow:0 6px 24px rgba(92,107,192,.45);
+  transition:all .25s;text-decoration:none;white-space:nowrap;
+  flex-shrink:0;
+}
+.th-next-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 32px rgba(92,107,192,.55);
+  background:linear-gradient(135deg,#3949ab,#311b92,#651fff);
+}
+.th-next-btn .arr{font-size:1.1rem;}
+
+/* ===== HERO BANNER ===== */
+.hero-banner{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#1a237e 0%,#283593 20%,#3949ab 40%,#5c35a0 65%,#7b1fa2 85%,#6a1b9a 100%);
+  padding:64px 40px 68px;text-align:center;
+  min-height:260px;display:flex;align-items:center;justify-content:center;
+}
+.hero-sym{
+  position:absolute;font-weight:800;color:rgba(255,255,255,.07);
+  font-family:'Poppins',sans-serif;pointer-events:none;user-select:none;
+}
+.hs1{left:4%;top:22%;font-size:2.4rem;}
+.hs2{right:5%;top:30%;font-size:2.8rem;}
+.hs3{left:38%;top:12%;font-size:1.6rem;}
+.hs4{left:20%;bottom:15%;font-size:1.8rem;}
+.hs5{right:22%;bottom:12%;font-size:2rem;}
+.hs6{right:15%;top:14%;font-size:1.4rem;}
+.hero-inner{position:relative;z-index:2;max-width:700px;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(245,166,35,.22);
+  border:1.5px solid rgba(245,166,35,.45);
+  color:#f5d060;padding:7px 20px;border-radius:50px;
+  font-size:.82rem;font-weight:700;margin-bottom:22px;
+  letter-spacing:.3px;
+}
+.hero-title{
+  font-size:3rem;font-weight:800;line-height:1.2;
+  color:#fff;margin-bottom:18px;
+  text-shadow:0 2px 20px rgba(0,0,0,.3);
+}
+.hero-title .ht-orange{color:#f5a623;}
+.hero-title .ht-light{color:#b0bec5;font-weight:700;}
+.hero-desc{
+  font-size:1rem;color:rgba(255,255,255,.78);
+  line-height:1.75;max-width:560px;margin:0 auto;
+  font-weight:400;
+}
+
+/* ===== MAIN CONTENT AREA ===== */
+.main-wrap{max-width:960px;margin:0 auto;padding:36px 24px;}
+
+/* ===== INTRO CARDS ===== */
+.intro-section{margin-bottom:32px;}
+.intro-section-title{
+  font-size:1.1rem;font-weight:700;color:#3f4fcf;
+  margin-bottom:16px;display:flex;align-items:center;gap:8px;
+}
+.intro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+.ib{border-radius:16px;padding:20px;transition:transform .22s,box-shadow .22s;}
+.ib:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(0,0,0,.12);}
+.ib.g{background:linear-gradient(145deg,#e8f8f0,#c8f0da);border:2px solid #4caf7d;}
+.ib.b{background:linear-gradient(145deg,#e3f0ff,#c5dcf7);border:2px solid #5c9fd4;}
+.ib.o{background:linear-gradient(145deg,#fff8e1,#ffe0a3);border:2px solid #f5a623;}
+.ib-icon{font-size:2.2rem;margin-bottom:10px;display:block;}
+.ib-t{font-weight:800;font-size:.95rem;margin-bottom:6px;}
+.ib.g .ib-t{color:#2e7d32;} .ib.b .ib-t{color:#1565c0;} .ib.o .ib-t{color:#e65100;}
+.ib-p{font-size:.82rem;line-height:1.65;color:#444;font-weight:400;}
+.intro-note{
+  background:linear-gradient(135deg,#e8f5e9,#dcedc8);
+  border-radius:14px;padding:16px 22px;
+  border-left:5px solid #4caf7d;
+  font-size:.9rem;color:#1b5e20;line-height:1.75;font-weight:600;
+}
+
+/* ===== LKS WRAPPER ===== */
+.lks-wrap{
+  background:#fff;border-radius:20px;
+  box-shadow:0 8px 40px rgba(0,0,0,.09);
+  overflow:hidden;margin-bottom:32px;
+}
+.lks-hdr{
+  background:linear-gradient(135deg,#1a237e,#3949ab,#7b1fa2);
+  padding:26px 34px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+}
+.lks-hdr-info .lks-title{
+  font-size:1.65rem;font-weight:800;color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.2);
+}
+.lks-hdr-info .lks-sub{font-size:.84rem;color:rgba(255,255,255,.8);margin-top:4px;}
+.btn-bacakasus{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.4);
+  color:#fff;padding:10px 20px;border-radius:50px;
+  font-weight:700;font-size:.82rem;cursor:pointer;
+  text-decoration:none;transition:all .22s;font-family:'Poppins',sans-serif;
+}
+.btn-bacakasus:hover{background:rgba(255,255,255,.3);transform:translateY(-2px);}
+
+/* reminder */
+.reminder{
+  background:linear-gradient(135deg,#fffde7,#fff9c4);
+  border:2.5px dashed #f5a623;border-radius:16px;
+  padding:18px 22px;margin-bottom:28px;
+  display:flex;align-items:flex-start;gap:14px;
+  animation:remPulse 3s ease infinite;
+  position:relative;overflow:hidden;
+}
+.reminder::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#f5a623,#e74c3c,#f5a623);
+  background-size:200% 100%;animation:shimmer 2.5s linear infinite;
+}
+@keyframes remPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.15)}50%{box-shadow:0 0 0 8px rgba(245,166,35,.05)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.rem-icon{font-size:2.2rem;flex-shrink:0;animation:wobble 3.5s ease infinite;}
+@keyframes wobble{0%,100%{transform:rotate(0)}15%{transform:rotate(-10deg)}30%{transform:rotate(10deg)}45%{transform:rotate(-5deg)}60%{transform:rotate(5deg)}}
+.rem-body .rem-title{font-weight:800;color:#7d5300;font-size:.95rem;margin-bottom:8px;}
+.rem-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.rem-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.75);border:1.5px solid #f5a623;
+  border-radius:50px;padding:5px 14px;
+  font-size:.78rem;font-weight:700;color:#b45309;cursor:pointer;
+  text-decoration:none;
+  transition:background .2s;
+}
+.rem-tag:hover{background:rgba(255,255,255,1);}
+
+/* progress */
+.prog-sec{margin-bottom:26px;}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.prog-lbl{font-size:.82rem;font-weight:700;color:#555;}
+.prog-pct{
+  font-size:1rem;font-weight:800;
+  background:linear-gradient(135deg,#3f4fcf,#7b1fa2);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.prog-track{background:#e8eaf0;border-radius:50px;height:13px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,.06);}
+.prog-fill{
+  height:100%;width:0;border-radius:50px;
+  background:linear-gradient(90deg,#3f4fcf,#7b1fa2,#3f4fcf);
+  background-size:200% 100%;
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+  animation:shimmer 2s linear infinite;
+}
+.prog-dots{display:flex;gap:8px;margin-top:10px;}
+.pd{flex:1;height:6px;border-radius:3px;background:#e0e0e0;transition:background .4s;}
+.pd.done{background:linear-gradient(90deg,#3f4fcf,#7b1fa2);}
+
+/* identity card */
+.id-card{
+  background:linear-gradient(135deg,#e8eaf6,#f3e5f5);
+  border:2px solid #9fa8da;border-radius:18px;
+  padding:26px;margin-bottom:28px;position:relative;overflow:hidden;
+}
+.id-card::after{content:'👥';position:absolute;right:16px;bottom:-6px;font-size:5rem;opacity:.06;}
+.id-title{font-weight:800;font-size:1.1rem;color:#3f4fcf;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.id-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.id-grid .full{grid-column:1/-1;}
+.fg{display:flex;flex-direction:column;gap:7px;}
+.fg label{font-size:.75rem;font-weight:800;color:#283593;text-transform:uppercase;letter-spacing:.7px;}
+.fi,.ft{
+  border:2px solid #c5cae9;border-radius:11px;
+  padding:10px 14px;font-family:'Poppins',sans-serif;
+  font-size:.88rem;color:#1e272e;
+  background:rgba(255,255,255,.85);transition:border-color .2s,box-shadow .2s;
+}
+.fi:focus,.ft:focus{
+  outline:none;border-color:#3f4fcf;
+  box-shadow:0 0 0 4px rgba(63,79,207,.12);background:#fff;
+}
+.ft{resize:vertical;min-height:90px;line-height:1.65;}
+
+/* question cards */
+.qcard{
+  border-radius:18px;padding:26px;margin-bottom:22px;
+  position:relative;overflow:hidden;
+  transition:transform .22s,box-shadow .22s;
+  opacity:0;transform:translateY(24px);
+}
+.qcard.visible{opacity:1;transform:translateY(0);transition:opacity .5s ease,transform .5s ease;}
+.qcard:hover{transform:translateY(-4px);box-shadow:0 14px 42px rgba(0,0,0,.12);}
+.qcard.q1{background:linear-gradient(145deg,#e8f8f0,#c8f0da);border:2.5px solid #4caf7d;}
+.qcard.q2{background:linear-gradient(145deg,#e3f0ff,#c5dcf7);border:2.5px solid #5c9fd4;}
+.qcard.q3{background:linear-gradient(145deg,#f3e5f5,#e1bee7);border:2.5px solid #ab47bc;}
+.qcard.q4{background:linear-gradient(145deg,#fff8e1,#ffe0a3);border:2.5px solid #f5a623;}
+.qcard.q5{background:linear-gradient(145deg,#fce4ec,#f8bbd9);border:2.5px solid #e91e63;}
+.q-bignum{
+  position:absolute;top:-10px;right:18px;
+  font-size:5.5rem;font-weight:900;opacity:.07;
+  line-height:1;color:#000;pointer-events:none;
+  font-family:'Poppins',sans-serif;
+}
+.qbadge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 16px;border-radius:50px;
+  font-size:.78rem;font-weight:800;color:#fff;margin-bottom:12px;
+}
+.qb1{background:linear-gradient(90deg,#4caf7d,#2e7d32);}
+.qb2{background:linear-gradient(90deg,#5c9fd4,#1565c0);}
+.qb3{background:linear-gradient(90deg,#ab47bc,#6a1b9a);}
+.qb4{background:linear-gradient(90deg,#f5a623,#e65100);}
+.qb5{background:linear-gradient(90deg,#e91e63,#880e4f);}
+.qpts{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,.6);border:1.5px solid rgba(0,0,0,.1);
+  border-radius:50px;padding:3px 10px;
+  font-size:.72rem;font-weight:700;color:#666;margin-left:8px;
+}
+.qtext{font-size:.92rem;color:#1e272e;line-height:1.8;font-weight:600;margin-bottom:14px;}
+.qhint{
+  display:flex;align-items:flex-start;gap:8px;
+  background:rgba(255,255,255,.6);border-radius:10px;
+  padding:10px 14px;margin-bottom:14px;
+  font-size:.79rem;color:#555;line-height:1.65;
+  border-left:3.5px solid rgba(0,0,0,.15);
+}
+.ans-box{
+  background:rgba(255,255,255,.75);border-radius:13px;
+  border:2px dashed rgba(0,0,0,.15);overflow:hidden;
+  transition:border-color .2s,background .2s;
+}
+.ans-box:focus-within{border-style:solid;border-color:rgba(0,0,0,.3);background:rgba(255,255,255,.95);}
+.ans-box textarea{
+  width:100%;border:none;outline:none;
+  padding:14px 16px;font-family:'Poppins',sans-serif;
+  font-size:.87rem;line-height:1.85;color:#1e272e;
+  background:transparent;resize:vertical;min-height:130px;
+}
+.ans-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 14px 10px;border-top:1px dashed rgba(0,0,0,.08);
+}
+.ans-status{font-size:.72rem;font-weight:700;}
+.ans-status.ok{color:#2e7d32;} .ans-status.empty{color:#bbb;} .ans-status.typing{color:#f5a623;}
+.charcnt{font-size:.72rem;color:#aaa;font-weight:600;}
+.charcnt.ok{color:#2e7d32;}
+
+/* action buttons */
+.actions{
+  display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  margin-top:32px;padding-top:28px;
+  border-top:3px dashed #e0e0e0;
+}
+.abtn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 28px;border:none;border-radius:50px;
+  cursor:pointer;font-family:'Poppins',sans-serif;
+  font-weight:700;font-size:.92rem;
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.abtn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  transform:translateX(-150%);transition:transform .5s;
+}
+.abtn:hover::after{transform:translateX(150%);}
+.abtn:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.2);}
+.abtn-pdf{background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;box-shadow:0 4px 18px rgba(21,101,192,.35);}
+.abtn-sub{
+  background:linear-gradient(135deg,#3f4fcf,#7b1fa2);color:#fff;
+  box-shadow:0 4px 18px rgba(63,79,207,.4);
+  padding:14px 36px;font-size:1rem;
+}
+.abtn-rst{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;box-shadow:0 4px 18px rgba(231,76,60,.3);}
+
+/* collected banner */
+.col-banner{
+  display:none;align-items:center;gap:14px;
+  background:linear-gradient(135deg,#1a237e,#3949ab);
+  border-radius:16px;padding:18px 24px;margin-top:20px;
+  border:2px solid #5c6bc0;box-shadow:0 6px 24px rgba(63,79,207,.25);
+}
+.col-banner.show{display:flex;}
+.col-banner-icon{font-size:2.5rem;}
+.col-banner-text strong{color:#fff;font-size:1rem;}
+.col-banner-text p{color:rgba(255,255,255,.8);font-size:.82rem;margin-top:2px;}
+
+/* ===== ANSWER KEY SECTION ===== */
+.ak-section{display:none;margin-bottom:40px;}
+.ak-section.visible{display:block;animation:fadeUp .8s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+.ak-outer{
+  background:#fff;border-radius:20px;
+  box-shadow:0 8px 40px rgba(0,0,0,.09);overflow:hidden;
+}
+.ak-hdr{
+  background:linear-gradient(135deg,#1a237e,#4a148c,#b71c1c,#e65100);
+  padding:30px 36px;text-align:center;position:relative;overflow:hidden;
+}
+.ak-hdr::before{
+  content:'🔑';position:absolute;right:36px;top:50%;
+  transform:translateY(-50%);font-size:5.5rem;opacity:.12;
+}
+.ak-hdr::after{
+  content:'✅';position:absolute;left:36px;top:50%;
+  transform:translateY(-50%);font-size:4rem;opacity:.12;
+}
+.ak-hdr-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.38);
+  color:#fff;border-radius:50px;padding:6px 18px;
+  font-size:.8rem;font-weight:700;margin-bottom:12px;
+}
+.ak-hdr-title{
+  font-size:2.2rem;font-weight:800;color:#fff;
+  text-shadow:0 3px 12px rgba(0,0,0,.3);
+}
+.ak-hdr-sub{color:rgba(255,255,255,.82);font-size:.9rem;margin-top:8px;}
+.ak-body{padding:34px;}
+
+.ak-item{
+  border-radius:16px;overflow:hidden;
+  margin-bottom:24px;
+  box-shadow:0 4px 18px rgba(0,0,0,.07);
+  animation:fadeUp .5s ease both;
+}
+.ak-item:nth-child(1){animation-delay:.05s;} .ak-item:nth-child(2){animation-delay:.10s;}
+.ak-item:nth-child(3){animation-delay:.15s;} .ak-item:nth-child(4){animation-delay:.20s;}
+.ak-item:nth-child(5){animation-delay:.25s;}
+
+.ak-qhdr{
+  padding:14px 22px;font-weight:700;font-size:.9rem;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.akc1{background:linear-gradient(90deg,#4caf7d,#2e7d32);}
+.akc2{background:linear-gradient(90deg,#5c9fd4,#1565c0);}
+.akc3{background:linear-gradient(90deg,#ab47bc,#6a1b9a);}
+.akc4{background:linear-gradient(90deg,#f5a623,#e65100);}
+.akc5{background:linear-gradient(90deg,#e91e63,#880e4f);}
+.ak-pts{
+  background:rgba(255,255,255,.22);border-radius:50px;
+  padding:3px 12px;font-size:.72rem;font-weight:700;
+}
+.ak-ans{
+  padding:22px 24px;font-size:.88rem;line-height:1.9;color:#1e272e;
+  border:2.5px solid;border-top:none;
+}
+.aka1{background:#e8f8f0;border-color:#4caf7d;}
+.aka2{background:#e3f0ff;border-color:#5c9fd4;}
+.aka3{background:#f3e5f5;border-color:#ab47bc;}
+.aka4{background:#fff8e1;border-color:#f5a623;}
+.aka5{background:#fce4ec;border-color:#e91e63;}
+.ak-ans strong{font-weight:800;}
+.ak-ans em{font-style:italic;font-weight:600;}
+.chem{
+  display:block;font-family:'Courier New',monospace;
+  background:rgba(0,0,0,.06);padding:11px 18px;
+  border-radius:10px;margin:10px 0;font-size:.92rem;
+  letter-spacing:.4px;border-left:4px solid rgba(0,0,0,.15);
+  font-weight:600;
+}
+.blist{list-style:none;padding:0;margin:8px 0;}
+.blist li{padding:5px 0 5px 22px;position:relative;font-size:.86rem;line-height:1.7;}
+.blist li::before{content:'▸';position:absolute;left:0;top:6px;font-size:.8rem;}
+.aka1 .blist li::before{color:#2e7d32;}
+.aka2 .blist li::before{color:#1565c0;}
+.aka3 .blist li::before{color:#6a1b9a;}
+.aka4 .blist li::before{color:#e65100;}
+.aka5 .blist li::before{color:#880e4f;}
+.ak-subtitle{font-weight:800;margin:14px 0 6px;font-size:.9rem;display:flex;align-items:center;gap:6px;}
+.ak-hl{
+  display:inline-block;background:rgba(255,255,255,.7);
+  border-radius:6px;padding:1px 8px;font-weight:800;
+}
+.ak-box{
+  border-radius:10px;padding:14px 18px;margin:12px 0;
+}
+.aka4 .ak-box{background:rgba(255,255,255,.55);border:1.5px solid rgba(245,166,35,.4);}
+.aka5 .ak-box{background:rgba(255,255,255,.55);border:1.5px solid rgba(233,30,99,.3);}
+
+/* ===== FOOTER ===== */
+.cta-banner{
+  background:linear-gradient(135deg,#f5a623 0%,#f5556d 45%,#e91e63 100%);
+  padding:56px 40px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-banner::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 20% 50%, rgba(255,255,255,.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(255,255,255,.06) 0%, transparent 50%);
+}
+.cta-inner{position:relative;z-index:2;}
+.cta-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:10px;text-shadow:0 2px 12px rgba(0,0,0,.2);}
+.cta-sub{color:rgba(255,255,255,.85);font-size:1rem;margin-bottom:28px;line-height:1.6;}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#fff;color:#c0392b;
+  padding:15px 36px;border-radius:50px;
+  font-family:'Poppins',sans-serif;font-weight:700;font-size:.95rem;
+  text-decoration:none;cursor:pointer;border:none;
+  box-shadow:0 6px 24px rgba(0,0,0,.18);
+  transition:all .25s;
+}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.25);}
+.cta-btn .icon{font-size:1.1rem;}
+.site-footer{
+  background:linear-gradient(135deg,#1a237e,#283593,#4a148c);
+  padding:32px 40px;text-align:center;
+}
+.sf-logo{font-size:2.2rem;margin-bottom:10px;display:block;}
+.sf-brand{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:4px;}
+.sf-dev{font-size:.88rem;color:rgba(255,255,255,.7);line-height:1.6;}
+.sf-dev span{color:#f5d060;font-weight:600;}
+
+/* ===== MODALS ===== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.65);
+  backdrop-filter:blur(8px);z-index:99000;
+  display:none;align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex;}
+.mbox{
+  background:#fff;border-radius:26px;
+  padding:44px 40px;max-width:540px;width:92%;
+  text-align:center;
+  box-shadow:0 24px 70px rgba(0,0,0,.3);
+  animation:modalIn .4s cubic-bezier(.34,1.56,.64,1) both;
+  position:relative;overflow:hidden;
+}
+.mbox::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:5px;
+  background:linear-gradient(90deg,#3f4fcf,#7b1fa2,#e91e63,#f5a623);
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.65)}to{opacity:1;transform:scale(1)}}
+.memoji{font-size:4.5rem;display:block;margin-bottom:14px;animation:bounce 1s ease infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.mtitle{font-size:1.9rem;font-weight:800;color:#1e272e;margin-bottom:10px;}
+.mdesc{font-size:.9rem;color:#666;line-height:1.75;margin-bottom:26px;}
+.mchecks{
+  text-align:left;background:#f4f6fb;border-radius:12px;
+  padding:16px 20px;margin-bottom:24px;
+}
+.mc{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:.84rem;font-weight:600;color:#333;}
+.mcdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.mcdot.ok{background:#2e7d32;} .mcdot.warn{background:#f5a623;}
+.mbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.mbtn{
+  padding:12px 28px;border-radius:50px;border:none;
+  cursor:pointer;font-family:'Poppins',sans-serif;
+  font-weight:700;font-size:.9rem;transition:all .22s;
+}
+.mbtn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.15);}
+.mbtn-yes{background:linear-gradient(135deg,#3f4fcf,#7b1fa2);color:#fff;}
+.mbtn-no{background:#ecf0f1;color:#2d3436;}
+.mbox.success-box{background:linear-gradient(145deg,#1a237e,#283593);}
+.mbox.success-box .mtitle,.mbox.success-box .mdesc{color:#fff;}
+.mbox.success-box .mdesc{color:rgba(255,255,255,.8);}
+.mbtn-glow{
+  background:linear-gradient(135deg,#f5a623,#e91e63);color:#fff;
+  box-shadow:0 6px 24px rgba(245,85,109,.4);
+}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:99999;
+  padding:14px 22px;border-radius:14px;color:#fff;
+  font-family:'Poppins',sans-serif;font-weight:700;font-size:.85rem;
+  display:none;align-items:center;gap:10px;max-width:330px;
+  box-shadow:0 10px 32px rgba(0,0,0,.25);
+}
+.toast.show{display:flex;animation:toastIn .4s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes toastIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+.toast.ts{background:linear-gradient(135deg,#3f4fcf,#7b1fa2);}
+.toast.te{background:linear-gradient(135deg,#e74c3c,#c0392b);}
+.toast.ti{background:linear-gradient(135deg,#4caf7d,#2e7d32);}
+
+/* ===== CONFETTI ===== */
+#cnv{position:fixed;inset:0;width:100%;height:100%;z-index:99998;pointer-events:none;display:none;}
+#cnv.active{display:block;}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-track{background:#f0f0f0;}
+::-webkit-scrollbar-thumb{background:linear-gradient(#3f4fcf,#7b1fa2);border-radius:4px;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:720px){
+  .intro-grid{grid-template-columns:1fr;}
+  .id-grid{grid-template-columns:1fr;}
+  .th-inner{flex-wrap:wrap;padding:14px 0;gap:12px;min-height:auto;}
+  .th-next-btn{font-size:.82rem;padding:11px 18px;}
+  .th-page-title{font-size:1.35rem;}
+  .hero-title{font-size:2rem;}
+  .lks-body{padding:20px 18px;}
+  .ak-body{padding:20px 18px;}
+  .actions{gap:10px;}
+  .abtn{padding:11px 18px;font-size:.82rem;}
+  .cta-title{font-size:1.5rem;}
+  .top-header{padding:0 16px;}
+  .main-wrap{padding:24px 16px;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="cnv"></canvas>
+
+<!-- TOP HEADER -->
+<header class="top-header">
+  <div class="th-inner">
+    <div class="th-left">
+      <div class="th-nav-links">
+        <a href="index.html">← Landing Page</a>
+        <span class="th-nav-sep">|</span>
+        <a href="Masalah Pada Case.html">← Masalah Pada Case</a>
+        <span class="th-nav-sep">|</span>
+        <a href="Teori Dasar.html">← Teori Dasar</a>
+        <span class="th-nav-sep">|</span>
+        <a href="Simulasi interaktif.html">← Simulasi Interaktif</a>
+        <span class="th-nav-sep">|</span>
+        <a href="Perhitungan pH.html">← Perhitungan pH</a>
+      </div>
+      <div class="th-page-title">
+        <span class="w1">Solusi</span>
+        <span class="w2"> Case</span>
+        <span class="w3"> Hidrolisis</span>
+        <span class="w4"> Garam</span>
+      </div>
+      <div class="th-breadcrumb">
+        <span>🏠 Home</span>
+        <span class="sep">/</span>
+        <span>Masalah Pada Case</span>
+        <span class="sep">/</span>
+        <span>Teori Dasar</span>
+        <span class="sep">/</span>
+        <span>Simulasi Interaktif</span>
+        <span class="sep">/</span>
+        <span class="active">Solusi Case</span>
+      </div>
+    </div>
+    <a href="Perhitungan pH.html" class="th-next-btn">
+      Lanjut ke Perhitungan pH <span class="arr">→</span>
+    </a>
+  </div>
+</header>
+
+<!-- HERO BANNER -->
+<section class="hero-banner">
+  <span class="hero-sym hs1">H⁺</span>
+  <span class="hero-sym hs2">pH</span>
+  <span class="hero-sym hs3">Kw</span>
+  <span class="hero-sym hs4">Kh</span>
+  <span class="hero-sym hs5">Ka·Kb</span>
+  <span class="hero-sym hs6">OH⁻</span>
+  <div class="hero-inner">
+    <div class="hero-badge">📝 Solusi Case &amp; LKS</div>
+    <h1 class="hero-title">
+      Solusi Case <span class="ht-orange">Hidrolisis</span> <span class="ht-light">Garam</span>
+    </h1>
+    <p class="hero-desc">
+      Terapkan konsep hidrolisis garam untuk menganalisis dampak pupuk ZA terhadap keasaman tanah — dari identifikasi ion hingga rancangan solusi nyata.
+    </p>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrap">
+
+  <!-- INTRO 3 BLOCKS -->
+  <div class="intro-section">
+    <div class="intro-section-title">🌟 Mengapa Kita Mempelajari Ini?</div>
+    <div class="intro-grid">
+      <div class="ib g">
+        <span class="ib-icon">🤔</span>
+        <div class="ib-t">Aplikasi Konsep</div>
+        <p class="ib-p">Setelah mempelajari konsep hidrolisis garam, saatnya menggunakannya untuk menganalisis masalah nyata di lingkungan pertanian yang ada di sekitar kita.</p>
+      </div>
+      <div class="ib b">
+        <span class="ib-icon">🌾</span>
+        <div class="ib-t">Konteks Nyata</div>
+        <p class="ib-p">Pupuk ZA yang tampaknya bermanfaat bagi tanaman ternyata menyimpan dampak kimia yang dapat merusak kesuburan tanah dan ekosistem dalam jangka panjang.</p>
+      </div>
+      <div class="ib o">
+        <span class="ib-icon">🔍</span>
+        <div class="ib-t">Penyelidikan Ilmiah</div>
+        <p class="ib-p">Melalui LKS ini kita telusuri bagaimana ion-ion dari pupuk ZA bereaksi di air tanah dan bagaimana proses hidrolisis memengaruhi pH serta kesuburan tanah.</p>
+      </div>
+    </div>
+    <div class="intro-note">
+      💡 <strong>Koneksi Materi:</strong> Kasus pupuk ZA menunjukkan hubungan langsung antara konsep hidrolisis garam dengan perubahan pH tanah yang berdampak nyata pada pertanian dan keseimbangan lingkungan hidup.
+    </div>
+  </div>
+
+  <!-- LKS WRAPPER -->
+  <div class="lks-wrap">
+    <div class="lks-hdr">
+      <div class="lks-hdr-info">
+        <div class="lks-title">📝 Lembar Kerja Siswa (LKS)</div>
+        <div class="lks-sub">Bacalah kembali kasus tentang pupuk ZA dan keasaman tanah, lalu jawablah pertanyaan berikut!</div>
+      </div>
+      <a href="Masalah Pada Case.html" class="btn-bacakasus">
+        📖 Kembali ke Bacaan Kasus
+      </a>
+    </div>
+
+    <div class="lks-body">
+
+      <!-- REMINDER -->
+      <div class="reminder">
+        <span class="rem-icon">⚠️</span>
+        <div class="rem-body">
+          <div class="rem-title">📌 Penting sebelum mengerjakan LKS ini!</div>
+          <p style="font-size:.85rem;color:#7d5300;line-height:1.65;">Sebelum menjawab LKS ini, pastikan kamu sudah membaca dan mempelajari ketiga bagian berikut sebagai penunjang dalam menjawab soal-soal di bawah ini:</p>
+          <div class="rem-tags">
+            <a href="Masalah Pada Case.html" class="rem-tag">📋 ① Bacaan Kasus</a>
+            <a href="Teori Dasar.html" class="rem-tag">📚 ② Teori &amp; Perolehan Konsep</a>
+            <a href="Simulasi interaktif.html" class="rem-tag">🔬 ③ Simulasi Interaktif</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="prog-sec">
+        <div class="prog-top">
+          <span class="prog-lbl" id="prog-lbl">Progress: 0 dari 5 soal diisi</span>
+          <span class="prog-pct" id="prog-pct">0%</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+        <div class="prog-dots">
+          <div class="pd" id="pd1"></div><div class="pd" id="pd2"></div>
+          <div class="pd" id="pd3"></div><div class="pd" id="pd4"></div>
+          <div class="pd" id="pd5"></div>
+        </div>
+      </div>
+
+      <!-- IDENTITY -->
+      <div class="id-card">
+        <div class="id-title">👥 Identitas Kelompok</div>
+        <div class="id-grid">
+          <div class="fg">
+            <label for="fn">📌 Nama Kelompok <span style="color:#e74c3c">*</span></label>
+            <input type="text" class="fi" id="fn" placeholder="Contoh: Kelompok Ilmuwan Muda" oninput="refreshProg()">
+          </div>
+          <div class="fg">
+            <label for="fk">🏫 Kelas <span style="color:#e74c3c">*</span></label>
+            <input type="text" class="fi" id="fk" placeholder="Contoh: XI IPA 2" oninput="refreshProg()">
+          </div>
+          <div class="fg full">
+            <label for="fa">👤 Anggota Kelompok <span style="color:#e74c3c">*</span> <small style="font-weight:400;text-transform:none;letter-spacing:0;color:#999;">(satu nama per baris)</small></label>
+            <textarea class="ft" id="fa" rows="5" placeholder="1. Nama Siswa 1&#10;2. Nama Siswa 2&#10;3. Nama Siswa 3&#10;4. Nama Siswa 4&#10;5. Nama Siswa 5" oninput="refreshProg()"></textarea>
+          </div>
+          <div class="fg">
+            <label for="fd">🗓️ Tanggal Pengerjaan</label>
+            <input type="date" class="fi" id="fd">
+          </div>
+          <div class="fg">
+            <label for="fm">📘 Mata Pelajaran</label>
+            <input type="text" class="fi" id="fm" placeholder="Kimia" value="Kimia">
+          </div>
+        </div>
+      </div>
+
+      <!-- SOAL 1 -->
+      <div class="qcard q1" id="qc1">
+        <div class="q-bignum">1</div>
+        <div>
+          <span class="qbadge qb1">⚗️ Soal 1 – Pelarutan Garam</span>
+          <span class="qpts">🏆 20 poin</span>
+        </div>
+        <div class="qtext">
+          Pupuk ZA termasuk jenis <strong>garam</strong>. Jelaskan apa yang terjadi pada pupuk ZA ketika dilarutkan dalam air tanah berdasarkan <strong>konsep pelarutan garam</strong>! Tuliskan juga <strong>persamaan reaksi disosiasinya</strong>!
+        </div>
+        <div class="qhint">
+          <span style="font-size:1rem;flex-shrink:0;">💡</span>
+          <span>Petunjuk: Perhatikan rumus kimia pupuk ZA yaitu (NH₄)₂SO₄. Tentukan ion-ion apa yang dihasilkan ketika garam ini terlarut dalam air, dan jelaskan proses disosiasinya secara lengkap.</span>
+        </div>
+        <div class="ans-box" id="ab1">
+          <textarea id="j1" placeholder="Tuliskan jawabanmu di sini...&#10;&#10;Petunjuk format jawaban yang baik:&#10;• Identifikasi senyawa dan jenisnya&#10;• Reaksi disosiasi: (NH₄)₂SO₄ → ...&#10;• Penjelasan proses yang terjadi" oninput="onType(this,1)"></textarea>
+          <div class="ans-foot">
+            <span class="ans-status empty" id="as1">⭕ Belum diisi</span>
+            <span class="charcnt" id="cc1">0 karakter</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOAL 2 -->
+      <div class="qcard q2" id="qc2">
+        <div class="q-bignum">2</div>
+        <div>
+          <span class="qbadge qb2">🔬 Soal 2 – Reaksi Hidrolisis</span>
+          <span class="qpts">🏆 20 poin</span>
+        </div>
+        <div class="qtext">
+          Ion manakah dari pupuk ZA yang mengalami <strong>hidrolisis</strong>? Tuliskan <strong>reaksi hidrolisisnya</strong> secara lengkap dan jelaskan mengapa reaksi tersebut dapat membuat tanah menjadi <strong>asam</strong>!
+        </div>
+        <div class="qhint">
+          <span style="font-size:1rem;flex-shrink:0;">💡</span>
+          <span>Petunjuk: Dari ion NH₄⁺ dan SO₄²⁻, identifikasi mana yang berasal dari basa lemah. Ion tersebut yang akan bereaksi dengan H₂O. Tuliskan reaksinya dan perhatikan produk yang menentukan sifat asam larutan.</span>
+        </div>
+        <div class="ans-box" id="ab2">
+          <textarea id="j2" placeholder="Tuliskan jawabanmu di sini...&#10;&#10;Petunjuk format jawaban yang baik:&#10;• Sebutkan ion yang terhidrolisis beserta alasannya&#10;• Reaksi: NH₄⁺ + H₂O ⇌ ...&#10;• Jelaskan mengapa menghasilkan larutan asam" oninput="onType(this,2)"></textarea>
+          <div class="ans-foot">
+            <span class="ans-status empty" id="as2">⭕ Belum diisi</span>
+            <span class="charcnt" id="cc2">0 karakter</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOAL 3 -->
+      <div class="qcard q3" id="qc3">
+        <div class="q-bignum">3</div>
+        <div>
+          <span class="qbadge qb3">📊 Soal 3 – Jenis Hidrolisis</span>
+          <span class="qpts">🏆 20 poin</span>
+        </div>
+        <div class="qtext">
+          Berdasarkan <strong>asal asam dan basanya</strong>, pupuk ZA termasuk garam yang mengalami <em>hidrolisis total</em> atau <em>hidrolisis sebagian</em>? <strong>Jelaskan alasanmu!</strong>
+        </div>
+        <div class="qhint">
+          <span style="font-size:1rem;flex-shrink:0;">💡</span>
+          <span>Petunjuk: Tentukan terlebih dahulu — (1) Apakah H₂SO₄ termasuk asam kuat atau lemah? (2) Apakah NH₃ termasuk basa kuat atau lemah? Kemudian tentukan jenis hidrolisis berdasarkan kombinasi keduanya.</span>
+        </div>
+        <div class="ans-box" id="ab3">
+          <textarea id="j3" placeholder="Tuliskan jawabanmu di sini...&#10;&#10;Petunjuk format jawaban yang baik:&#10;• Sifat H₂SO₄: asam kuat/lemah → ion SO₄²⁻ mengalami/tidak mengalami hidrolisis&#10;• Sifat NH₃: basa kuat/lemah → ion NH₄⁺ mengalami/tidak mengalami hidrolisis&#10;• Kesimpulan jenis hidrolisis + sifat larutan" oninput="onType(this,3)"></textarea>
+          <div class="ans-foot">
+            <span class="ans-status empty" id="as3">⭕ Belum diisi</span>
+            <span class="charcnt" id="cc3">0 karakter</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOAL 4 -->
+      <div class="qcard q4" id="qc4">
+        <div class="q-bignum">4</div>
+        <div>
+          <span class="qbadge qb4">🌍 Soal 4 – Dampak Lingkungan</span>
+          <span class="qpts">🏆 20 poin</span>
+        </div>
+        <div class="qtext">
+          Mengapa penggunaan pupuk ZA (Ammonium Sulfat) secara <strong>berlebihan</strong> dapat menyebabkan <em>soil acidification</em> dan bagaimana proses hidrolisis yang terjadi dapat <strong>mengancam kesuburan tanah</strong> serta <strong>kesehatan ekosistem</strong> dalam jangka panjang?
+        </div>
+        <div class="qhint">
+          <span style="font-size:1rem;flex-shrink:0;">💡</span>
+          <span>Petunjuk: Hubungkan proses hidrolisis NH₄⁺ yang terus-menerus dengan penumpukan ion H⁺. Kemudian analisis dampaknya terhadap: ketersediaan unsur hara, aktivitas mikroba tanah, dan ekosistem secara keseluruhan.</span>
+        </div>
+        <div class="ans-box" id="ab4">
+          <textarea id="j4" placeholder="Tuliskan jawabanmu di sini...&#10;&#10;Petunjuk format jawaban yang baik:&#10;• Jelaskan proses kimia pengasaman tanah&#10;• Dampak pada kesuburan tanah (minimal 3 poin)&#10;• Dampak pada ekosistem (minimal 2 poin)" oninput="onType(this,4)"></textarea>
+          <div class="ans-foot">
+            <span class="ans-status empty" id="as4">⭕ Belum diisi</span>
+            <span class="charcnt" id="cc4">0 karakter</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOAL 5 -->
+      <div class="qcard q5" id="qc5">
+        <div class="q-bignum">5</div>
+        <div>
+          <span class="qbadge qb5">💡 Soal 5 – Solusi &amp; Aksi Nyata</span>
+          <span class="qpts">🏆 20 poin</span>
+        </div>
+        <div class="qtext">
+          Sebagai <strong>agen perubahan lingkungan</strong> di komunitas Anda, rancang dan implementasikan sebuah <strong>solusi konkret</strong> untuk mengatasi masalah penggunaan pupuk kimia berlebihan. Jelaskan bagaimana Anda akan <strong>mengkomunikasikan dampak ilmiah</strong> dari alternatif yang Anda tawarkan kepada petani lokal!
+        </div>
+        <div class="qhint">
+          <span style="font-size:1rem;flex-shrink:0;">💡</span>
+          <span>Petunjuk: Pikirkan minimal 2 solusi alternatif (pupuk organik, rotasi tanaman, dll). Kemudian rancang strategi komunikasinya — bagaimana menyampaikan dampak kimianya dengan bahasa yang mudah dipahami petani lokal.</span>
+        </div>
+        <div class="ans-box" id="ab5">
+          <textarea id="j5" placeholder="Tuliskan jawabanmu di sini...&#10;&#10;Petunjuk format jawaban yang baik:&#10;A. Rancangan Solusi:&#10;   • Solusi 1: ...&#10;   • Solusi 2: ...&#10;B. Strategi Komunikasi kepada Petani:&#10;   • Cara 1: ...&#10;   • Cara 2: ..." oninput="onType(this,5)"></textarea>
+          <div class="ans-foot">
+            <span class="ans-status empty" id="as5">⭕ Belum diisi</span>
+            <span class="charcnt" id="cc5">0 karakter</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- collected banner -->
+      <div class="col-banner" id="col-banner">
+        <span class="col-banner-icon">🎊</span>
+        <div class="col-banner-text">
+          <strong>LKS Berhasil Dikumpulkan!</strong>
+          <p>Kunci jawaban sudah terbuka — scroll ke bawah untuk melihatnya 👇</p>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="actions">
+        <button class="abtn abtn-pdf" onclick="downloadPDF()">
+          <span>📄</span> Unduh PDF
+        </button>
+        <button class="abtn abtn-sub" onclick="openSubmitModal()">
+          <span>📤</span> Kumpulkan &amp; Buka Kunci Jawaban
+        </button>
+        <button class="abtn abtn-rst" onclick="openModal('modal-reset')">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+
+    </div><!-- /lks-body -->
+  </div><!-- /lks-wrap -->
+
+  <!-- ANSWER KEY SECTION -->
+  <div class="ak-section" id="ak-section">
+    <div class="ak-outer">
+      <div class="ak-hdr">
+        <div class="ak-hdr-badge">🔓 Terbuka Setelah Pengumpulan</div>
+        <div class="ak-hdr-title">🔑 Kunci Jawaban Resmi</div>
+        <div class="ak-hdr-sub">Bandingkan jawabanmu dengan kunci berikut untuk mengukur seberapa jauh pemahamanmu!</div>
+      </div>
+      <div class="ak-body">
+
+        <!-- KUNCI 1 -->
+        <div class="ak-item">
+          <div class="ak-qhdr akc1">
+            <span>⚗️ Soal 1 – Pelarutan Garam</span>
+            <span class="ak-pts">20 poin</span>
+          </div>
+          <div class="ak-ans aka1">
+            <strong>Jawaban:</strong><br><br>
+            Pupuk ZA [(NH₄)₂SO₄] merupakan senyawa garam yang ketika dilarutkan dalam air akan terurai menjadi ion-ionnya. Proses ini disebut <strong>disosiasi (pelarutan garam)</strong>.
+            <span class="chem">(NH₄)₂SO₄(s) → 2NH₄⁺(aq) + SO₄²⁻(aq)</span>
+            Artinya, pupuk tidak lagi berbentuk padat, tetapi berubah menjadi <strong class="ak-hl">ion amonium (NH₄⁺)</strong> dan <strong class="ak-hl">ion sulfat (SO₄²⁻)</strong> yang tersebar dalam air tanah.
+          </div>
+        </div>
+
+        <!-- KUNCI 2 -->
+        <div class="ak-item">
+          <div class="ak-qhdr akc2">
+            <span>🔬 Soal 2 – Reaksi Hidrolisis</span>
+            <span class="ak-pts">20 poin</span>
+          </div>
+          <div class="ak-ans aka2">
+            <strong>Jawaban:</strong><br><br>
+            Ion yang mengalami hidrolisis adalah <strong class="ak-hl">ion amonium (NH₄⁺)</strong>.<br><br>
+            <strong>Reaksi hidrolisisnya:</strong>
+            <span class="chem">NH₄⁺(aq) + H₂O(l) ⇌ NH₃(aq) + H₃O⁺(aq)</span>
+            Reaksi ini menghasilkan ion <strong>H₃O⁺</strong> (atau H⁺). Bertambahnya ion H⁺ menyebabkan <strong>pH tanah menurun</strong> sehingga tanah menjadi lebih asam.
+          </div>
+        </div>
+
+        <!-- KUNCI 3 -->
+        <div class="ak-item">
+          <div class="ak-qhdr akc3">
+            <span>📊 Soal 3 – Jenis Hidrolisis</span>
+            <span class="ak-pts">20 poin</span>
+          </div>
+          <div class="ak-ans aka3">
+            <strong>Jawaban:</strong><br><br>
+            Pupuk ZA mengalami <strong class="ak-hl">hidrolisis sebagian</strong>.<br><br>
+            <strong>Alasannya:</strong>
+            <ul class="blist">
+              <li>Berasal dari <strong>asam kuat (H₂SO₄)</strong> → ion SO₄²⁻ <em>tidak terhidrolisis</em></li>
+              <li>Berasal dari <strong>basa lemah (NH₃)</strong> → ion NH₄⁺ <em>terhidrolisis</em></li>
+            </ul>
+            <br>Karena hanya salah satu ion yang terhidrolisis, maka disebut <strong>hidrolisis sebagian</strong> dan larutannya bersifat <strong>asam</strong>.
+          </div>
+        </div>
+
+        <!-- KUNCI 4 -->
+        <div class="ak-item">
+          <div class="ak-qhdr akc4">
+            <span>🌍 Soal 4 – Dampak Lingkungan</span>
+            <span class="ak-pts">20 poin</span>
+          </div>
+          <div class="ak-ans aka4">
+            <strong>Jawaban:</strong><br><br>
+            Penggunaan pupuk ZA berlebihan menyebabkan <em>soil acidification</em> melalui mekanisme berikut:<br><br>
+            <div class="ak-subtitle">🔬 Proses Hidrolisis Kimia:</div>
+            Ketika ZA dilarutkan dalam air tanah, terjadi reaksi:
+            <span class="chem">(NH₄)₂SO₄(s) → 2NH₄⁺(aq) + SO₄²⁻(aq)</span>
+            Ion amonium (NH₄⁺) bereaksi dengan air menghasilkan ion H⁺ yang meningkatkan keasaman tanah.
+            <div class="ak-box">
+              <div class="ak-subtitle">🌱 Dampak pada Kesuburan Tanah:</div>
+              <ul class="blist">
+                <li>pH tanah menurun (semakin asam)</li>
+                <li>Ketersediaan unsur hara esensial berkurang</li>
+                <li>Aktivitas mikroorganisme tanah terganggu</li>
+                <li>Struktur tanah memburuk karena ion logam terlarut</li>
+              </ul>
+            </div>
+            <div class="ak-box">
+              <div class="ak-subtitle">🌍 Dampak pada Ekosistem:</div>
+              <ul class="blist">
+                <li>Pencemaran air tanah oleh ion sulfat berlebih</li>
+                <li>Gangguan pada rantai makanan tanah</li>
+                <li>Penurunan biodiversitas mikroorganisme</li>
+                <li>Potensi pencemaran sumber air bagi manusia dan hewan</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- KUNCI 5 -->
+        <div class="ak-item">
+          <div class="ak-qhdr akc5">
+            <span>💡 Soal 5 – Solusi &amp; Aksi Nyata</span>
+            <span class="ak-pts">20 poin</span>
+          </div>
+          <div class="ak-ans aka5">
+            <strong>Jawaban:</strong><br><br>
+            <div class="ak-box">
+              <div class="ak-subtitle">🌿 A. Rancangan Solusi:</div>
+              <strong>Pupuk Organik Kompos</strong>
+              <ul class="blist">
+                <li>Meningkatkan bahan organik tanah (humus)</li>
+                <li>Menggunakan limbah pertanian dan kotoran ternak</li>
+                <li>Memperbaiki struktur dan kapasitas menahan air</li>
+              </ul>
+              <br><strong>Sistem Rotasi Tanaman</strong>
+              <ul class="blist">
+                <li>Mengurangi ketergantungan pada pupuk nitrogen sintetis</li>
+                <li>Meningkatkan kesuburan alami tanah</li>
+                <li>Menanam kacang-kacangan yang mengikat nitrogen atmosfer</li>
+              </ul>
+            </div>
+            <div class="ak-box">
+              <div class="ak-subtitle">📢 B. Strategi Komunikasi kepada Petani:</div>
+              <strong>Demonstrasi</strong>
+              <ul class="blist">
+                <li>Menunjukkan data pH tanah, kadar bahan organik, dan produktivitas</li>
+                <li>Membandingkan hasil panen: pupuk kimia vs. organik</li>
+              </ul>
+              <br><strong>Penyuluhan Berbasis Sains</strong>
+              <ul class="blist">
+                <li>Menggunakan diagram reaksi kimia yang mudah dipahami</li>
+                <li>Menjelaskan mekanisme <em>soil acidification</em> dengan bahasa sederhana</li>
+                <li>Menunjukkan dampak ekonomi jangka panjang (penghematan biaya)</li>
+              </ul>
+              <br><strong>Pelatihan Pembuatan Kompos</strong>
+              <ul class="blist">
+                <li>Workshop praktis pembuatan pupuk organik</li>
+                <li>Pendampingan berkelanjutan</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /ak-body -->
+    </div><!-- /ak-outer -->
+  </div><!-- /ak-section -->
+
+</div><!-- /main-wrap -->
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="cta-inner">
+    <h2 class="cta-title">Siap ke Perhitungan pH? 🧪</h2>
+    <p class="cta-sub">Kamu sudah menganalisis kasusnya — sekarang hitung pH larutan hidrolisis secara matematis!</p>
+    <a href="Perhitungan pH.html" class="cta-btn">
+      <span class="icon">🧮</span> Lanjut ke Perhitungan pH →
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <span class="sf-logo">🧪</span>
+  <div class="sf-brand">© 2025 Virtual Chemistry Learning | Hidrolisis Garam</div>
+  <div class="sf-dev">Dikembangkan oleh: <span>Putri Ayu Rahmawati</span> – Universitas Negeri Malang</div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-submit">
+  <div class="mbox">
+    <span class="memoji">📤</span>
+    <h2 class="mtitle">Siap Mengumpulkan?</h2>
+    <p class="mdesc">Setelah mengumpulkan, <strong>kunci jawaban akan terbuka otomatis</strong>.<br>Pastikan semua jawaban sudah kamu isi dan periksa kembali!</p>
+    <div class="mchecks" id="mchecks"></div>
+    <div class="mbtns">
+      <button class="mbtn mbtn-no" onclick="closeModal('modal-submit')">← Kembali Edit</button>
+      <button class="mbtn mbtn-yes" onclick="doSubmit()">✅ Ya, Kumpulkan!</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-success">
+  <div class="mbox success-box">
+    <span class="memoji">🎉</span>
+    <h2 class="mtitle">LKS Berhasil Dikumpulkan!</h2>
+    <p class="mdesc">Selamat! LKS kamu sudah berhasil dikumpulkan.<br>Kunci jawaban lengkap kini sudah terbuka — scroll ke bawah!</p>
+    <div class="mbtns">
+      <button class="mbtn mbtn-glow" onclick="closeModal('modal-success');scrollToKey();">🔑 Lihat Kunci Jawaban</button>
+      <button class="mbtn mbtn-no" onclick="closeModal('modal-success')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-reset">
+  <div class="mbox">
+    <span class="memoji" style="animation:none;">⚠️</span>
+    <h2 class="mtitle">Reset Semua?</h2>
+    <p class="mdesc">Semua jawaban dan identitas yang sudah diisi akan <strong>dihapus permanen</strong>. Tindakan ini tidak bisa dibatalkan.</p>
+    <div class="mbtns">
+      <button class="mbtn mbtn-no" onclick="closeModal('modal-reset')">Batal</button>
+      <button class="mbtn" style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;" onclick="doReset()">🗑️ Ya, Reset!</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="ti">✅</span><span id="tm"></span></div>
+
+<script>
+"use strict";
+
+// ── TYPING
+var MIN=30;
+function onType(el,n){
+  var len=el.value.length;
+  var cc=document.getElementById('cc'+n);
+  var as=document.getElementById('as'+n);
+  cc.textContent=len+' karakter';
+  if(len>=MIN){cc.className='charcnt ok';as.textContent='✅ Sudah diisi';as.className='ans-status ok';}
+  else if(len>0){cc.className='charcnt';as.textContent='✏️ Sedang diisi...';as.className='ans-status typing';}
+  else{cc.className='charcnt';as.textContent='⭕ Belum diisi';as.className='ans-status empty';}
+  refreshProg();
+}
+function refreshProg(){
+  var count=0;
+  for(var i=1;i<=5;i++){
+    var done=((document.getElementById('j'+i)||{}).value||'').trim().length>=MIN;
+    if(done)count++;
+    var pd=document.getElementById('pd'+i);
+    if(pd)pd.classList.toggle('done',done);
+  }
+  var pct=Math.round(count/5*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-lbl').textContent='Progress: '+count+' dari 5 soal diisi'+(count===5?' ✅':'');
+}
+
+// ── MODAL UTILS
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.querySelectorAll('.modal-overlay').forEach(function(w){
+  w.addEventListener('click',function(e){if(e.target===w){closeModal(w.id);}});
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(function(m){closeModal(m.id);});
+});
+
+// ── SUBMIT
+function openSubmitModal(){
+  var nama=document.getElementById('fn').value.trim();
+  var angg=document.getElementById('fa').value.trim();
+  var kls=document.getElementById('fk').value.trim();
+  if(!nama){toast('error','⚠️ Isi nama kelompok terlebih dahulu!');document.getElementById('fn').focus();return;}
+  if(!angg){toast('error','⚠️ Isi anggota kelompok terlebih dahulu!');document.getElementById('fa').focus();return;}
+  if(!kls){toast('error','⚠️ Isi kelas terlebih dahulu!');document.getElementById('fk').focus();return;}
+  var items=[
+    {l:'Nama Kelompok',ok:!!nama},{l:'Anggota Kelompok',ok:!!angg},{l:'Kelas',ok:!!kls},
+    {l:'Soal 1 terjawab',ok:(document.getElementById('j1').value.trim().length>=MIN)},
+    {l:'Soal 2 terjawab',ok:(document.getElementById('j2').value.trim().length>=MIN)},
+    {l:'Soal 3 terjawab',ok:(document.getElementById('j3').value.trim().length>=MIN)},
+    {l:'Soal 4 terjawab',ok:(document.getElementById('j4').value.trim().length>=MIN)},
+    {l:'Soal 5 terjawab',ok:(document.getElementById('j5').value.trim().length>=MIN)},
+  ];
+  document.getElementById('mchecks').innerHTML=items.map(function(it){
+    return '<div class="mc"><div class="mcdot '+(it.ok?'ok':'warn')+'"></div>'+(it.ok?'✅':'⚠️')+' '+it.l+'</div>';
+  }).join('');
+  openModal('modal-submit');
+}
+function doSubmit(){
+  closeModal('modal-submit');
+  document.getElementById('ak-section').classList.add('visible');
+  document.getElementById('col-banner').classList.add('show');
+  openModal('modal-success');
+  launchConfetti();
+  toast('info','🎉 LKS dikumpulkan! Kunci jawaban terbuka!');
+}
+function scrollToKey(){
+  document.getElementById('ak-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── RESET
+function doReset(){
+  closeModal('modal-reset');
+  ['fn','fk','fm'].forEach(function(id){var e=document.getElementById(id);if(e)e.value=id==='fm'?'Kimia':'';});
+  document.getElementById('fa').value='';
+  try{document.getElementById('fd').valueAsDate=new Date();}catch(e){}
+  for(var i=1;i<=5;i++){
+    var ta=document.getElementById('j'+i);if(ta)ta.value='';
+    var cc=document.getElementById('cc'+i);if(cc){cc.textContent='0 karakter';cc.className='charcnt';}
+    var as=document.getElementById('as'+i);if(as){as.textContent='⭕ Belum diisi';as.className='ans-status empty';}
+  }
+  document.getElementById('ak-section').classList.remove('visible');
+  document.getElementById('col-banner').classList.remove('show');
+  refreshProg();
+  toast('info','🔄 Form berhasil direset!');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── TOAST
+var _tt=null;
+function toast(type,msg){
+  var t=document.getElementById('toast');
+  var ic={'success':'✅','error':'❌','info':'ℹ️'};
+  t.className='toast show t'+type[0];
+  document.getElementById('ti').textContent=ic[type]||'ℹ️';
+  document.getElementById('tm').textContent=msg;
+  if(_tt)clearTimeout(_tt);
+  _tt=setTimeout(function(){t.classList.remove('show');},3400);
+}
+
+// ── CONFETTI
+function launchConfetti(){
+  var c=document.getElementById('cnv');
+  c.classList.add('active');
+  c.width=window.innerWidth;c.height=window.innerHeight;
+  var ctx=c.getContext('2d');
+  var cols=['#3f4fcf','#7b1fa2','#e91e63','#f5a623','#4caf7d','#5c9fd4','#f1c40f','#1a237e'];
+  var shapes=['rect','circle','tri'];
+  var pp=[];
+  for(var i=0;i<180;i++){
+    pp.push({
+      x:Math.random()*c.width,y:-Math.random()*c.height*.35-10,
+      w:Math.random()*12+5,h:Math.random()*7+4,
+      col:cols[Math.floor(Math.random()*cols.length)],
+      sh:shapes[Math.floor(Math.random()*shapes.length)],
+      r:Math.random()*Math.PI*2,dr:(Math.random()-.5)*.2,
+      vx:(Math.random()-.5)*5,vy:Math.random()*4.5+2,alpha:1
+    });
+  }
+  var fr=0;
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pp.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.r+=p.dr;
+      if(p.y>c.height*.65)p.alpha-=.02;
+      ctx.save();ctx.globalAlpha=Math.max(0,p.alpha);
+      ctx.fillStyle=p.col;
+      ctx.translate(p.x,p.y);ctx.rotate(p.r);
+      if(p.sh==='circle'){ctx.beginPath();ctx.arc(0,0,p.w/2,0,Math.PI*2);ctx.fill();}
+      else if(p.sh==='tri'){ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill();}
+      else{ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);}
+      ctx.restore();
+    });
+    fr++;
+    if(fr<220)requestAnimationFrame(draw);
+    else{ctx.clearRect(0,0,c.width,c.height);c.classList.remove('active');}
+  }
+  draw();
+}
+
+// ── PDF DOWNLOAD
+function downloadPDF(){
+  if(typeof window.jspdf==='undefined'){
+    toast('error','Library PDF belum siap. Refresh halaman.');return;
+  }
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+
+  function cleanText(str){
+    if(!str) return '';
+    return str
+      .replace(/\u2080/g,'0').replace(/\u2081/g,'1').replace(/\u2082/g,'2')
+      .replace(/\u2083/g,'3').replace(/\u2084/g,'4').replace(/\u2085/g,'5')
+      .replace(/\u2086/g,'6').replace(/\u2087/g,'7').replace(/\u2088/g,'8').replace(/\u2089/g,'9')
+      .replace(/\u00B9/g,'1').replace(/\u00B2/g,'2').replace(/\u00B3/g,'3')
+      .replace(/\u2074/g,'4').replace(/\u2075/g,'5').replace(/\u2076/g,'6')
+      .replace(/\u2077/g,'7').replace(/\u2078/g,'8').replace(/\u2079/g,'9').replace(/\u2070/g,'0')
+      .replace(/\u207A/g,'+').replace(/\u207B/g,'-')
+      .replace(/NH\u2084\u207A/g,'NH4+').replace(/NH\u2084/g,'NH4')
+      .replace(/SO\u2084\u00B2\u207B/g,'SO4 2-').replace(/SO\u2084\u00B2-/g,'SO4 2-').replace(/SO\u2084/g,'SO4')
+      .replace(/H\u2083O\u207A/g,'H3O+').replace(/H\u2083O/g,'H3O')
+      .replace(/H\u2082O/g,'H2O').replace(/H\u2082SO\u2084/g,'H2SO4')
+      .replace(/\(NH\u2084\)\u2082SO\u2084/g,'(NH4)2SO4')
+      .replace(/\u21CC/g,' <=> ').replace(/\u21C4/g,' <=> ')
+      .replace(/\u2192/g,' -> ').replace(/\u2190/g,' <- ')
+      .replace(/\u21D2/g,' => ')
+      .replace(/\u00B1/g,'+/-')
+      .replace(/\u00B0/g,' derajat ')
+      .replace(/\u00D7/g,'x')
+      .replace(/\u2212/g,'-')
+      .replace(/\u2013/g,'-').replace(/\u2014/g,'-')
+      .replace(/\u2018/g,"'").replace(/\u2019/g,"'")
+      .replace(/\u201C/g,'"').replace(/\u201D/g,'"')
+      .replace(/\u2026/g,'...')
+      .replace(/[^\x00-\x7E\u00C0-\u024F]/g,'')
+      .trim();
+  }
+
+  var nama=cleanText(document.getElementById('fn').value.trim())||'Tidak Diisi';
+  var kls=cleanText(document.getElementById('fk').value.trim())||'-';
+  var ang=cleanText(document.getElementById('fa').value.trim())||'-';
+  var mpl=cleanText(document.getElementById('fm').value.trim())||'Kimia';
+  var tgl=document.getElementById('fd').value||'-';
+
+  var ans=[];
+  for(var i=1;i<=5;i++){
+    var raw=document.getElementById('j'+i).value.trim();
+    ans.push(raw ? cleanText(raw) : '(Belum diisi)');
+  }
+
+  var W=210, mg=15, cW=W-mg*2;
+  var y=0;
+
+  function checkPage(cy, need){
+    need=need||15;
+    if(cy+need>282){
+      doc.addPage();
+      drawPageHeader();
+      return 20;
+    }
+    return cy;
+  }
+
+  function drawPageHeader(){
+    doc.setFillColor(63,79,207);doc.rect(0,0,W,9,'F');
+    doc.setFillColor(123,31,162);doc.rect(70,0,70,9,'F');
+    doc.setFillColor(233,30,99);doc.rect(140,0,70,9,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(7);
+    doc.text('LKS Solusi Case - Hidrolisis Garam  |  Kelompok: '+nama+'  |  Kelas: '+kls, W/2, 6, {align:'center'});
+  }
+
+  doc.setFillColor(63,79,207);doc.rect(0,0,W,15,'F');
+  doc.setFillColor(123,31,162);doc.rect(70,0,70,15,'F');
+  doc.setFillColor(233,30,99);doc.rect(140,0,70,15,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');doc.setFontSize(13);
+  doc.text('LEMBAR KERJA SISWA (LKS)', W/2, 8, {align:'center'});
+  doc.setFontSize(8);
+  doc.text('Solusi Case - Hidrolisis Garam & Pupuk ZA', W/2, 13.5, {align:'center'});
+  y=28;
+
+  doc.setFillColor(232,234,246);
+  doc.roundedRect(mg, y, cW, 52, 3, 3, 'F');
+  doc.setDrawColor(63,79,207);doc.setLineWidth(0.6);
+  doc.roundedRect(mg, y, cW, 52, 3, 3, 'S');
+  doc.setTextColor(63,79,207);doc.setFont('helvetica','bold');doc.setFontSize(10);
+  doc.text('IDENTITAS KELOMPOK', mg+5, y+9);
+
+  var c1=mg+5, c2=mg+cW/2+5;
+  var iy=y+18;
+  var idData=[
+    ['Nama Kelompok',nama],['Kelas',kls],['Mata Pelajaran',mpl],['Tanggal',tgl]
+  ];
+  idData.forEach(function(row){
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(26,35,126);
+    doc.text(row[0], c1, iy);
+    doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);
+    var val=doc.splitTextToSize(': '+row[1], cW/2-10);
+    doc.text(val[0], c1+38, iy);
+    iy+=8;
+  });
+
+  var iy2=y+18;
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(26,35,126);
+  doc.text('Anggota:', c2, iy2);
+  doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.setFontSize(7.5);
+  ang.split('\n').slice(0,5).forEach(function(ln,ix){
+    doc.text(ln.trim()||'-', c2, iy2+(ix+1)*7);
+  });
+  y+=58;
+
+  doc.setFillColor(255,253,235);
+  doc.roundedRect(mg, y, cW, 16, 2, 2, 'F');
+  doc.setDrawColor(245,166,35);doc.setLineWidth(0.5);
+  doc.roundedRect(mg, y, cW, 16, 2, 2, 'S');
+  doc.setTextColor(120,80,0);doc.setFont('helvetica','bold');doc.setFontSize(8);
+  doc.text('PETUNJUK:', mg+5, y+7);
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+  doc.text('Pastikan sudah membaca: (1) Bacaan Kasus  (2) Teori Dasar  (3) Simulasi Interaktif', mg+5, y+13);
+  y+=22;
+
+  doc.setFillColor(63,79,207);
+  doc.roundedRect(mg, y, cW, 8, 2, 2, 'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(9);
+  doc.text('TABEL REKAP NILAI', W/2, y+5.5, {align:'center'});
+  y+=10;
+  var colW=cW/6;
+  var hdrs=['Soal 1','Soal 2','Soal 3','Soal 4','Soal 5','TOTAL'];
+  var bgHdr=[[76,175,125],[92,159,212],[171,71,188],[245,166,35],[233,30,99],[26,35,126]];
+  hdrs.forEach(function(h,i){
+    doc.setFillColor(bgHdr[i][0],bgHdr[i][1],bgHdr[i][2]);
+    doc.rect(mg+i*colW, y, colW, 7, 'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(7.5);
+    doc.text(h, mg+i*colW+colW/2, y+5, {align:'center'});
+  });
+  y+=7;
+  for(var ci=0;ci<6;ci++){
+    doc.setFillColor(255,255,255);doc.setDrawColor(200,200,200);doc.setLineWidth(0.3);
+    doc.rect(mg+ci*colW, y, colW, 10, 'FD');
+    doc.setTextColor(180,180,180);doc.setFontSize(7);
+    doc.text('........', mg+ci*colW+colW/2, y+7, {align:'center'});
+  }
+  y+=18;
+
+  var qTitles=[
+    'Soal 1 - Pelarutan Garam (20 Poin)',
+    'Soal 2 - Reaksi Hidrolisis (20 Poin)',
+    'Soal 3 - Jenis Hidrolisis (20 Poin)',
+    'Soal 4 - Dampak Lingkungan (20 Poin)',
+    'Soal 5 - Solusi & Aksi Nyata (20 Poin)'
+  ];
+  var qTexts=[
+    'Pupuk ZA termasuk jenis garam. Jelaskan apa yang terjadi pada pupuk ZA ketika dilarutkan dalam air tanah berdasarkan konsep pelarutan garam! Tuliskan juga persamaan reaksi disosiasinya!',
+    'Ion manakah dari pupuk ZA yang mengalami hidrolisis? Tuliskan reaksi hidrolisisnya secara lengkap dan jelaskan mengapa reaksi tersebut dapat membuat tanah menjadi asam!',
+    'Berdasarkan asal asam dan basanya, pupuk ZA termasuk garam yang mengalami hidrolisis total atau hidrolisis sebagian? Jelaskan alasanmu!',
+    'Mengapa penggunaan pupuk ZA (Ammonium Sulfat) secara berlebihan dapat menyebabkan soil acidification dan bagaimana proses hidrolisis yang terjadi dapat mengancam kesuburan tanah serta kesehatan ekosistem dalam jangka panjang?',
+    'Sebagai agen perubahan lingkungan, rancang solusi konkret untuk mengatasi masalah penggunaan pupuk kimia berlebihan. Jelaskan bagaimana mengkomunikasikan dampak ilmiah kepada petani lokal!'
+  ];
+  var qColors=[[76,175,125],[92,159,212],[171,71,188],[245,166,35],[233,30,99]];
+
+  for(var qi=0;qi<5;qi++){
+    var qc=qColors[qi];
+    var answerText=ans[qi];
+    y=checkPage(y, 50);
+    doc.setFillColor(qc[0],qc[1],qc[2]);
+    doc.roundedRect(mg, y, cW, 9, 2, 2, 'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(9.5);
+    doc.text(qTitles[qi], mg+5, y+6.2);
+    y+=12;
+    doc.setTextColor(50,50,50);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+    var qWrapped=doc.splitTextToSize(qTexts[qi], cW-6);
+    qWrapped.forEach(function(ln){
+      y=checkPage(y, 6);
+      doc.text(ln, mg+3, y);
+      y+=5.5;
+    });
+    y+=3;
+    y=checkPage(y, 10);
+    doc.setFont('helvetica','bold');doc.setFontSize(8.5);
+    doc.setTextColor(qc[0],qc[1],qc[2]);
+    doc.text('Jawaban Kelompok:', mg+3, y);
+    y+=7;
+    if(answerText !== '(Belum diisi)'){
+      doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+      doc.setTextColor(20,20,20);
+      var ansWrapped=doc.splitTextToSize(answerText, cW-10);
+      var estimatedH = ansWrapped.length * 5.5 + 10;
+      if(y + estimatedH <= 280){
+        doc.setFillColor(250,252,255);
+        doc.setDrawColor(qc[0],qc[1],qc[2]);doc.setLineWidth(0.5);
+        doc.roundedRect(mg+2, y-3, cW-4, estimatedH, 2, 2, 'FD');
+        ansWrapped.forEach(function(ln){
+          doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+          doc.setTextColor(20,20,20);
+          doc.text(ln, mg+5, y);
+          y+=5.5;
+        });
+        y+=8;
+      } else {
+        ansWrapped.forEach(function(ln){
+          y=checkPage(y, 7);
+          doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+          doc.setTextColor(20,20,20);
+          doc.text(ln, mg+5, y);
+          y+=5.5;
+        });
+        y+=8;
+      }
+    } else {
+      y=checkPage(y, 38);
+      doc.setDrawColor(200,200,200);doc.setFillColor(252,252,252);
+      doc.roundedRect(mg+2, y-2, cW-4, 36, 2, 2, 'FD');
+      doc.setTextColor(190,190,190);doc.setFont('helvetica','italic');doc.setFontSize(8.5);
+      doc.text('(Belum diisi)', W/2, y+16, {align:'center'});
+      y+=42;
+    }
+    y+=4;
+  }
+
+  var np=doc.internal.getNumberOfPages();
+  for(var p=1;p<=np;p++){
+    doc.setPage(p);
+    doc.setFillColor(63,79,207);doc.rect(0,287,70,10,'F');
+    doc.setFillColor(123,31,162);doc.rect(70,287,70,10,'F');
+    doc.setFillColor(233,30,99);doc.rect(140,287,70,10,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','normal');doc.setFontSize(7);
+    doc.text('Virtual Chemistry Learning  |  Hidrolisis Garam  |  Putri Ayu Rahmawati - Univ. Negeri Malang', W/2, 293.5, {align:'center'});
+    doc.setFont('helvetica','bold');
+    doc.text('Hal. '+p+'/'+np, W-mg, 293.5, {align:'right'});
+  }
+
+  var safeName=nama.replace(/[^a-zA-Z0-9]/g,'_').substring(0,25);
+  doc.save('LKS_Solusi_Case_'+safeName+'.pdf');
+  toast('info','PDF berhasil diunduh!');
+}
+
+// ── INTERSECTION OBSERVER
+(function init(){
+  try{document.getElementById('fd').valueAsDate=new Date();}catch(e){}
+  refreshProg();
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting)en.target.classList.add('visible');
+      });
+    },{threshold:0.12});
+    document.querySelectorAll('.qcard,.ak-item').forEach(function(el){io.observe(el);});
+  } else {
+    document.querySelectorAll('.qcard').forEach(function(el){el.classList.add('visible');});
+  }
+})();
+</script>
+</body>
+</html>
